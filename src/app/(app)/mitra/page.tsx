@@ -103,13 +103,22 @@ export default function MitraPage() {
             <p className="text-xs text-[#98A2B3]">Private AI companion · Not a therapist</p>
           </div>
         </div>
-        <button
-          onClick={reset}
-          className="flex items-center gap-1.5 text-xs text-[#98A2B3] hover:text-[#667085] transition-colors px-2 py-1.5 rounded-lg hover:bg-[#F7FBF8]"
-          title="New conversation"
-        >
-          <RotateCcw className="w-3.5 h-3.5" /> New chat
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href="/mitra/call"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-[#2E7D5B] text-white hover:bg-[#1E5C41] transition-colors"
+            title="Start Voice/Video Call"
+          >
+            <Mic className="w-4 h-4" />
+          </a>
+          <button
+            onClick={reset}
+            className="flex items-center gap-1.5 text-xs text-[#98A2B3] hover:text-[#667085] transition-colors px-2 py-1.5 rounded-lg hover:bg-[#F7FBF8]"
+            title="New conversation"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> New chat
+          </button>
+        </div>
       </div>
 
       {/* Messages */}

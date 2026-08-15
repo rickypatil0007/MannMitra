@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PageHeader, Badge } from "@/components/ui/shared";
-import { ArrowLeft, Users, Shield, MessagesSquare, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Users, Shield, MessagesSquare, CheckCircle2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
@@ -114,8 +114,13 @@ export default function MatchingPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-3 pt-4">
-                <Button className="w-full gap-2">
-                  <MessagesSquare className="w-4 h-4" /> Start Anonymous Chat
+                <Button className="w-full gap-2 bg-[#2E7D5B] hover:bg-[#1E5C41] text-white" asChild>
+                  <Link href="/spaces/call">
+                    <Video className="w-4 h-4" /> Join Secure Video/Audio Call
+                  </Link>
+                </Button>
+                <Button variant="outline" className="w-full gap-2 text-[#2E7D5B] border-[#2E7D5B] hover:bg-[#EFF8F1]">
+                  <MessagesSquare className="w-4 h-4" /> Start Anonymous Text Chat
                 </Button>
                 <Button variant="ghost" className="text-[#667085]" onClick={() => setMatched(false)}>
                   Cancel

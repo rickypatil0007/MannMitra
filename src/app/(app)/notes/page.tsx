@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader, EmptyState } from "@/components/ui/shared";
-import { Book, Plus, Search, Calendar, ChevronRight, X, Save, Mic } from "lucide-react";
+import { Book, Plus, Search, Calendar, X, Save, Mic, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -29,6 +29,40 @@ export default function NotesPage() {
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
+
+  // Recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => setRecordingTime((t) => t + 1), 1000);
+    } else {
+      setRecordingTime(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      setEditContent(
+        (prev) =>
+          prev +
+          (prev ? "\n\n" : "") +
+          `🎤 Voice Note (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}):\n"I'm feeling much better today. Taking things one step at a time helps..."`
+      );
+    } else {
+      setIsRecording(true);
+    }
+  };
 
   const filtered = notes.filter(
     (n) => n.title.toLowerCase().includes(search.toLowerCase()) || n.content.toLowerCase().includes(search.toLowerCase())
@@ -129,16 +163,57 @@ export default function NotesPage() {
                 <X className="w-4 h-4" /> Close
               </Button>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2 border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--green-primary)]" onClick={() => {
-                  setEditContent(prev => prev + (prev ? " " : "") + "(Voice transcription: I am feeling much better today...)");
-                }}>
-                  <Mic className="w-4 h-4" /> Record Voice
+                <Button 
+                  variant={isRecording ? "destructive" : "outline"} 
+                  size="sm" 
+                  className={`gap-2 min-w-[140px] ${!isRecording ? "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--green-primary)]" : "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-red-200"}`} 
+                  onClick={toggleRecording}
+                >
+                  {isRecording ? (
+                    <>
+                      <div className="w-2 h-2 rounded-full bg-red-500 animate-ping mr-1" />
+                      {formatTime(recordingTime)}
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-4 h-4" /> Record Voice
+                    </>
+                  )}
                 </Button>
                 <Button size="sm" onClick={saveNote} className="gap-2 bg-[var(--green-primary)] text-white hover:bg-[var(--green-dark)]">
                   <Save className="w-4 h-4" /> Save Entry
                 </Button>
               </div>
             </div>
+
+            {/* Recording visualizer */}
+            <AnimatePresence>
+              {isRecording && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }} 
+                  animate={{ height: "auto", opacity: 1 }} 
+                  exit={{ height: 0, opacity: 0 }}
+                  className="bg-red-50 rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-red-100 overflow-hidden"
+                >
+                  <p className="text-red-500 font-medium text-sm animate-pulse">Recording voice note...</p>
+                  <div className="flex items-center gap-1 h-12">
+                    {[...Array(20)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="w-1.5 bg-red-400 rounded-full"
+                        animate={{ height: ["20%", "100%", "20%"] }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: i * 0.05,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             
             <input 
               type="text"
