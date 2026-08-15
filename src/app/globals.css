@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-epilogue), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-background-soft: var(--background-soft);
+  --color-background-green: var(--background-green);
+
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--green-primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--background-soft);
+  --color-secondary-foreground: var(--text-primary);
+
+  --color-muted: var(--background-green);
+  --color-muted-foreground: var(--text-secondary);
+
+  --color-accent: var(--green-light);
+  --color-accent-foreground: var(--green-dark);
+
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: #ffffff;
+
+  --color-border: var(--border);
+  --color-input: var(--background);
+  --color-ring: var(--green-primary);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
+  --radius-full: 9999px;
+}
+
+/* ===== DESIGN TOKENS — Single Source of Truth ===== */
+:root {
+  /* Backgrounds */
+  --background: #FFFFFF;
+  --background-soft: #F7FBF8;
+  --background-green: #EFF8F1;
+
+  /* Green Palette */
+  --green-primary: #2E7D5B;
+  --green-dark: #1F5D43;
+  --green-medium: #4FA477;
+  --green-light: #DDF2E3;
+  --green-very-light: #EFF8F1;
+
+  /* Semantic Primary */
+  --primary-foreground: #FFFFFF;
+
+  /* Text - Muted green-grays */
+  --foreground: #1A2621;
+  --text-primary: #1A2621;
+  --text-secondary: #4B5952;
+  --text-supporting: #6A7A71;
+  --text-muted: #95A69D;
+
+  /* Borders */
+  --border: #E4EDE7;
+  --border-soft: #EEF3EF;
+
+  /* State Colors */
+  --danger: #C94A4A;
+  --danger-soft: #FFF2F2;
+  --success: #2E7D5B;
+  --warning: #D97706;
+
+  /* Aliases */
+  --radius: 14px;
+}
+
+/* ===== BASE STYLES ===== */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  ::selection {
+    background-color: var(--green-light);
+    color: var(--green-dark);
+  }
+
+  a {
+    color: var(--green-primary);
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+@layer utilities {
+  /* Subtle card glass */
+  .glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(28px);
+    border: 1px solid var(--border-soft);
+  }
+
+  /* Premium soft shadow */
+  .shadow-soft {
+    box-shadow: 0 2px 16px rgba(30, 80, 60, 0.06), 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .shadow-card {
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04), 0 4px 20px rgba(30, 80, 60, 0.05);
+  }
+
+  /* Text utilities */
+  .text-support { color: var(--text-supporting); }
+  .text-muted-custom { color: var(--text-muted); }
+  .text-green-dark { color: var(--green-dark); }
+  .text-green-primary { color: var(--green-primary); }
+  .text-green-medium { color: var(--green-medium); }
+
+  /* Background utilities */
+  .bg-soft { background-color: var(--background-soft); }
+  .bg-green-section { background-color: var(--background-green); }
+  .bg-green-light-card { background-color: var(--green-light); }
+}
