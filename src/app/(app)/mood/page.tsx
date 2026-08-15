@@ -34,7 +34,7 @@ const history = [
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 export default function MoodPage() {
@@ -54,7 +54,7 @@ export default function MoodPage() {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, ease: "easeOut" as const }}
       className="space-y-8 max-w-2xl"
     >
       {/* Page Header */}
@@ -142,7 +142,7 @@ export default function MoodPage() {
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${(selectedStress / 5) * 100}%` }}
-                          transition={{ duration: 0.4, ease: "easeOut" }}
+                          transition={{ duration: 0.4, ease: "easeOut" as const }}
                           className={`${stressLevels[selectedStress - 1].barColor} h-full rounded-full`}
                         />
                       </div>
@@ -284,7 +284,7 @@ export default function MoodPage() {
                         <motion.div
                           initial={{ height: 0 }}
                           animate={{ height: `${(h.level / 5) * 100}%` }}
-                          transition={{ delay: i * 0.07, duration: 0.4, ease: "easeOut" }}
+                          transition={{ delay: i * 0.07, duration: 0.4, ease: "easeOut" as const }}
                           className={`w-full rounded-t-lg ${lvl.barColor} opacity-80 min-h-[6px]`}
                           style={{ height: `${(h.level / 5) * 64}px` }}
                         />

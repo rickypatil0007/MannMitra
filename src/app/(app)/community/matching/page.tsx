@@ -33,7 +33,7 @@ export default function MatchingPage() {
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-2xl mx-auto"
     >
       <Link href="/community" className="inline-flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">

@@ -23,7 +23,7 @@ export default function SpacesPage() {
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-4xl"
     >
       <PageHeader 
@@ -53,7 +53,7 @@ export default function SpacesPage() {
           <Card key={space.id} className="hover:shadow-soft hover:border-[var(--green-light)] transition-all duration-200">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
-                <Badge variant={space.type === "Wellness" ? "success" : "muted"}>{space.type}</Badge>
+                <Badge variant={space.type === "Wellness" ? "green" : "muted"}>{space.type}</Badge>
                 <div className="flex items-center gap-1 text-sm text-[var(--green-primary)] font-medium bg-[var(--background-green)] px-2 py-0.5 rounded-md">
                   <MapPin className="w-3.5 h-3.5" /> {space.distance}
                 </div>

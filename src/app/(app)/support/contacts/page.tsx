@@ -12,7 +12,7 @@ export default function TrustedContactsPage() {
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-3xl"
     >
       <Link href="/support" className="inline-flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
@@ -45,7 +45,7 @@ export default function TrustedContactsPage() {
           <Card key={i} className="relative overflow-hidden group">
             {contact.primary && (
               <div className="absolute top-0 right-0 p-2">
-                <Badge variant="success" className="text-[10px]">Primary SOS</Badge>
+                <Badge variant="green" className="text-[10px]">Primary SOS</Badge>
               </div>
             )}
             <CardContent className="p-6">

@@ -16,7 +16,7 @@ export default function CommunityPage() {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, ease: "easeOut" as const }}
       className="space-y-8 max-w-3xl"
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
