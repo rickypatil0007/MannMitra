@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -31,6 +32,22 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    import("@/lib/firebase").then(({ auth }) => {
+      import("firebase/auth").then(({ onAuthStateChanged }) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setIsGuest(!!user?.isAnonymous);
+        });
+        return () => unsubscribe();
+      });
+    });
+  }, []);
+
+  const visibleNav = isGuest 
+    ? navigation.filter(n => n.name === "Dashboard" || n.name === "Mitra")
+    : navigation;
 
   return (
     <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Main navigation">
@@ -44,7 +61,7 @@ export function Sidebar() {
 
       {/* Nav links */}
       <nav className="flex-1 px-2.5 pt-3 pb-3 space-y-0.5 overflow-y-auto">
-        {navigation.map((item) => {
+        {visibleNav.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
           return (
             <Link

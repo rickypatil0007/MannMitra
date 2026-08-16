@@ -20,8 +20,26 @@ const mobileNav = [
   { name: "Support",   href: "/support",   icon: Headset },
 ];
 
+import { useState, useEffect } from "react";
+
 export function MobileNav() {
   const pathname = usePathname();
+  const [isGuest, setIsGuest] = useState(false);
+
+  useEffect(() => {
+    import("@/lib/firebase").then(({ auth }) => {
+      import("firebase/auth").then(({ onAuthStateChanged }) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setIsGuest(!!user?.isAnonymous);
+        });
+        return () => unsubscribe();
+      });
+    });
+  }, []);
+
+  const visibleNav = isGuest 
+    ? mobileNav.filter(n => n.name === "Home" || n.name === "Mitra")
+    : mobileNav;
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-nav border-t-0 safe-area-bottom">
@@ -34,7 +52,7 @@ export function MobileNav() {
         SOS · Urgent Help
       </Link>
       <div className="flex items-center justify-around px-1 py-2">
-        {mobileNav.map((item) => {
+        {visibleNav.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
           return (
             <Link
