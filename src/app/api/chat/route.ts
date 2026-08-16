@@ -1,9 +1,6 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { streamText, tool } from 'ai';
 import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
-
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 // NVIDIA NIM uses the OpenAI SDK format with a custom baseURL
@@ -36,39 +33,20 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
       model: nvidia('meta/llama-3.1-70b-instruct'), 
       system: systemPrompt,
       messages,
-      tools: {
-        createTask: tool({
-          description: 'Create a new task or assignment in the student planner.',
-          parameters: z.object({
-            title: z.string().describe('The name of the task or assignment.'),
-            deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
-            estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
-            priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional().describe('The priority of the task.'),
-          }),
-          execute: async ({ title, deadline, estimatedMin, priority }) => {
-            try {
-              const defaultUser = await prisma.user.findFirst({ where: { role: 'STUDENT' } });
-              
-              if (defaultUser) {
-                await prisma.task.create({
-                  data: {
-                    title,
-                    deadline: deadline ? new Date(deadline) : new Date(Date.now() + 86400000),
-                    estimatedMin,
-                    priority: priority || 'MEDIUM',
-                    userId: defaultUser.id,
-                  }
-                });
-                return { success: true, message: `Task "${title}" created successfully.` };
-              }
-              return { success: false, message: "No active user found to attach task to." };
-            } catch (e) {
-              console.error("Task creation failed:", e);
-              return { success: false, message: "Database error while creating task." };
-            }
-          },
-        }),
-      },
+      // tools: {
+      //   createTask: tool({
+      //     description: 'Create a new task or assignment in the student planner.',
+      //     parameters: z.object({
+      //       title: z.string().describe('The name of the task or assignment.'),
+      //       deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
+      //       estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
+      //       priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional().describe('The priority of the task.'),
+      //     }),
+      //     execute: async ({ title, deadline, estimatedMin, priority }) => {
+      //       return { success: true, message: `Task "${title}" created successfully (mocked).` };
+      //     },
+      //   }),
+      // },
     });
 
     return result.toDataStreamResponse();
