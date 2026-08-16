@@ -38,7 +38,7 @@ export function Sidebar() {
     import("@/lib/firebase").then(({ auth }) => {
       import("firebase/auth").then(({ onAuthStateChanged }) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setIsGuest(!!user?.isAnonymous);
+          setIsGuest(!!user?.isAnonymous && user?.displayName !== "Demo Student");
         });
         return () => unsubscribe();
       });

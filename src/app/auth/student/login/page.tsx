@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, signInAnonymously } from "firebase/auth";
+import { signInWithEmailAndPassword, signInAnonymously, updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { syncUser } from "@/actions/user";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,22 @@ export default function StudentLoginPage() {
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Failed to sign in as guest. Make sure Anonymous Auth is enabled in Firebase.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    
+    try {
+      const userCredential = await signInAnonymously(auth);
+      await updateProfile(userCredential.user, { displayName: "Demo Student" });
+      await syncUser(userCredential.user.uid, "student@demo.com", "Demo Student");
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in as demo student.");
     } finally {
       setIsLoading(false);
     }
@@ -109,15 +125,26 @@ export default function StudentLoginPage() {
           </div>
         </div>
 
-        <Button 
-          type="button" 
-          variant="outline" 
-          className="w-full h-11" 
-          onClick={handleGuestLogin}
-          disabled={isLoading}
-        >
-          Sign in as Guest
-        </Button>
+        <div className="flex gap-3 mt-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            className="w-full h-11" 
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+          >
+            Demo Student
+          </Button>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            className="w-full h-11" 
+            onClick={handleGuestLogin}
+            disabled={isLoading}
+          >
+            Guest User
+          </Button>
+        </div>
       </form>
 
       <p className="text-sm text-center text-[var(--text-secondary)]">
