@@ -3,7 +3,7 @@
 import { useRef, useEffect, KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Brain, Send, RotateCcw, Sparkles, Mic } from "lucide-react";
+import { Brain, Send, RotateCcw, Sparkles, Mic, CheckCircle2, Loader2 } from "lucide-react";
 import { useChat, Message } from "ai/react";
 
 const suggestedPrompts = [
@@ -114,9 +114,20 @@ export default function MitraPage() {
                   msg.role === "user"
                     ? "bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-sm"
                     : "bg-[var(--surface-ai)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-tl-sm whitespace-pre-wrap"
-                }`}
+                } ${!msg.content && msg.toolInvocations ? 'bg-transparent border-none px-0 py-0' : ''}`}
               >
                 {msg.content}
+                
+                {/* Tool Invocations (Reduces Perceived Lag) */}
+                {msg.toolInvocations?.map((toolInvocation, index) => {
+                  const isDone = 'result' in toolInvocation;
+                  return (
+                    <div key={index} className={`text-xs mt-2 flex items-center gap-1.5 px-3 py-2 rounded-lg border ${isDone ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-[var(--accent-ai)]/10 border-[var(--accent-ai)]/20 text-[var(--accent-ai)] animate-pulse'}`}>
+                      {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      {isDone ? 'Action completed' : 'Mitra is processing an action...'}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </motion.div>

@@ -14,7 +14,8 @@ export default function MitraCallPage() {
   const [callDuration, setCallDuration] = useState(0);
   const [mitraSpeaking, setMitraSpeaking] = useState(false);
   const [transcript, setTranscript] = useState("");
-  
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const { messages, append, isLoading } = useChat({
@@ -26,6 +27,58 @@ export default function MitraCallPage() {
   });
 
   useEffect(() => {
+    // Initialize Speech Recognition
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = true;
+        
+        recognitionRef.current.onstart = () => setIsListening(true);
+        recognitionRef.current.onend = () => setIsListening(false);
+        
+        recognitionRef.current.onresult = (event: any) => {
+          let currentTranscript = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            currentTranscript += event.results[i][0].transcript;
+          }
+          setTranscript(currentTranscript);
+          
+          if (event.results[0].isFinal) {
+            if (currentTranscript.trim() && !isLoading && !mitraSpeaking) {
+              append({ role: 'user', content: currentTranscript });
+              setTranscript("");
+            }
+          }
+        };
+      }
+    }
+
+    // Load voices early
+    if (typeof window !== "undefined" && 'speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+    }
+  }, [append, isLoading, mitraSpeaking]);
+
+  // Handle manual mute toggle
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (!isMuted) {
+      recognitionRef.current?.stop();
+    } else if (!mitraSpeaking && !isLoading) {
+      try { recognitionRef.current?.start(); } catch(e) {}
+    }
+  };
+
+  useEffect(() => {
+    // Start listening initially if not muted and not speaking
+    if (!isMuted && !mitraSpeaking && !isLoading && recognitionRef.current && !isListening) {
+      try { recognitionRef.current.start(); } catch(e) {}
+    }
+  }, [isMuted, mitraSpeaking, isLoading, isListening]);
+
+  useEffect(() => {
     // Initial greeting
     if (messages.length === 0) {
       const greeting = "Hi, I'm Mitra. I'm listening.";
@@ -34,35 +87,33 @@ export default function MitraCallPage() {
     }
   }, [messages.length, append]);
 
-  const playTTS = async (text: string) => {
-    setMitraSpeaking(true);
-    try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text })
-      });
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        if (audioRef.current) {
-          audioRef.current.src = url;
-          audioRef.current.play();
-        }
+  const playTTS = (text: string) => {
+    if (!('speechSynthesis' in window)) return;
+    
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Find a good female voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const preferredVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK English Female')) || voices[0];
+    if (preferredVoice) utterance.voice = preferredVoice;
+    
+    utterance.pitch = 1.1;
+    utterance.rate = 1.0;
+    
+    utterance.onstart = () => setMitraSpeaking(true);
+    utterance.onend = () => {
+      setMitraSpeaking(false);
+      // Automatically resume listening if not muted
+      if (!isMuted && recognitionRef.current) {
+        try { recognitionRef.current.start(); } catch (e) {}
       }
-    } catch (e) {
-      console.error("TTS failed", e);
-    }
+    };
+    
+    window.speechSynthesis.speak(utterance);
   };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.onended = () => {
-        setMitraSpeaking(false);
-        // Start listening again here if continuous recognition is built
-      };
-    }
-  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCallDuration((prev) => prev + 1), 1000);
@@ -122,13 +173,26 @@ export default function MitraCallPage() {
 
         {/* User Status indicator */}
         <div className="absolute bottom-10 text-center w-full text-[#8BBF9F] text-sm animate-pulse">
-          {mitraSpeaking ? "Mitra is speaking..." : isLoading ? "Mitra is thinking..." : isMuted ? "Your microphone is muted" : "Listening..."}
+          {mitraSpeaking ? "Mitra is speaking..." : isLoading ? "Mitra is thinking..." : isMuted ? "Your microphone is muted" : isListening ? "Listening..." : "Waiting..."}
         </div>
+        
+        {/* Subtitle / Live Transcript Display */}
+        {transcript && !mitraSpeaking && !isLoading && (
+          <div className="absolute bottom-24 w-full px-8 text-center">
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-white/80 text-lg font-medium"
+            >
+              "{transcript}"
+            </motion.p>
+          </div>
+        )}
         
         <audio ref={audioRef} className="hidden" />
       </div>
 
-      {/* Manual text input for testing Voice without SpeechRecognition implementation */}
+      {/* Manual text input hidden but active if they want to type */}
       <div className="w-full max-w-sm mb-4">
          <form 
            onSubmit={(e) => {
@@ -155,25 +219,12 @@ export default function MitraCallPage() {
       </div>
 
       {/* Call Controls */}
-      <div className="flex items-center gap-6 mb-8 bg-[#122b1e] px-8 py-5 rounded-[2rem] border border-[#1e4531]">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setIsVideoOn(!isVideoOn)}
-          className={`w-14 h-14 rounded-full border-none transition-all ${
-            isVideoOn ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[#1E5C41]" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
-          }`}
-        >
-          {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
-        </Button>
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setIsMuted(!isMuted)}
-          className={`w-14 h-14 rounded-full border-none transition-all ${
-            isMuted ? "bg-[var(--surface)] text-black hover:bg-gray-200" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
-          }`}
+      <div className="flex items-center justify-center gap-6 mb-8 bg-[#122b1e] px-8 py-5 rounded-[2rem] border border-[#1e4531] relative z-10">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          onClick={toggleMute}
+          className={`w-14 h-14 rounded-full border-none ${isMuted ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]'}`}
         >
           {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
         </Button>
