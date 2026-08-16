@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { PostIdentity, ReportItemType } from "@prisma/client";
+import { PostIdentity, ReportItemType } from "@/generated/prisma/client";
 
 export async function getCommunityPosts(firebaseUid: string, tag?: string) {
   try {
@@ -13,7 +13,7 @@ export async function getCommunityPosts(firebaseUid: string, tag?: string) {
       where: { blockerId: user.id },
       select: { blockedId: true },
     });
-    const blockedIds = blockedByMe.map((b) => b.blockedId);
+    const blockedIds = blockedByMe.map((b: { blockedId: string }) => b.blockedId);
 
     const whereClause: any = {
       authorId: { notIn: blockedIds },

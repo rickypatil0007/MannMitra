@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { StressLevel } from "@prisma/client";
+import { StressLevel } from "@/generated/prisma/client";
 
 export async function recordMood(
   firebaseUid: string,

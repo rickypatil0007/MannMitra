@@ -10,7 +10,7 @@ import { Plus, CheckCircle2, Circle, Clock, Calendar, Trash2, X, Loader2 } from 
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getUserTasks, createTask, toggleTaskCompletion, deleteTask } from "@/actions/task";
-import { TaskPriority } from "@prisma/client";
+import { TaskPriority } from "@/generated/prisma/client";
 
 type Tab = "Today" | "Upcoming" | "All" | "Calendar";
 

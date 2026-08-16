@@ -9,7 +9,7 @@ import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { getUserTasks } from "@/actions/task";
 import { recordMood } from "@/actions/mood";
-import { StressLevel } from "@prisma/client";
+import { StressLevel } from "@/generated/prisma/client";
 
 const MOODS = [
   { emoji: '😭', score: 1, stress: "VERY_HIGH" },

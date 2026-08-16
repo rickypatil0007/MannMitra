@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { TaskPriority } from "@prisma/client";
+import { TaskPriority } from "@/generated/prisma/client";
 
 export async function getUserTasks(firebaseUid: string) {
   try {

@@ -8,7 +8,7 @@ import { Smile, Wind, Zap, Frown, AlertCircle, CheckCircle, History, Loader2 } f
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { recordMood, getMoodHistory } from "@/actions/mood";
-import { StressLevel } from "@prisma/client";
+import { StressLevel } from "@/generated/prisma/client";
 
 // ─── Design spec: 5-point scale, supportive labels (no "Severe Stress")
 // ─── Mood colors: soft emotional tones (NOT medical dashboard colors)
