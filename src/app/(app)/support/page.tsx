@@ -1,11 +1,15 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import * as motion from "framer-motion/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/shared";
-import { CalendarHeart, Users, ShieldAlert, Phone, MessageSquare, Clock, CheckCircle2 } from "lucide-react";
+import { PageHeader, EmptyState } from "@/components/ui/shared";
+import { CalendarHeart, Users, ShieldAlert, Phone, MessageSquare, Clock, CheckCircle2, Loader2 } from "lucide-react";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { getMyCounsellingRequests, requestCounselling } from "@/actions/support";
 
-// Counsellor data - in production fetched from /api/v1/counsellors
-// Using text avatars to avoid next/image external hostname errors
 const counsellors = [
   {
     id: 1,
@@ -13,7 +17,6 @@ const counsellors = [
     title: "Clinical Psychologist",
     specialties: ["Academic Stress", "Anxiety", "Burnout"],
     availability: "Available: Mon, Wed, Fri",
-    requestStatus: null as null | "pending" | "accepted",
   },
   {
     id: 2,
@@ -21,7 +24,6 @@ const counsellors = [
     title: "Licensed Counselor",
     specialties: ["Identity", "Relationships", "Transition"],
     availability: "Available: Tue, Thu",
-    requestStatus: null as null | "pending" | "accepted",
   },
   {
     id: 3,
@@ -29,13 +31,61 @@ const counsellors = [
     title: "Wellness Counselor",
     specialties: ["Depression", "Sleep", "Self-Esteem"],
     availability: "Next slot: Thursday 3 PM",
-    requestStatus: null as null | "pending" | "accepted",
   },
 ];
 
 const initials = (name: string) => name.split(" ").map(n => n[0]).join("").slice(0, 2);
 
+interface RequestData {
+  id: string;
+  status: string;
+  notes: string | null;
+  requestedAt: string | Date;
+}
+
 export default function SupportPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [requests, setRequests] = useState<RequestData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submittingId, setSubmittingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchRequests(currentUser.uid);
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchRequests = useCallback(async (uid: string) => {
+    setLoading(true);
+    const res = await getMyCounsellingRequests(uid);
+    if (res.success && res.requests) {
+      setRequests(res.requests as RequestData[]);
+    }
+    setLoading(false);
+  }, []);
+
+  const handleRequestChat = async (counsellor: typeof counsellors[0]) => {
+    if (!user) return;
+    setSubmittingId(counsellor.id);
+    const notes = `Requested chat with ${counsellor.name}`;
+    await requestCounselling(user.uid, notes);
+    await fetchRequests(user.uid);
+    setSubmittingId(null);
+  };
+
+  const isPending = (counsellorName: string) => {
+    return requests.some((req) => req.status === "pending" && req.notes?.includes(counsellorName));
+  };
+  const isAccepted = (counsellorName: string) => {
+    return requests.some((req) => (req.status === "scheduled" || req.status === "accepted") && req.notes?.includes(counsellorName));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -48,7 +98,7 @@ export default function SupportPage() {
         description="Professional help is always within reach. You don't have to navigate this alone."
       />
 
-      {/* Emergency strip — visually distinct from green (spec) */}
+      {/* Emergency strip */}
       <div className="rounded-2xl bg-[var(--danger-soft)] border border-[#FECACA] p-5">
         <div className="flex items-start gap-3">
           <ShieldAlert className="w-5 h-5 text-[var(--danger)] flex-shrink-0 mt-0.5" />
@@ -69,19 +119,79 @@ export default function SupportPage() {
         </div>
       </div>
 
-      {/* Section: Counsellors directory (spec STU-18-01) */}
+      {/* Counsellors directory */}
       <div className="space-y-4">
         <h2 className="text-xl font-display font-semibold text-[var(--text-primary)]">Schedule a Chat</h2>
         <p className="text-sm text-[var(--text-secondary)]">All sessions are free and completely confidential. A simple &ldquo;I&apos;d like to talk&rdquo; is enough.</p>
 
         <div className="space-y-4">
-          {counsellors.map((c) => (
-            <CounsellorCard key={c.id} counsellor={c} />
-          ))}
+          {counsellors.map((c) => {
+            const pending = isPending(c.name);
+            const accepted = isAccepted(c.name);
+            const status = accepted ? "accepted" : pending ? "pending" : null;
+            
+            return (
+              <Card key={c.id} className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[var(--primary-soft)] flex items-center justify-center flex-shrink-0 text-[var(--primary-hover)] font-bold font-display text-sm">
+                      {initials(c.name)}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                          <p className="font-semibold text-[var(--text-primary)]">{c.name}</p>
+                          <p className="text-sm text-[var(--text-secondary)]">{c.title}</p>
+                        </div>
+                        {status === "pending" && (
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-[#FFF6ED] text-[#7A4A1E] border border-[#FFD9AE] font-semibold flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> Pending
+                          </span>
+                        )}
+                        {status === "accepted" && (
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--primary-soft)] text-[var(--primary-hover)] font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Accepted
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {c.specialties.map((s) => (
+                          <span key={s} className="px-2 py-0.5 rounded-full bg-[var(--background-secondary)] border border-[var(--border)] text-[10px] font-medium text-[var(--text-secondary)]">
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+
+                      <p className="text-xs text-[var(--text-muted)] mt-2">{c.availability}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex gap-2 justify-end">
+                    <Button variant="secondary" size="sm">View Profile</Button>
+                    <Button 
+                      size="sm" 
+                      disabled={status !== null || submittingId === c.id}
+                      onClick={() => handleRequestChat(c)}
+                    >
+                      {submittingId === c.id ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...</>
+                      ) : status === "pending" ? (
+                        "Request sent"
+                      ) : (
+                        "Request a Chat"
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
-      {/* Section: Group support */}
+      {/* Group support & Requests */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
           <CardHeader>
@@ -95,6 +205,7 @@ export default function SupportPage() {
             <Button variant="secondary" className="w-full">Explore Groups</Button>
           </CardContent>
         </Card>
+        
         <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
           <CardHeader>
             <div className="w-10 h-10 rounded-2xl bg-[var(--surface-secondary)] flex items-center justify-center mb-3">
@@ -105,71 +216,39 @@ export default function SupportPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--primary-soft)]">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[var(--primary-soft)]" />
-                  <div>
-                    <p className="text-xs font-semibold text-[var(--primary-hover)]">Dr. Priya Sharma</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">Pending · Submitted today</p>
-                  </div>
+              {loading ? (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="w-5 h-5 animate-spin text-[var(--primary)]" />
                 </div>
-                <span className="text-[10px] px-2 py-1 rounded-full bg-[var(--primary-soft)] text-[var(--primary-hover)] font-semibold">Pending</span>
-              </div>
+              ) : requests.length === 0 ? (
+                <p className="text-sm text-[var(--text-muted)] text-center py-4">No active requests</p>
+              ) : (
+                requests.map(req => (
+                  <div key={req.id} className="flex items-center justify-between p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--primary-soft)]">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-[var(--primary-soft)]" />
+                      <div>
+                        <p className="text-xs font-semibold text-[var(--primary-hover)]">{req.notes || "General Request"}</p>
+                        <p className="text-[10px] text-[var(--text-secondary)]">
+                          {req.status.charAt(0).toUpperCase() + req.status.slice(1)} · 
+                          {new Date(req.requestedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <span className={`text-[10px] px-2 py-1 rounded-full font-semibold ${
+                      req.status === 'pending' 
+                        ? "bg-[#FFF6ED] text-[#7A4A1E]" 
+                        : "bg-[var(--primary-soft)] text-[var(--primary-hover)]"
+                    }`}>
+                      {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
     </motion.div>
-  );
-}
-
-function CounsellorCard({ counsellor }: { counsellor: typeof counsellors[0] }) {
-  return (
-    <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
-      <CardContent className="p-5">
-        <div className="flex items-start gap-4">
-          {/* Avatar — text initials (no external images) */}
-          <div className="w-12 h-12 rounded-full bg-[var(--primary-soft)] flex items-center justify-center flex-shrink-0 text-[var(--primary-hover)] font-bold font-display text-sm">
-            {initials(counsellor.name)}
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <div>
-                <p className="font-semibold text-[var(--text-primary)]">{counsellor.name}</p>
-                <p className="text-sm text-[var(--text-secondary)]">{counsellor.title}</p>
-              </div>
-              {counsellor.requestStatus === "pending" && (
-                <span className="text-xs px-2.5 py-1 rounded-full bg-[#FFF6ED] text-[#7A4A1E] border border-[#FFD9AE] font-semibold flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> Pending
-                </span>
-              )}
-              {counsellor.requestStatus === "accepted" && (
-                <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--primary-soft)] text-[var(--primary-hover)] font-semibold flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" /> Accepted
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {counsellor.specialties.map((s) => (
-                <span key={s} className="px-2 py-0.5 rounded-full bg-[var(--background-secondary)] border border-[var(--border)] text-[10px] font-medium text-[var(--text-secondary)]">
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            <p className="text-xs text-[var(--text-muted)] mt-2">{counsellor.availability}</p>
-          </div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex gap-2 justify-end">
-          <Button variant="secondary" size="sm">View Profile</Button>
-          <Button size="sm" disabled={counsellor.requestStatus !== null}>
-            {counsellor.requestStatus === "pending" ? "Request sent" : "Request a Chat"}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
   );
 }
