@@ -54,7 +54,7 @@ export default function CounselorsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search by name or specialty..." 
-            className="pl-10 h-12 bg-white/60 dark:bg-black/20 backdrop-blur-md rounded-2xl"
+            className="pl-10 h-12 bg-[var(--surface)]/60 dark:bg-black/20 backdrop-blur-md rounded-2xl"
           />
         </div>
       </header>

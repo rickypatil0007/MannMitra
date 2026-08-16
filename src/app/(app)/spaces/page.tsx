@@ -39,8 +39,8 @@ export default function SpacesPage() {
             onClick={() => setFilter(t)}
             className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === t
-                ? "bg-[var(--green-primary)] text-white"
-                : "bg-[var(--background-soft)] text-[var(--text-secondary)] border border-[var(--border)] hover:bg-[var(--background-green)] hover:text-[var(--green-primary)] hover:border-[var(--green-light)]"
+                ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
+                : "bg-[var(--background-secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)]"
             }`}
           >
             {t}
@@ -50,17 +50,17 @@ export default function SpacesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filtered.map((space) => (
-          <Card key={space.id} className="hover:shadow-soft hover:border-[var(--green-light)] transition-all duration-200">
+          <Card key={space.id} className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200">
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <Badge variant={space.type === "Wellness" ? "green" : "muted"}>{space.type}</Badge>
-                <div className="flex items-center gap-1 text-sm text-[var(--green-primary)] font-medium bg-[var(--background-green)] px-2 py-0.5 rounded-md">
+                <div className="flex items-center gap-1 text-sm text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md">
                   <MapPin className="w-3.5 h-3.5" /> {space.distance}
                 </div>
               </div>
               <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">{space.name}</h3>
               
-              <div className="grid grid-cols-2 gap-4 border-t border-[var(--border-soft)] pt-4 mb-5">
+              <div className="grid grid-cols-2 gap-4 border-t border-[var(--border-subtle)] pt-4 mb-5">
                 <div>
                   <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><VolumeX className="w-3.5 h-3.5" /> Noise Level</p>
                   <p className="text-sm font-medium text-[var(--text-primary)]">{space.noise}</p>
@@ -71,7 +71,7 @@ export default function SpacesPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-[var(--background-soft)] text-[var(--green-primary)] hover:bg-[var(--background-green)] hover:text-[var(--green-dark)] border border-[var(--green-light)] gap-2 shadow-none">
+              <Button className="w-full bg-[var(--background-secondary)] text-[var(--primary)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary-hover)] border border-[var(--primary-soft)] gap-2 shadow-none">
                 <Navigation className="w-4 h-4" /> Get Directions
               </Button>
             </CardContent>

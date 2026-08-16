@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Epilogue, Manrope } from "next/font/google";
 import "./globals.css";
 
+import { CursorGlow } from "@/components/ui/cursor-glow";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
+
 const epilogue = Epilogue({
   variable: "--font-epilogue",
   subsets: ["latin"],
@@ -24,7 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${epilogue.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-primary/20">{children}</body>
+      <body className="antialiased min-h-screen bg-[var(--background-primary)] selection:bg-[var(--primary-soft)] selection:text-[var(--primary-hover)] relative">
+        <ScrollProgress />
+        <CursorGlow />
+        {children}
+
+      </body>
     </html>
   );
 }

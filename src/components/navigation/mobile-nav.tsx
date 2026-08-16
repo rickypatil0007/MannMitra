@@ -24,11 +24,11 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E4EDE7] safe-area-bottom">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-nav border-t-0 safe-area-bottom">
       {/* SOS strip */}
       <Link
         href="/safety"
-        className="flex items-center justify-center gap-2 py-2 bg-[#FFF2F2] border-b border-[#FECACA]/40 text-[#C94A4A] text-xs font-semibold"
+        className="flex items-center justify-center gap-2 py-2 bg-[var(--danger-soft)] border-b border-[#FECACA]/40 text-[var(--danger)] text-xs font-semibold"
       >
         <AlertTriangle className="w-3.5 h-3.5" strokeWidth={2.5} />
         SOS · Urgent Help
@@ -44,11 +44,11 @@ export function MobileNav() {
             >
               <item.icon
                 className={cn("w-5 h-5 transition-colors",
-                  isActive ? "text-[#2E7D5B]" : "text-[#98A2B3]"
+                  isActive ? "text-[var(--primary)]" : "text-[var(--text-muted)]"
                 )}
                 strokeWidth={isActive ? 2.5 : 2}
               />
-              <span className={cn("text-[10px] font-medium", isActive ? "text-[#2E7D5B]" : "text-[#98A2B3]")}>
+              <span className={cn("text-[10px] font-medium", isActive ? "text-[var(--primary)]" : "text-[var(--text-muted)]")}>
                 {item.name}
               </span>
             </Link>

@@ -36,7 +36,7 @@ export default function MitraCallPage() {
     <div className="fixed inset-0 z-50 bg-[#0A1912] flex flex-col items-center justify-between py-12 px-4 font-display">
       {/* Header Info */}
       <div className="text-center space-y-2 mt-8">
-        <h1 className="text-white text-3xl font-semibold tracking-tight">Mitra AI</h1>
+        <h1 className="text-[var(--primary-foreground)] text-3xl font-semibold tracking-tight">Mitra AI</h1>
         <p className="text-[#8BBF9F] font-medium tracking-widest uppercase text-sm">
           {formatTime(callDuration)}
         </p>
@@ -53,23 +53,23 @@ export default function MitraCallPage() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.5, 1] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute w-48 h-48 rounded-full bg-[#2E7D5B] blur-xl"
+                  className="absolute w-48 h-48 rounded-full bg-[var(--primary)] blur-xl"
                 />
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: [0.2, 0.6, 0.2], scale: [1, 1.2, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                  className="absolute w-40 h-40 rounded-full bg-[#4FA477] blur-md"
+                  className="absolute w-40 h-40 rounded-full bg-[var(--primary-soft)] blur-md"
                 />
               </>
             )}
           </AnimatePresence>
 
           {/* Main Orb */}
-          <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-[#1E5C41] to-[#0F3624] border border-[#2E7D5B] flex items-center justify-center shadow-2xl z-10 overflow-hidden">
+          <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-[#1E5C41] to-[#0F3624] border border-[var(--primary)] flex items-center justify-center shadow-2xl z-10 overflow-hidden">
              {/* Dynamic inner glow */}
              <motion.div 
-                className="absolute inset-0 bg-white/10"
+                className="absolute inset-0 bg-[var(--surface)]/10"
                 animate={{ opacity: mitraSpeaking ? [0.2, 0.5, 0.2] : 0.1 }}
                 transition={{ duration: 1, repeat: Infinity }}
              />
@@ -90,7 +90,7 @@ export default function MitraCallPage() {
           size="icon"
           onClick={() => setIsVideoOn(!isVideoOn)}
           className={`w-14 h-14 rounded-full border-none transition-all ${
-            isVideoOn ? "bg-[#2E7D5B] text-white hover:bg-[#1E5C41]" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
+            isVideoOn ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[#1E5C41]" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
           }`}
         >
           {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
@@ -101,7 +101,7 @@ export default function MitraCallPage() {
           size="icon"
           onClick={() => setIsMuted(!isMuted)}
           className={`w-14 h-14 rounded-full border-none transition-all ${
-            isMuted ? "bg-white text-black hover:bg-gray-200" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
+            isMuted ? "bg-[var(--surface)] text-black hover:bg-gray-200" : "bg-[#1E4531] text-[#A8D3B7] hover:bg-[#2a5c43]"
           }`}
         >
           {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}

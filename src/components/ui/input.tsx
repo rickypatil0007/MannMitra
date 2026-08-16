@@ -11,17 +11,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn(
           // Base
-          "flex h-12 w-full rounded-xl border bg-white px-4 py-2 text-sm text-[#1F2937]",
+          "flex h-12 w-full rounded-xl border bg-[var(--background-secondary)] px-4 py-2 text-sm text-[var(--text-primary)]",
           // Border
-          "border-[#D7E2DA]",
+          "border-[var(--border)]",
           // Placeholder
-          "placeholder:text-[#98A2B3]",
-          // Focus
-          "focus-visible:outline-none focus-visible:border-[#2E7D5B] focus-visible:ring-2 focus-visible:ring-[rgba(46,125,91,0.18)]",
+          "placeholder:text-[var(--text-muted)]",
+          // Focus Glow
+          "focus-visible:outline-none focus-visible:border-[var(--primary)] focus-visible:ring-4 focus-visible:ring-[rgba(224,122,95,0.12)] transition-all duration-300",
           // Disabled
           "disabled:cursor-not-allowed disabled:opacity-50",
           // Error (via data attr)
-          "data-[invalid=true]:border-[#C94A4A]",
+          "data-[invalid=true]:border-[var(--danger)]",
           "transition-all duration-200",
           className
         )}

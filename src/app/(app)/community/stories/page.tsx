@@ -42,7 +42,7 @@ export default function SeniorStoriesPage() {
       transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-4xl"
     >
-      <Link href="/community" className="inline-flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
+      <Link href="/community" className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Community
       </Link>
       
@@ -58,16 +58,16 @@ export default function SeniorStoriesPage() {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <Badge variant="muted">{story.category}</Badge>
-                  <span className="text-xs text-[#98A2B3]">{story.reads} reads</span>
+                  <span className="text-xs text-[var(--text-muted)]">{story.reads} reads</span>
                 </div>
-                <h3 className="text-xl font-display font-semibold text-[#1F2937] mb-2 group-hover:text-[#2E7D5B] transition-colors">{story.title}</h3>
-                <p className="text-sm text-[#667085] leading-relaxed mb-4">{story.preview}</p>
-                <div className="flex items-center justify-between border-t border-[#EEF3EF] pt-4">
+                <h3 className="text-xl font-display font-semibold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">{story.title}</h3>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">{story.preview}</p>
+                <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
                   <div className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-[#4FA477]" />
-                    <span className="text-xs font-semibold text-[#1F2937]">{story.author}</span>
+                    <GraduationCap className="w-4 h-4 text-[var(--primary-soft)]" />
+                    <span className="text-xs font-semibold text-[var(--text-primary)]">{story.author}</span>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-[#2E7D5B] hover:text-[#1F5D43]">
+                  <Button variant="ghost" size="sm" className="text-[var(--primary)] hover:text-[var(--primary-hover)]">
                     Read Story
                   </Button>
                 </div>
@@ -77,16 +77,16 @@ export default function SeniorStoriesPage() {
         </div>
 
         <div className="space-y-4">
-          <Card className="bg-[#1F2937] text-white border-transparent">
+          <Card className="bg-[var(--text-primary)] text-[var(--primary-foreground)] border-transparent">
             <CardContent className="p-6 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mx-auto">
-                <Quote className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-full bg-[var(--surface)]/10 flex items-center justify-center mx-auto">
+                <Quote className="w-6 h-6 text-[var(--primary-foreground)]" />
               </div>
               <h3 className="text-lg font-semibold font-display">Share your journey</h3>
-              <p className="text-sm text-white/70 leading-relaxed">
+              <p className="text-sm text-[var(--primary-foreground)]/70 leading-relaxed">
                 Your setbacks and successes can help current students navigate their own challenges.
               </p>
-              <Button className="w-full bg-white text-[#1F2937] hover:bg-white/90">
+              <Button className="w-full bg-[var(--surface)] text-[var(--text-primary)] hover:bg-[var(--surface)]/90">
                 Submit a Story
               </Button>
             </CardContent>
@@ -95,14 +95,14 @@ export default function SeniorStoriesPage() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-[#D4A45B]" /> Top Categories
+                <Trophy className="w-4 h-4 text-[var(--warning)]" /> Top Categories
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {['Failure & Recovery', 'Internships', 'Mental Health', 'Career Pivots'].map(c => (
-                <div key={c} className="flex items-center justify-between p-2 rounded-lg hover:bg-[#F7FBF8] cursor-pointer transition-colors">
-                  <span className="text-sm text-[#475467] font-medium">{c}</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-[#98A2B3]" />
+                <div key={c} className="flex items-center justify-between p-2 rounded-lg hover:bg-[var(--background-secondary)] cursor-pointer transition-colors">
+                  <span className="text-sm text-[var(--text-secondary)] font-medium">{c}</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                 </div>
               ))}
             </CardContent>

@@ -50,7 +50,7 @@ export default function ChaosPage() {
             value={chaosText}
             onChange={(e) => setChaosText(e.target.value)}
             placeholder="I have to email my professor about the midterm because I was sick, and also I need to read chapter 4 for sociology, oh and I keep forgetting to pay the internet bill, plus my mom called yesterday and I haven't called her back yet..."
-            className="w-full min-h-[300px] p-6 text-lg bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-all placeholder:text-muted-foreground/60 leading-relaxed"
+            className="w-full min-h-[300px] p-6 text-lg bg-[var(--surface)]/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-all placeholder:text-muted-foreground/60 leading-relaxed"
           />
           <div className="flex justify-end">
             <Button 
@@ -88,7 +88,7 @@ export default function ChaosPage() {
             {tasks.map(task => (
               <label 
                 key={task.id} 
-                className="flex items-start gap-4 p-4 rounded-2xl border border-border/50 bg-white/40 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 transition-colors cursor-pointer"
+                className="flex items-start gap-4 p-4 rounded-2xl border border-border/50 bg-[var(--surface)]/40 dark:bg-black/20 hover:bg-[var(--surface)]/80 dark:hover:bg-black/40 transition-colors cursor-pointer"
               >
                 <input 
                   type="checkbox" 

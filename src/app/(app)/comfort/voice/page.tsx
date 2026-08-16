@@ -73,21 +73,21 @@ export default function VoiceNotesPage() {
       transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-2xl mx-auto"
     >
-      <Link href="/comfort" className="inline-flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
+      <Link href="/comfort" className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Comfort Library
       </Link>
       
       <div className="text-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-[#EFF8F1] flex items-center justify-center mx-auto mb-4">
-          <Mic className="w-8 h-8 text-[#2E7D5B]" />
+        <div className="w-16 h-16 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center mx-auto mb-4">
+          <Mic className="w-8 h-8 text-[var(--primary)]" />
         </div>
-        <h1 className="text-3xl font-display font-semibold text-[#1F2937] tracking-tight">Self-Comfort Notes</h1>
-        <p className="text-[#667085] mt-2 max-w-md mx-auto">Record encouraging messages to yourself. Play them back when you need a reminder of your strength.</p>
+        <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Self-Comfort Notes</h1>
+        <p className="text-[var(--text-secondary)] mt-2 max-w-md mx-auto">Record encouraging messages to yourself. Play them back when you need a reminder of your strength.</p>
       </div>
 
-      <Card className="bg-[#F7FBF8] border-[#E4EDE7]">
+      <Card className="bg-[var(--background-secondary)] border-[var(--border)]">
         <CardContent className="p-8 text-center space-y-6">
-          <div className="text-4xl font-display font-semibold text-[#1F2937] tracking-wider">
+          <div className="text-4xl font-display font-semibold text-[var(--text-primary)] tracking-wider">
             {formatTime(recordingTime)}
           </div>
           
@@ -95,36 +95,36 @@ export default function VoiceNotesPage() {
             {isRecording ? (
               <button
                 onClick={stopRecording}
-                className="w-16 h-16 rounded-full bg-[#C94A4A] hover:bg-[#9F2F2F] text-white flex items-center justify-center transition-colors shadow-lg shadow-[#C94A4A]/20"
+                className="w-16 h-16 rounded-full bg-[var(--danger)] hover:bg-[var(--danger)] text-[var(--primary-foreground)] flex items-center justify-center transition-colors shadow-lg shadow-[var(--danger)]/20"
               >
                 <Square className="w-6 h-6 fill-current" />
               </button>
             ) : (
               <button
                 onClick={startRecording}
-                className="w-16 h-16 rounded-full bg-[#2E7D5B] hover:bg-[#1F5D43] text-white flex items-center justify-center transition-colors shadow-lg shadow-[#2E7D5B]/20 relative"
+                className="w-16 h-16 rounded-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] flex items-center justify-center transition-colors shadow-lg shadow-[var(--primary)]/20 relative"
               >
-                <div className="absolute inset-0 rounded-full border-2 border-[#2E7D5B] animate-ping opacity-20" />
+                <div className="absolute inset-0 rounded-full border-2 border-[var(--primary)] animate-ping opacity-20" />
                 <Mic className="w-6 h-6" />
               </button>
             )}
           </div>
-          <p className={isRecording ? "text-[#C94A4A] font-medium text-sm animate-pulse" : "text-[#667085] text-sm"}>
+          <p className={isRecording ? "text-[var(--danger)] font-medium text-sm animate-pulse" : "text-[var(--text-secondary)] text-sm"}>
             {isRecording ? "Recording..." : "Tap to start recording"}
           </p>
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-between text-sm text-[#98A2B3] px-1">
+      <div className="flex items-center justify-between text-sm text-[var(--text-muted)] px-1">
         <span className="font-semibold uppercase tracking-wider">Your Recordings</span>
-        <div className="flex items-center gap-1.5 bg-[#EFF8F1] text-[#2E7D5B] px-2 py-0.5 rounded-full text-xs">
+        <div className="flex items-center gap-1.5 bg-[var(--surface-secondary)] text-[var(--primary)] px-2 py-0.5 rounded-full text-xs">
           <Shield className="w-3 h-3" /> Encrypted locally
         </div>
       </div>
 
       <div className="space-y-3">
         {notes.length === 0 ? (
-          <div className="text-center py-8 text-[#98A2B3] text-sm">
+          <div className="text-center py-8 text-[var(--text-muted)] text-sm">
             You don't have any voice notes yet.
           </div>
         ) : (
@@ -133,29 +133,29 @@ export default function VoiceNotesPage() {
               <CardContent className="p-4 flex items-center gap-4">
                 <button
                   onClick={() => setPlayingId(playingId === note.id ? null : note.id)}
-                  className="w-10 h-10 rounded-full bg-[#F7FBF8] hover:bg-[#EFF8F1] flex items-center justify-center text-[#2E7D5B] transition-colors shrink-0"
+                  className="w-10 h-10 rounded-full bg-[var(--background-secondary)] hover:bg-[var(--surface-secondary)] flex items-center justify-center text-[var(--primary)] transition-colors shrink-0"
                 >
                   {playingId === note.id ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
                 </button>
                 <div className="flex-1">
-                  <div className="h-2 bg-[#E4EDE7] rounded-full overflow-hidden">
+                  <div className="h-2 bg-[var(--border)] rounded-full overflow-hidden">
                     {playingId === note.id && (
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: "100%" }}
                         transition={{ duration: note.duration, ease: "linear" }}
-                        className="h-full bg-[#4FA477]"
+                        className="h-full bg-[var(--primary-soft)]"
                       />
                     )}
                   </div>
-                  <div className="flex justify-between text-xs text-[#98A2B3] mt-2">
-                    <span className="font-medium text-[#475467]">{note.date}</span>
+                  <div className="flex justify-between text-xs text-[var(--text-muted)] mt-2">
+                    <span className="font-medium text-[var(--text-secondary)]">{note.date}</span>
                     <span>{formatTime(note.duration)}</span>
                   </div>
                 </div>
                 <button
                   onClick={() => deleteNote(note.id)}
-                  className="p-2 text-[#98A2B3] hover:text-[#C94A4A] transition-colors rounded-lg hover:bg-[#FFF2F2]"
+                  className="p-2 text-[var(--text-muted)] hover:text-[var(--danger)] transition-colors rounded-lg hover:bg-[var(--danger-soft)]"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

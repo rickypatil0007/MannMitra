@@ -1,51 +1,145 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, updateProfile, signInAnonymously } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { syncUser } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2, UserPlus } from "lucide-react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, {
+        displayName: name
+      });
+      
+      // Sync to Postgres via Server Action
+      await syncUser(userCredential.user.uid, email, name);
+      
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to create account.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    
+    try {
+      const userCredential = await signInAnonymously(auth);
+      await syncUser(userCredential.user.uid, null, "Guest User");
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in as guest. Make sure Anonymous Auth is enabled in Firebase.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6 relative">
       <Link href="/auth/student" className="absolute -top-12 left-0 flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
         <ArrowLeft className="w-4 h-4" />
         Back
       </Link>
-
+      
       <div>
-        <h2 className="text-2xl font-display font-semibold text-[#1F2937] tracking-tight">Create your account</h2>
-        <p className="text-[#667085] mt-1.5 text-sm">Start your journey to better wellbeing. It's free.</p>
+        <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Create Account</h2>
+        <p className="text-[var(--text-secondary)] mt-1.5 text-sm">Join MannMitra to start your wellness journey.</p>
       </div>
 
-      <div className="space-y-4">
+      <form onSubmit={handleRegister} className="space-y-4">
         <div className="space-y-1.5">
-          <label htmlFor="name" className="text-sm font-medium text-[#1F2937]">Full Name</label>
-          <Input id="name" type="text" placeholder="Alex Doe" />
-        </div>
-        <div className="space-y-1.5">
-          <label htmlFor="gsuid" className="text-sm font-medium text-[#1F2937]">GSUID (ID of TCET)</label>
-          <Input id="gsuid" type="email" placeholder="student@tcetmumbai.in" />
-        </div>
-        <div className="space-y-1.5">
-          <label htmlFor="password" className="text-sm font-medium text-[#1F2937]">Password</label>
-          <Input id="password" type="password" placeholder="Create a strong password" />
+          <label className="text-sm font-medium text-[var(--text-primary)]">Full Name</label>
+          <Input 
+            type="text" 
+            placeholder="John Doe" 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="h-12 bg-[var(--surface-secondary)] border-[var(--border)] focus:border-[var(--primary)]"
+          />
         </div>
 
-        <Button className="w-full h-12 bg-[var(--green-primary)] hover:bg-[var(--green-dark)] text-white" asChild>
-          <Link href="/onboarding">Create Account</Link>
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium text-[var(--text-primary)]">Email</label>
+          <Input 
+            type="email" 
+            placeholder="student@university.edu" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="h-12 bg-[var(--surface-secondary)] border-[var(--border)] focus:border-[var(--primary)]"
+          />
+        </div>
+        
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium text-[var(--text-primary)]">Password</label>
+          <Input 
+            type="password" 
+            placeholder="••••••••" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            className="h-12 bg-[var(--surface-secondary)] border-[var(--border)] focus:border-[var(--primary)]"
+          />
+          <p className="text-xs text-[var(--text-muted)] pt-1">Must be at least 6 characters.</p>
+        </div>
+
+        {error && (
+          <div className="p-3 rounded-xl bg-[var(--danger-soft)] border border-[#FECACA] text-sm text-[var(--danger)]">
+            {error}
+          </div>
+        )}
+
+        <Button type="submit" className="w-full h-11" disabled={isLoading || !email || !password || !name}>
+          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
         </Button>
-      </div>
 
-      <p className="text-xs text-center text-[#98A2B3] leading-relaxed px-2">
-        By signing up, you agree to our{" "}
-        <Link href="#" className="underline underline-offset-4 hover:text-[var(--green-primary)] transition-colors">Terms of Service</Link>
-        {" "}and{" "}
-        <Link href="#" className="underline underline-offset-4 hover:text-[var(--green-primary)] transition-colors">Privacy Policy</Link>.
-      </p>
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-[var(--border)]" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-[var(--surface)] px-2 text-[var(--text-secondary)]">Or continue with</span>
+          </div>
+        </div>
 
-      <p className="text-sm text-center text-[#667085]">
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="w-full h-11" 
+          onClick={handleGuestLogin}
+          disabled={isLoading}
+        >
+          Sign in as Guest
+        </Button>
+      </form>
+
+      <p className="text-sm text-center text-[var(--text-secondary)]">
         Already have an account?{" "}
-        <Link href="/auth/student/login" className="font-semibold text-[var(--green-primary)] hover:text-[var(--green-dark)] transition-colors">
-          Log in
+        <Link href="/auth/student/login" className="font-semibold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors">
+          Sign In
         </Link>
       </p>
     </div>

@@ -24,11 +24,11 @@ export default function PeerCallPage() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1F2937] flex flex-col font-display">
+    <div className="fixed inset-0 z-50 bg-[var(--text-primary)] flex flex-col font-display">
       {/* Top Bar */}
       <div className="absolute top-0 w-full p-6 flex justify-between items-start z-10 bg-gradient-to-b from-black/50 to-transparent">
         <div>
-          <h1 className="text-white text-xl font-semibold tracking-tight">Peer Session (Anonymous)</h1>
+          <h1 className="text-[var(--primary-foreground)] text-xl font-semibold tracking-tight">Peer Session (Anonymous)</h1>
           <p className="text-gray-300 font-medium text-sm mt-1">
             {formatTime(callDuration)} • End-to-end encrypted
           </p>
@@ -36,7 +36,7 @@ export default function PeerCallPage() {
         <Button 
           variant="destructive" 
           size="sm" 
-          className="gap-2 bg-red-500/90 hover:bg-red-600 text-white border border-red-400/50 backdrop-blur-md"
+          className="gap-2 bg-red-500/90 hover:bg-red-600 text-[var(--primary-foreground)] border border-red-400/50 backdrop-blur-md"
           onClick={() => {
             // In a real app, this would trigger an immediate SOS workflow
             alert("SOS Alert Triggered. Disconnecting and notifying support team.");
@@ -63,7 +63,7 @@ export default function PeerCallPage() {
           </div>
           
           <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-            <p className="text-white text-sm font-medium">Peer (Camera Off)</p>
+            <p className="text-[var(--primary-foreground)] text-sm font-medium">Peer (Camera Off)</p>
           </div>
         </div>
 
@@ -82,7 +82,7 @@ export default function PeerCallPage() {
           )}
 
           <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
-            <p className="text-white text-sm font-medium">You</p>
+            <p className="text-[var(--primary-foreground)] text-sm font-medium">You</p>
             {isMuted && <MicOff className="w-3.5 h-3.5 text-red-400" />}
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function PeerCallPage() {
           size="icon"
           onClick={() => setIsVideoOn(!isVideoOn)}
           className={`w-14 h-14 rounded-full border border-gray-600 transition-all ${
-            isVideoOn ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
+            isVideoOn ? "bg-gray-700 text-[var(--primary-foreground)] hover:bg-gray-600" : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
           }`}
         >
           {isVideoOn ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />}
@@ -107,7 +107,7 @@ export default function PeerCallPage() {
           size="icon"
           onClick={() => setIsMuted(!isMuted)}
           className={`w-14 h-14 rounded-full border border-gray-600 transition-all ${
-            !isMuted ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
+            !isMuted ? "bg-gray-700 text-[var(--primary-foreground)] hover:bg-gray-600" : "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
           }`}
         >
           {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}

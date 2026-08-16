@@ -4,7 +4,7 @@ import { MobileNav } from "@/components/navigation/mobile-nav";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[var(--background-soft)]">
+    <div className="flex min-h-screen bg-[var(--background-secondary)]">
       {/* Desktop sidebar */}
       <div className="hidden md:flex flex-shrink-0">
         <Sidebar />

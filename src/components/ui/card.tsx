@@ -3,15 +3,17 @@ import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "green" | "soft" }
+  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "green" | "soft" | "warm" | "ai" }
 >(({ className, variant = "default", ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-2xl transition-all duration-200",
-      variant === "default" && "bg-white border border-[#E4EDE7] shadow-[0_1px_6px_rgba(0,0,0,0.04),_0_4px_20px_rgba(30,80,60,0.05)]",
-      variant === "green"  && "bg-[#EFF8F1] border border-[#DDF2E3]",
-      variant === "soft"   && "bg-[#F7FBF8] border border-[#EEF3EF]",
+      "rounded-[20px] transition-all duration-200 shadow-card border border-[var(--border-subtle)]",
+      variant === "default" && "bg-[var(--surface)]",
+      variant === "green"  && "bg-[var(--surface-secondary)]",
+      variant === "soft"   && "bg-[var(--surface-secondary)]",
+      variant === "warm"   && "bg-[var(--surface-community)]",
+      variant === "ai"     && "bg-[var(--surface-ai)]",
       className
     )}
     {...props}
@@ -38,7 +40,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "font-display text-xl font-semibold leading-none tracking-tight text-[#1F2937]",
+      "font-display text-xl font-semibold leading-none tracking-tight text-[var(--text-primary)]",
       className
     )}
     {...props}
@@ -52,7 +54,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-[#667085] leading-relaxed", className)}
+    className={cn("text-sm text-[var(--text-secondary)] leading-relaxed", className)}
     {...props}
   />
 ))

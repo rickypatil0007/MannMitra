@@ -90,10 +90,10 @@ export default function ReflectionPage() {
                   onClick={() => { setReading(r); setView("reading"); }}>
                   <CardContent className="p-5 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-semibold text-[#98A2B3] uppercase tracking-wider mb-1">{r.date}</p>
-                      <p className="text-sm text-[#1F2937]">{r.preview}</p>
+                      <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">{r.date}</p>
+                      <p className="text-sm text-[var(--text-primary)]">{r.preview}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[#98A2B3] flex-shrink-0" />
+                    <ChevronRight className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" />
                   </CardContent>
                 </Card>
               ))}
@@ -104,21 +104,21 @@ export default function ReflectionPage() {
 
       {view === "reading" && reading && (
         <>
-          <button onClick={() => setView("list")} className="flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
+          <button onClick={() => setView("list")} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
           <div className="space-y-6">
             <div>
-              <p className="text-xs font-semibold text-[#98A2B3] uppercase tracking-wider mb-1">{reading.date}</p>
-              <h2 className="text-2xl font-display font-semibold text-[#1F2937]">Reflection</h2>
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">{reading.date}</p>
+              <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)]">Reflection</h2>
             </div>
             {prompts.map((p) => (
               <div key={p.id} className="space-y-2">
-                <p className="text-sm font-semibold text-[#475467]">{p.label}</p>
+                <p className="text-sm font-semibold text-[var(--text-secondary)]">{p.label}</p>
                 <Card variant="soft">
                   <CardContent className="p-4">
-                    <p className="text-sm text-[#1F2937] leading-relaxed whitespace-pre-wrap">
-                      {reading.answers[p.id] || <span className="text-[#98A2B3] italic">Not answered</span>}
+                    <p className="text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-wrap">
+                      {reading.answers[p.id] || <span className="text-[var(--text-muted)] italic">Not answered</span>}
                     </p>
                   </CardContent>
                 </Card>
@@ -130,14 +130,14 @@ export default function ReflectionPage() {
 
       {view === "new" && !saved && (
         <>
-          <button onClick={resetNew} className="flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
+          <button onClick={resetNew} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
             <ArrowLeft className="w-4 h-4" /> Cancel
           </button>
 
           {/* Progress dots */}
           <div className="flex items-center gap-2">
             {prompts.map((_, i) => (
-              <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= step ? "bg-[#2E7D5B]" : "bg-[#EEF3EF]"}`} />
+              <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= step ? "bg-[var(--primary)]" : "bg-[var(--border-subtle)]"}`} />
             ))}
           </div>
 
@@ -151,10 +151,10 @@ export default function ReflectionPage() {
               className="space-y-4"
             >
               <div>
-                <p className="text-xs font-semibold text-[#4FA477] uppercase tracking-wider mb-2">
+                <p className="text-xs font-semibold text-[var(--primary-soft)] uppercase tracking-wider mb-2">
                   Question {step + 1} of {prompts.length}
                 </p>
-                <h2 className="text-2xl font-display font-semibold text-[#1F2937] leading-tight">
+                <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)] leading-tight">
                   {currentPrompt.label}
                 </h2>
               </div>
@@ -166,7 +166,7 @@ export default function ReflectionPage() {
                 placeholder={currentPrompt.placeholder}
                 rows={6}
                 autoFocus
-                className="w-full resize-none rounded-xl border border-[#D7E2DA] bg-white px-4 py-3 text-sm text-[#1F2937] placeholder:text-[#98A2B3] focus:outline-none focus:border-[#2E7D5B] focus:ring-2 focus:ring-[rgba(46,125,91,0.15)] transition-all leading-relaxed"
+                className="w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[rgba(46,125,91,0.15)] transition-all leading-relaxed"
               />
 
               <div className="flex gap-3 justify-between">
@@ -188,11 +188,11 @@ export default function ReflectionPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center py-16 space-y-5"
         >
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#EFF8F1] flex items-center justify-center">
-            <CheckCircle className="w-8 h-8 text-[#2E7D5B]" />
+          <div className="w-16 h-16 mx-auto rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
+            <CheckCircle className="w-8 h-8 text-[var(--primary)]" />
           </div>
-          <h2 className="text-2xl font-display font-semibold text-[#1F5D43]">Reflection saved.</h2>
-          <p className="text-[#667085] max-w-xs mx-auto leading-relaxed text-sm">
+          <h2 className="text-2xl font-display font-semibold text-[var(--primary-hover)]">Reflection saved.</h2>
+          <p className="text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed text-sm">
             Taking time to reflect is a powerful act of self-care. It gets easier with practice. 🌿
           </p>
           <Button variant="secondary" onClick={resetNew}>View all reflections</Button>

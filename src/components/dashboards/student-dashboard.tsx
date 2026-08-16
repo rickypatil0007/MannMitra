@@ -39,16 +39,16 @@ export function StudentDashboard() {
       className="space-y-8"
     >
       {/* ─── Top Section: Greeting & Quick Mitra Access ─── */}
-      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-soft)] pb-6">
+      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-6">
         <div>
           <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">
             {greeting}, Alex.
           </h1>
-          <p className="text-[var(--text-supporting)] mt-1 text-sm">
+          <p className="text-[var(--text-muted)] mt-1 text-sm">
             You have 2 pending tasks today. Your stress levels are stable.
           </p>
         </div>
-        <Button className="gap-2 shrink-0 bg-[var(--green-primary)] hover:bg-[var(--green-dark)] text-white shadow-soft rounded-xl" asChild>
+        <Button className="gap-2 shrink-0 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] shadow-soft rounded-xl" asChild>
           <Link href="/mitra">
             <MessageSquareHeart className="w-4 h-4" />
             Talk to Mitra
@@ -62,24 +62,24 @@ export function StudentDashboard() {
         <div className="lg:col-span-8 space-y-8">
           
           {/* Today's Focus Priority */}
-          <div className="rounded-2xl bg-[var(--background-green)] border border-[var(--border)] p-6 shadow-soft relative overflow-hidden">
+          <div className="rounded-2xl bg-[var(--surface-secondary)] border border-[var(--border)] p-6 shadow-soft relative overflow-hidden">
             {/* Soft decorative glow */}
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[var(--green-light)] rounded-full blur-3xl opacity-50" />
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[var(--primary-soft)] rounded-full blur-3xl opacity-50" />
             
             <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-[var(--green-medium)]" />
-                  <p className="text-xs font-semibold text-[var(--green-primary)] uppercase tracking-wider">Top Priority</p>
+                  <Sparkles className="w-4 h-4 text-[var(--primary-soft)]" />
+                  <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-wider">Top Priority</p>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--green-dark)] leading-snug">
+                <h3 className="text-xl font-semibold text-[var(--primary-hover)] leading-snug">
                   Midterm Exam in CS301 — in 4 days
                 </h3>
-                <p className="text-sm text-[var(--green-medium)] mt-1">
+                <p className="text-sm text-[var(--primary-soft)] mt-1">
                   Mitra suggests blocking out 2 hours today for review.
                 </p>
               </div>
-              <Button variant="secondary" size="sm" className="shrink-0 bg-white hover:bg-[var(--background-soft)] text-[var(--green-primary)] border-[var(--border)]" asChild>
+              <Button variant="secondary" size="sm" className="shrink-0 bg-[var(--surface)] hover:bg-[var(--background-secondary)] text-[var(--primary)] border-[var(--border)]" asChild>
                 <Link href="/planner">Plan Study Time <ArrowRight className="w-3.5 h-3.5 ml-1" /></Link>
               </Button>
             </div>
@@ -89,7 +89,7 @@ export function StudentDashboard() {
           <section className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-display font-semibold text-[var(--text-primary)]">Today&apos;s Checklist</h2>
-              <Link href="/planner" className="text-sm font-medium text-[var(--green-primary)] hover:text-[var(--green-dark)] transition-colors flex items-center gap-1">
+              <Link href="/planner" className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors flex items-center gap-1">
                 Open Planner <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -100,21 +100,21 @@ export function StudentDashboard() {
                   key={t.id} 
                   className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${
                     t.done 
-                    ? "bg-[var(--background-soft)] border-transparent opacity-60" 
-                    : "bg-white border-[var(--border)] hover:border-[var(--green-light)] hover:shadow-soft cursor-pointer"
+                    ? "bg-[var(--background-secondary)] border-transparent opacity-60" 
+                    : "bg-[var(--surface)] border-[var(--border)] hover:border-[var(--primary-soft)] hover:shadow-soft cursor-pointer"
                   }`}
                 >
-                  <button className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${t.done ? "border-[var(--success)] bg-[var(--success)]" : "border-[var(--border)] hover:border-[var(--green-medium)]"}`}>
-                    {t.done && <CheckCircle2 className="w-4 h-4 text-white" />}
+                  <button className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${t.done ? "border-[var(--success)] bg-[var(--success)]" : "border-[var(--border)] hover:border-[var(--primary-soft)]"}`}>
+                    {t.done && <CheckCircle2 className="w-4 h-4 text-[var(--primary-foreground)]" />}
                   </button>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium ${t.done ? "line-through text-[var(--text-muted)]" : "text-[var(--text-primary)]"}`}>
                       {t.title}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0 bg-[var(--background-soft)] px-2.5 py-1 rounded-md">
-                    <Clock className="w-3.5 h-3.5 text-[var(--text-supporting)]" />
-                    <span className="text-xs font-medium text-[var(--text-supporting)]">{t.time}</span>
+                  <div className="flex items-center gap-1.5 shrink-0 bg-[var(--background-secondary)] px-2.5 py-1 rounded-md">
+                    <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                    <span className="text-xs font-medium text-[var(--text-muted)]">{t.time}</span>
                   </div>
                 </div>
               ))}
@@ -122,14 +122,14 @@ export function StudentDashboard() {
           </section>
 
           {/* Mitra Suggestions / Recommendations */}
-          <section className="space-y-4 pt-4 border-t border-[var(--border-soft)]">
+          <section className="space-y-4 pt-4 border-t border-[var(--border-subtle)]">
             <h2 className="text-lg font-display font-semibold text-[var(--text-primary)]">Recommended for You</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {recommendations.map((rec) => (
                 <Link key={rec.id} href={`/${rec.type}`} className="block group">
-                  <div className="h-full p-4 rounded-2xl border border-[var(--border)] bg-white hover:border-[var(--green-medium)] hover:shadow-soft transition-all">
-                    <div className="w-8 h-8 rounded-full bg-[var(--background-green)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                      <rec.icon className="w-4 h-4 text-[var(--green-primary)]" />
+                  <div className="h-full p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--primary-soft)] hover:shadow-soft transition-all">
+                    <div className="w-8 h-8 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                      <rec.icon className="w-4 h-4 text-[var(--primary)]" />
                     </div>
                     <p className="text-sm font-medium text-[var(--text-primary)] leading-snug">{rec.title}</p>
                   </div>
@@ -144,18 +144,18 @@ export function StudentDashboard() {
         <div className="lg:col-span-4 space-y-6">
           
           {/* Quick Check-in Card */}
-          <Card className="border-[var(--border)] shadow-sm bg-white overflow-hidden">
-            <CardHeader className="pb-3 bg-[var(--background-soft)] border-b border-[var(--border-soft)]">
+          <Card className="border-[var(--border)] shadow-sm bg-[var(--surface)] overflow-hidden">
+            <CardHeader className="pb-3 bg-[var(--background-secondary)] border-b border-[var(--border-subtle)]">
               <CardTitle className="text-base flex items-center gap-2 text-[var(--text-primary)]">
-                <Activity className="w-4 h-4 text-[var(--green-primary)]" />
+                <Activity className="w-4 h-4 text-[var(--primary)]" />
                 Daily Check-in
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-5 space-y-4">
-              <p className="text-sm text-[var(--text-supporting)]">
+              <p className="text-sm text-[var(--text-muted)]">
                 You haven't logged your stress levels today. Taking 1 minute to reflect can improve your focus.
               </p>
-              <Button className="w-full bg-[var(--background-green)] hover:bg-[var(--green-light)] text-[var(--green-dark)] font-medium" variant="secondary" asChild>
+              <Button className="w-full bg-[var(--surface-secondary)] hover:bg-[var(--primary-soft)] text-[var(--primary-hover)] font-medium" variant="secondary" asChild>
                 <Link href="/mood">Log Stress Level</Link>
               </Button>
             </CardContent>
@@ -165,7 +165,7 @@ export function StudentDashboard() {
           <Card className="border-[var(--border)] shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2 text-[var(--text-primary)]">
-                <TrendingDown className="w-4 h-4 text-[var(--green-medium)]" />
+                <TrendingDown className="w-4 h-4 text-[var(--primary-soft)]" />
                 Stress Trend
               </CardTitle>
             </CardHeader>
@@ -175,11 +175,11 @@ export function StudentDashboard() {
                   <span className="text-[var(--text-secondary)]">Current level</span>
                   <span className="text-[var(--success)] font-semibold">Low</span>
                 </div>
-                <div className="w-full bg-[var(--border-soft)] h-2 rounded-full overflow-hidden">
-                  <div className="bg-[var(--green-medium)] w-1/4 h-full rounded-full" />
+                <div className="w-full bg-[var(--border-subtle)] h-2 rounded-full overflow-hidden">
+                  <div className="bg-[var(--primary-soft)] w-1/4 h-full rounded-full" />
                 </div>
               </div>
-              <p className="text-xs text-[var(--text-supporting)] leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 Your stress levels have been steadily dropping since the weekend. Great job maintaining balance.
               </p>
             </CardContent>
@@ -194,13 +194,13 @@ export function StudentDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="pl-3 border-l-2 border-[var(--green-primary)] relative">
-                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--green-primary)] ring-4 ring-white" />
+              <div className="pl-3 border-l-2 border-[var(--primary)] relative">
+                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--primary)] ring-4 ring-[var(--surface)]" />
                 <p className="text-sm font-semibold text-[var(--text-primary)]">Midterm — CS301</p>
                 <p className="text-xs text-[var(--text-muted)] mt-0.5">Thursday, 10:00 AM</p>
               </div>
               <div className="pl-3 border-l-2 border-[var(--border)] relative">
-                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--border)] ring-4 ring-white" />
+                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--border)] ring-4 ring-[var(--surface)]" />
                 <p className="text-sm font-medium text-[var(--text-secondary)]">Therapy Appointment</p>
                 <p className="text-xs text-[var(--text-muted)] mt-0.5">Friday, 2:00 PM</p>
               </div>

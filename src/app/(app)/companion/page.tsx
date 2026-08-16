@@ -106,7 +106,7 @@ export default function CompanionPage() {
           type="submit" 
           size="icon" 
           disabled={!input.trim()}
-          className="absolute right-2 top-2 rounded-full h-12 w-12 bg-primary hover:bg-primary/90 text-white shadow-sm transition-transform active:scale-95 disabled:opacity-40"
+          className="absolute right-2 top-2 rounded-full h-12 w-12 bg-primary hover:bg-primary/90 text-[var(--primary-foreground)] shadow-sm transition-transform active:scale-95 disabled:opacity-40"
         >
           <Send className="w-5 h-5" />
           <span className="sr-only">Send message</span>

@@ -25,10 +25,10 @@ export function CounsellorDashboard() {
           title="Counsellor Portal" 
           description="Manage your caseload, review new requests, and update your status."
         />
-        <div className="flex items-center gap-2 bg-white border border-[var(--border)] p-1 rounded-lg">
-          <button onClick={() => setStatus("available")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "available" ? "bg-[var(--success)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--background-soft)]"}`}>Available</button>
-          <button onClick={() => setStatus("busy")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "busy" ? "bg-[#D4A45B] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--background-soft)]"}`}>Busy</button>
-          <button onClick={() => setStatus("offline")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "offline" ? "bg-[var(--text-muted)] text-white" : "text-[var(--text-secondary)] hover:bg-[var(--background-soft)]"}`}>Offline</button>
+        <div className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--border)] p-1 rounded-lg">
+          <button onClick={() => setStatus("available")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "available" ? "bg-[var(--success)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Available</button>
+          <button onClick={() => setStatus("busy")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "busy" ? "bg-[var(--warning)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Busy</button>
+          <button onClick={() => setStatus("offline")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "offline" ? "bg-[var(--text-muted)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Offline</button>
         </div>
       </div>
 
@@ -41,26 +41,26 @@ export function CounsellorDashboard() {
                 <p className="text-sm font-semibold text-[var(--text-secondary)]">Active Caseload</p>
                 <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">14</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[var(--background-green)] flex items-center justify-center">
-                <Users className="w-5 h-5 text-[var(--green-primary)]" />
+              <div className="w-10 h-10 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
+                <Users className="w-5 h-5 text-[var(--primary)]" />
               </div>
             </div>
             <p className="text-xs text-[var(--text-muted)] mt-4">2 slots remaining</p>
           </CardContent>
         </Card>
 
-        <Card className="border-[var(--border)] shadow-soft bg-white">
+        <Card className="border-[var(--border)] shadow-soft bg-[var(--surface)]">
           <CardContent className="p-5">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-semibold text-[var(--text-secondary)]">Pending Requests</p>
                 <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">3</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[#FFF2F2] flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[#C94A4A]" />
+              <div className="w-10 h-10 rounded-full bg-[var(--danger-soft)] flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[var(--danger)]" />
               </div>
             </div>
-            <p className="text-xs text-[#C94A4A] font-semibold mt-4">Action required</p>
+            <p className="text-xs text-[var(--danger)] font-semibold mt-4">Action required</p>
           </CardContent>
         </Card>
         
@@ -71,7 +71,7 @@ export function CounsellorDashboard() {
                 <p className="text-sm font-semibold text-[var(--text-secondary)]">High Priority Alerts</p>
                 <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">0</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-[var(--background-soft)] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-[var(--background-secondary)] flex items-center justify-center">
                 <ShieldAlert className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
             </div>
@@ -87,20 +87,20 @@ export function CounsellorDashboard() {
         {/* Main Panel: Pending Requests */}
         <div className="md:col-span-2 space-y-6">
           <Card className="border-[var(--border)] shadow-soft">
-            <CardHeader className="pb-3 border-b border-[var(--border-soft)]">
+            <CardHeader className="pb-3 border-b border-[var(--border-subtle)]">
               <CardTitle className="text-lg flex items-center justify-between">
                 <span>Pending Intake Requests</span>
                 <Badge variant="warning">3 New</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y divide-[var(--border-soft)]">
+              <div className="divide-y divide-[var(--border-subtle)]">
                 {[
                   { id: "req-1", reason: "Severe academic anxiety", time: "2 hours ago", priority: "Medium" },
                   { id: "req-2", reason: "Feeling isolated and lonely", time: "5 hours ago", priority: "Low" },
                   { id: "req-3", reason: "Panic attacks before exams", time: "1 day ago", priority: "High" }
                 ].map((req) => (
-                  <div key={req.id} className="p-5 hover:bg-[var(--background-soft)] transition-colors">
+                  <div key={req.id} className="p-5 hover:bg-[var(--background-secondary)] transition-colors">
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
@@ -114,7 +114,7 @@ export function CounsellorDashboard() {
                       </div>
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" className="text-[var(--text-secondary)] border-[var(--border)]">Review</Button>
-                        <Button size="sm" className="bg-[var(--green-primary)] text-white hover:bg-[var(--green-dark)]">Accept</Button>
+                        <Button size="sm" className="bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]">Accept</Button>
                       </div>
                     </div>
                   </div>
@@ -126,28 +126,28 @@ export function CounsellorDashboard() {
 
         {/* Right Panel: Security & Case Notes */}
         <div className="space-y-6">
-          <Card className="bg-[var(--background-green)] border-[var(--green-light)]">
+          <Card className="bg-[var(--surface-secondary)] border-[var(--primary-soft)]">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
-                  <Lock className="w-5 h-5 text-[var(--green-primary)]" />
+                <div className="w-10 h-10 rounded-full bg-[var(--surface)] flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-[var(--primary)]" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[var(--green-dark)]">Private Case Notes</h3>
-                  <p className="text-xs text-[var(--green-primary)]">HIPAA & FERPA Compliant</p>
+                  <h3 className="font-semibold text-[var(--primary-hover)]">Private Case Notes</h3>
+                  <p className="text-xs text-[var(--primary)]">HIPAA & FERPA Compliant</p>
                 </div>
               </div>
-              <p className="text-sm text-[var(--green-dark)] leading-relaxed mb-4">
+              <p className="text-sm text-[var(--primary-hover)] leading-relaxed mb-4">
                 Select an active student from your caseload to view or add encrypted, private notes. These are never visible to the institution.
               </p>
-              <Button variant="outline" className="w-full bg-white text-[var(--green-primary)] border-[var(--green-light)] hover:bg-[var(--background-soft)]">
+              <Button variant="outline" className="w-full bg-[var(--surface)] text-[var(--primary)] border-[var(--primary-soft)] hover:bg-[var(--background-secondary)]">
                 Open Note Editor
               </Button>
             </CardContent>
           </Card>
           
           <Card className="border-[var(--border)] shadow-soft">
-            <CardHeader className="pb-3 border-b border-[var(--border-soft)]">
+            <CardHeader className="pb-3 border-b border-[var(--border-subtle)]">
               <CardTitle className="text-base flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-[var(--text-primary)]" />
                 Recent Messages

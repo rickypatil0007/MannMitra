@@ -22,13 +22,13 @@ export function FacultySidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col w-60 border-r border-[#E4EDE7] bg-white min-h-screen" aria-label="Faculty navigation">
+    <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Faculty navigation">
       {/* Logo */}
-      <div className="px-5 h-14 flex items-center gap-2.5 border-b border-[#EEF3EF] shrink-0 bg-[#F7FBF8]">
-        <div className="w-7 h-7 rounded-lg bg-[#2E7D5B] flex items-center justify-center text-white text-xs font-bold font-display flex-shrink-0" aria-hidden>
+      <div className="px-5 h-14 flex items-center gap-2.5 border-b border-[var(--border-subtle)] shrink-0 bg-[var(--background-secondary)]">
+        <div className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-[var(--primary-foreground)] text-xs font-bold font-display flex-shrink-0" aria-hidden>
           F
         </div>
-        <span className="font-display font-semibold text-base tracking-tight text-[#1F2937]">Faculty Portal</span>
+        <span className="font-display font-semibold text-base tracking-tight text-[var(--text-primary)]">Faculty Portal</span>
       </div>
 
       {/* Nav links */}
@@ -43,13 +43,13 @@ export function FacultySidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                 isActive
-                  ? "bg-[#EFF8F1] text-[#1F5D43]"
-                  : "text-[#667085] hover:bg-[#F7FBF8] hover:text-[#1F2937]"
+                  ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
               )}
             >
               <item.icon
                 className={cn("w-4 h-4 flex-shrink-0",
-                  isActive ? "text-[#2E7D5B]" : "text-[#667085]"
+                  isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]"
                 )}
                 strokeWidth={isActive ? 2.5 : 2}
               />
@@ -60,8 +60,8 @@ export function FacultySidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-2.5 pb-3 border-t border-[#EEF3EF] pt-2.5 space-y-0.5">
-        <div className="px-3 py-2.5 mb-2 text-xs font-medium text-[#667085] flex items-center gap-2">
+      <div className="px-2.5 pb-3 border-t border-[var(--border-subtle)] pt-2.5 space-y-0.5">
+        <div className="px-3 py-2.5 mb-2 text-xs font-medium text-[var(--text-secondary)] flex items-center gap-2">
           <Building2 className="w-3.5 h-3.5" /> CS Department
         </div>
         <Link
@@ -69,8 +69,8 @@ export function FacultySidebar() {
           className={cn(
             "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
             pathname === "/faculty/settings"
-              ? "bg-[#EFF8F1] text-[#1F5D43]"
-              : "text-[#667085] hover:bg-[#F7FBF8] hover:text-[#1F2937]"
+              ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
+              : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
           )}
         >
           <Settings className="w-4 h-4" strokeWidth={2} />
@@ -78,7 +78,7 @@ export function FacultySidebar() {
         </Link>
         <Link
           href="/auth/login"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#667085] hover:bg-[#F7FBF8] hover:text-[#1F2937] transition-all duration-150"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)] transition-all duration-150"
         >
           <LogOut className="w-4 h-4" strokeWidth={2} />
           Log out

@@ -124,7 +124,7 @@ export default function NotesPage() {
         {view === "list" ? (
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#98A2B3]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
               <Input 
                 placeholder="Search notes..." 
                 className="pl-9"
@@ -142,7 +142,7 @@ export default function NotesPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {filtered.map((note) => (
-                  <Card key={note.id} className="cursor-pointer hover:shadow-soft hover:border-[var(--green-light)] transition-all duration-200" onClick={() => openNote(note)}>
+                  <Card key={note.id} className="cursor-pointer hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200" onClick={() => openNote(note)}>
                     <CardContent className="p-5">
                       <h3 className="font-semibold text-[var(--text-primary)] truncate">{note.title}</h3>
                       <p className="text-sm text-[var(--text-secondary)] mt-1.5 line-clamp-2 leading-relaxed">{note.content}</p>
@@ -158,15 +158,15 @@ export default function NotesPage() {
           </motion.div>
         ) : (
           <motion.div key="edit" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[var(--border-soft)] pb-4">
-              <Button variant="ghost" size="sm" onClick={() => setView("list")} className="gap-2 text-[var(--text-supporting)] hover:text-[var(--text-primary)]">
+            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4">
+              <Button variant="ghost" size="sm" onClick={() => setView("list")} className="gap-2 text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-4 h-4" /> Close
               </Button>
               <div className="flex items-center gap-2">
                 <Button 
                   variant={isRecording ? "destructive" : "outline"} 
                   size="sm" 
-                  className={`gap-2 min-w-[140px] ${!isRecording ? "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--green-primary)]" : "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-red-200"}`} 
+                  className={`gap-2 min-w-[140px] ${!isRecording ? "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--primary)]" : "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-red-200"}`} 
                   onClick={toggleRecording}
                 >
                   {isRecording ? (
@@ -180,7 +180,7 @@ export default function NotesPage() {
                     </>
                   )}
                 </Button>
-                <Button size="sm" onClick={saveNote} className="gap-2 bg-[var(--green-primary)] text-white hover:bg-[var(--green-dark)]">
+                <Button size="sm" onClick={saveNote} className="gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]">
                   <Save className="w-4 h-4" /> Save Entry
                 </Button>
               </div>

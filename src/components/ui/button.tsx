@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "outline" | "danger"
+  variant?: "primary" | "secondary" | "ghost" | "outline" | "danger" | "destructive"
   size?: "default" | "sm" | "lg" | "icon"
   isLoading?: boolean
   asChild?: boolean
@@ -14,24 +14,26 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "default", isLoading, asChild = false, children, ...props }, ref) => {
 
     const baseStyles =
-      "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2E7D5B] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] cursor-pointer"
+      "inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(114,200,181,0.16)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] cursor-pointer"
 
     const variants: Record<string, string> = {
-      // Primary: Deep green bg, white text
+      // Primary
       primary:
-        "bg-[#2E7D5B] text-white hover:bg-[#1F5D43] shadow-sm",
-      // Secondary: Light green bg, deep green text
+        "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)] shadow-soft",
+      // Secondary
       secondary:
-        "bg-[#DDF2E3] text-[#1F5D43] hover:bg-[#CBE8D4]",
-      // Ghost: transparent, green text
+        "bg-[var(--surface-secondary)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:bg-[var(--primary-soft)]",
+      // Ghost
       ghost:
-        "bg-transparent text-[#2E7D5B] hover:bg-[#EFF8F1]",
-      // Outline: white bg, green border
+        "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]",
+      // Outline
       outline:
-        "border border-[#E4EDE7] bg-white text-[#1F2937] hover:bg-[#F7FBF8]",
-      // Danger: restrained red
+        "border border-[var(--border)] bg-transparent text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]",
+      // Danger / Destructive
       danger:
-        "bg-[#C94A4A] text-white hover:bg-[#b03b3b] shadow-sm",
+        "bg-[var(--danger)] text-[var(--primary-foreground)] hover:bg-[#D45A6A] shadow-soft",
+      destructive:
+        "bg-[var(--danger)] text-[var(--primary-foreground)] hover:bg-[#D45A6A] shadow-soft",
     }
 
     const sizes = {

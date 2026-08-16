@@ -29,7 +29,7 @@ export function Modal({ isOpen, onClose, title, description, children, className
         role="dialog"
         aria-modal="true"
         className={cn(
-          "relative z-50 w-full max-w-lg rounded-[24px] bg-white dark:bg-zinc-900 p-6 shadow-2xl overflow-hidden",
+          "relative z-50 w-full max-w-lg rounded-[24px] bg-[var(--surface)] p-6 shadow-2xl overflow-hidden",
           "animate-in fade-in zoom-in-95 duration-200",
           className
         )}

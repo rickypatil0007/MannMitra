@@ -15,7 +15,7 @@ export default function TrustedContactsPage() {
       transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-3xl"
     >
-      <Link href="/support" className="inline-flex items-center gap-2 text-sm text-[#667085] hover:text-[#1F2937] transition-colors">
+      <Link href="/support" className="inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Support
       </Link>
 
@@ -29,9 +29,9 @@ export default function TrustedContactsPage() {
         }
       />
 
-      <div className="bg-[#F7FBF8] border border-[#DDF2E3] rounded-2xl p-4 flex gap-3 items-start">
-        <Shield className="w-5 h-5 text-[#2E7D5B] shrink-0 mt-0.5" />
-        <div className="text-sm text-[#1F5D43]">
+      <div className="bg-[var(--background-secondary)] border border-[var(--primary-soft)] rounded-2xl p-4 flex gap-3 items-start">
+        <Shield className="w-5 h-5 text-[var(--primary)] shrink-0 mt-0.5" />
+        <div className="text-sm text-[var(--primary-hover)]">
           <p className="font-semibold mb-1">How SOS works</p>
           <p className="opacity-90 leading-relaxed">When you trigger the silent SOS, these contacts will immediately receive an SMS with your location and a request to check on you. We will never contact them without your explicit SOS trigger.</p>
         </div>
@@ -50,19 +50,19 @@ export default function TrustedContactsPage() {
             )}
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${contact.primary ? 'bg-[#EFF8F1] text-[#2E7D5B]' : 'bg-[#F7FBF8] text-[#667085]'}`}>
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${contact.primary ? 'bg-[var(--surface-secondary)] text-[var(--primary)]' : 'bg-[var(--background-secondary)] text-[var(--text-secondary)]'}`}>
                   <User className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-[#1F2937]">{contact.name}</h3>
-                  <p className="text-sm text-[#667085]">{contact.relation}</p>
+                  <h3 className="font-semibold text-[var(--text-primary)]">{contact.name}</h3>
+                  <p className="text-sm text-[var(--text-secondary)]">{contact.relation}</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-[#EEF3EF] pt-4">
-                <div className="flex items-center gap-2 text-sm text-[#667085] font-mono">
+              <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
+                <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] font-mono">
                   <Phone className="w-4 h-4" /> {contact.phone}
                 </div>
-                <Button variant="ghost" size="sm" className="w-8 h-8 p-0 rounded-full text-[#98A2B3] group-hover:text-[#1F2937]">
+                <Button variant="ghost" size="sm" className="w-8 h-8 p-0 rounded-full text-[var(--text-muted)] group-hover:text-[var(--text-primary)]">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </div>
@@ -70,8 +70,8 @@ export default function TrustedContactsPage() {
           </Card>
         ))}
         
-        <button className="border-2 border-dashed border-[#E4EDE7] rounded-xl flex flex-col items-center justify-center p-8 text-[#98A2B3] hover:text-[#2E7D5B] hover:border-[#DDF2E3] hover:bg-[#F7FBF8] transition-all group">
-          <div className="w-12 h-12 rounded-full bg-[#F7FBF8] group-hover:bg-[#EFF8F1] flex items-center justify-center mb-3 transition-colors">
+        <button className="border-2 border-dashed border-[var(--border)] rounded-xl flex flex-col items-center justify-center p-8 text-[var(--text-muted)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)] hover:bg-[var(--background-secondary)] transition-all group">
+          <div className="w-12 h-12 rounded-full bg-[var(--background-secondary)] group-hover:bg-[var(--surface-secondary)] flex items-center justify-center mb-3 transition-colors">
             <Plus className="w-6 h-6" />
           </div>
           <p className="font-medium">Add another contact</p>

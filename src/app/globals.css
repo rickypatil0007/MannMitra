@@ -4,30 +4,30 @@
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-epilogue), ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: var(--background);
-  --color-background-soft: var(--background-soft);
-  --color-background-green: var(--background-green);
+  --color-background: var(--background-primary);
+  --color-background-soft: var(--background-secondary);
+  --color-background-green: var(--surface-secondary);
 
   --color-foreground: var(--foreground);
 
-  --color-primary: var(--green-primary);
+  --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
-  --color-secondary: var(--background-soft);
+  --color-secondary: var(--background-secondary);
   --color-secondary-foreground: var(--text-primary);
 
-  --color-muted: var(--background-green);
+  --color-muted: var(--surface-secondary);
   --color-muted-foreground: var(--text-secondary);
 
-  --color-accent: var(--green-light);
-  --color-accent-foreground: var(--green-dark);
+  --color-accent: var(--border-hover);
+  --color-accent-foreground: var(--primary-hover);
 
   --color-destructive: var(--danger);
-  --color-destructive-foreground: #ffffff;
+  --color-destructive-foreground: #FFFFFF;
 
   --color-border: var(--border);
-  --color-input: var(--background);
-  --color-ring: var(--green-primary);
+  --color-input: var(--background-primary);
+  --color-ring: var(--primary);
 
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 2px);
@@ -38,42 +38,57 @@
   --radius-full: 9999px;
 }
 
-/* ===== DESIGN TOKENS — Single Source of Truth ===== */
-:root {
-  /* Backgrounds */
-  --background: #FFFFFF;
-  --background-soft: #F7FBF8;
-  --background-green: #EFF8F1;
+@layer base {
+  :root {
+    /* Saraathi Theme - Bright, Clean, Peach/Orange Primary */
+    --background: #FFFFFF;
+    --foreground: #111827; /* Slate 900 */
+    
+    --card: #FFFFFF;
+    --card-foreground: #111827;
+    
+    --popover: #FFFFFF;
+    --popover-foreground: #111827;
+    
+    /* Saraathi Peach/Orange */
+    --primary: #F97316; /* Orange 500 */
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #EA580C; /* Orange 600 */
+    --primary-soft: #FFEDD5; /* Orange 100 */
+    
+    --secondary: #F1F5F9; /* Slate 100 */
+    --secondary-foreground: #0F172A;
+    
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B; /* Slate 500 */
+    
+    --accent: #F1F5F9;
+    --accent-foreground: #0F172A;
+    
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
 
-  /* Green Palette */
-  --green-primary: #2E7D5B;
-  --green-dark: #1F5D43;
-  --green-medium: #4FA477;
-  --green-light: #DDF2E3;
-  --green-very-light: #EFF8F1;
+    --border: #E2E8F0; /* Slate 200 */
+    --border-subtle: #F1F5F9; /* Slate 100 */
+    
+    --input: #E2E8F0;
+    --ring: #F97316;
 
-  /* Semantic Primary */
-  --primary-foreground: #FFFFFF;
+    /* Custom App Colors */
+    --surface: #FFFFFF;
+    --surface-secondary: #F8FAFC; /* Very light slate */
+    --surface-ai: #FAF5FF; /* Very pale purple */
+    --surface-community: #F0FDF4; /* Very pale green */
+    
+    --text-primary: #111827;
+    --text-secondary: #334155; /* Slate 700 */
+    --text-muted: #64748B; /* Slate 500 */
 
-  /* Text - Muted green-grays */
-  --foreground: #1A2621;
-  --text-primary: #1A2621;
-  --text-secondary: #4B5952;
-  --text-supporting: #6A7A71;
-  --text-muted: #95A69D;
-
-  /* Borders */
-  --border: #E4EDE7;
-  --border-soft: #EEF3EF;
-
-  /* State Colors */
-  --danger: #C94A4A;
-  --danger-soft: #FFF2F2;
-  --success: #2E7D5B;
-  --warning: #D97706;
-
-  /* Aliases */
-  --radius: 14px;
+    --accent-ai: #8B5CF6; /* Violet 500 */
+    --accent-ai-soft: #EDE9FE; /* Violet 100 */
+    
+    --radius: 16px;
+  }
 }
 
 /* ===== BASE STYLES ===== */
@@ -83,11 +98,13 @@
   }
 
   body {
-    background-color: var(--background);
+    background-color: var(--background-primary);
     color: var(--text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Smooth scrolling for the whole page */
+    scroll-behavior: smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -98,48 +115,59 @@
   }
 
   ::selection {
-    background-color: var(--green-light);
-    color: var(--green-dark);
+    background-color: var(--primary-soft);
+    color: var(--primary-hover);
   }
 
   a {
-    color: var(--green-primary);
+    color: var(--primary);
+    transition: color 0.2s ease;
+  }
+  
+  a:hover {
+    color: var(--primary-hover);
   }
 }
 
 /* ===== UTILITY CLASSES ===== */
 @layer utilities {
-  /* Subtle card glass */
+  /* Warm light glass */
   .glass {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(224, 122, 95, 0.15);
   }
 
   .glass-panel {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(28px);
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--border-subtle);
+  }
+  
+  .glass-nav {
+    background: rgba(250, 245, 240, 0.85);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(224, 122, 95, 0.10);
   }
 
-  /* Premium soft shadow */
+  /* Warm soft shadow */
   .shadow-soft {
-    box-shadow: 0 2px 16px rgba(30, 80, 60, 0.06), 0 1px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 10px 40px rgba(224, 122, 95, 0.08);
   }
 
   .shadow-card {
-    box-shadow: 0 1px 6px rgba(0,0,0,0.04), 0 4px 20px rgba(30, 80, 60, 0.05);
+    box-shadow: 0 10px 40px rgba(224, 122, 95, 0.08);
   }
 
   /* Text utilities */
-  .text-support { color: var(--text-supporting); }
+  .text-support { color: var(--text-muted); }
   .text-muted-custom { color: var(--text-muted); }
-  .text-green-dark { color: var(--green-dark); }
-  .text-green-primary { color: var(--green-primary); }
-  .text-green-medium { color: var(--green-medium); }
+  .text-green-dark { color: var(--primary-hover); }
+  .text-green-primary { color: var(--primary); }
+  .text-green-medium { color: var(--primary-soft); }
 
   /* Background utilities */
-  .bg-soft { background-color: var(--background-soft); }
-  .bg-green-section { background-color: var(--background-green); }
-  .bg-green-light-card { background-color: var(--green-light); }
+  .bg-soft { background-color: var(--background-secondary); }
+  .bg-green-section { background-color: var(--surface-secondary); }
+  .bg-green-light-card { background-color: var(--primary-soft); }
 }
