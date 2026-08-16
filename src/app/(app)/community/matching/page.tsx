@@ -133,7 +133,7 @@ export default function MatchingPage() {
               </div>
               <div className="flex flex-col gap-3 pt-4">
                 <Button className="w-full gap-2 bg-[var(--primary)] hover:bg-[#1E5C41] text-[var(--primary-foreground)]" asChild>
-                  <Link href={`/spaces/call?room=${roomId}`}>
+                  <Link href={`/spaces/call?room=${roomId ? encodeURIComponent(roomId) : ""}`}>
                     <Video className="w-4 h-4" /> Join Secure Video/Audio Call
                   </Link>
                 </Button>

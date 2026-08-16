@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, PhoneOff, Video, VideoOff, Brain } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Video, VideoOff, Brain, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useChat } from "ai/react";
 
 export default function MitraCallPage() {
   const router = useRouter();
@@ -12,18 +13,60 @@ export default function MitraCallPage() {
   const [isVideoOn, setIsVideoOn] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [mitraSpeaking, setMitraSpeaking] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { messages, append, isLoading } = useChat({
+    api: "/api/chat",
+    onFinish: async (message) => {
+      // When AI finishes generating text, call TTS
+      playTTS(message.content);
+    }
+  });
+
+  useEffect(() => {
+    // Initial greeting
+    if (messages.length === 0) {
+      const greeting = "Hi, I'm Mitra. I'm listening.";
+      append({ role: 'assistant', content: greeting });
+      playTTS(greeting);
+    }
+  }, [messages.length, append]);
+
+  const playTTS = async (text: string) => {
+    setMitraSpeaking(true);
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        if (audioRef.current) {
+          audioRef.current.src = url;
+          audioRef.current.play();
+        }
+      }
+    } catch (e) {
+      console.error("TTS failed", e);
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.onended = () => {
+        setMitraSpeaking(false);
+        // Start listening again here if continuous recognition is built
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCallDuration((prev) => prev + 1), 1000);
     return () => clearInterval(timer);
-  }, []);
-
-  // Simulate Mitra speaking intermittently
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMitraSpeaking((prev) => !prev);
-    }, 4000); // Toggles every 4 seconds
-    return () => clearInterval(interval);
   }, []);
 
   const formatTime = (seconds: number) => {
@@ -79,8 +122,36 @@ export default function MitraCallPage() {
 
         {/* User Status indicator */}
         <div className="absolute bottom-10 text-center w-full text-[#8BBF9F] text-sm animate-pulse">
-          {mitraSpeaking ? "Mitra is speaking..." : isMuted ? "Your microphone is muted" : "Listening..."}
+          {mitraSpeaking ? "Mitra is speaking..." : isLoading ? "Mitra is thinking..." : isMuted ? "Your microphone is muted" : "Listening..."}
         </div>
+        
+        <audio ref={audioRef} className="hidden" />
+      </div>
+
+      {/* Manual text input for testing Voice without SpeechRecognition implementation */}
+      <div className="w-full max-w-sm mb-4">
+         <form 
+           onSubmit={(e) => {
+             e.preventDefault();
+             if (transcript.trim() && !isLoading && !mitraSpeaking) {
+               append({ role: 'user', content: transcript });
+               setTranscript("");
+             }
+           }}
+           className="flex gap-2"
+         >
+           <input 
+             type="text" 
+             value={transcript}
+             onChange={(e) => setTranscript(e.target.value)}
+             placeholder="Type to speak (mocking voice input)" 
+             className="flex-1 bg-[#1E4531] border border-[#2a5c43] rounded-full px-4 text-sm text-[#A8D3B7] placeholder:text-[#A8D3B7]/50 focus:outline-none"
+             disabled={isLoading || mitraSpeaking}
+           />
+           <Button type="submit" size="icon" variant="secondary" disabled={isLoading || mitraSpeaking || !transcript.trim()} className="rounded-full bg-[#1E5C41] text-[#A8D3B7] hover:bg-[#2a5c43]">
+             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
+           </Button>
+         </form>
       </div>
 
       {/* Call Controls */}
