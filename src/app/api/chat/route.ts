@@ -31,48 +31,49 @@ CORE DIRECTIVES:
 
 When helping with tasks, focus on practical breakdown and emphasizing rest. Turn failure into actionable learning without blaming the student.`;
 
-  const result = await streamText({
-    model: nvidia('meta/llama-3.1-70b-instruct'), 
-    system: systemPrompt,
-    messages,
-    tools: {
-      createTask: tool({
-        description: 'Create a new task or assignment in the student planner.',
-        parameters: z.object({
-          title: z.string().describe('The name of the task or assignment.'),
-          deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
-          estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
-          priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional().describe('The priority of the task.'),
-        }),
-        execute: async ({ title, deadline, estimatedMin, priority }) => {
-          // For MVP, we insert it with a mock user ID if we don't have the session context in the route yet
-          // In production, we'd extract the uid from the request headers/cookies.
-          
-          try {
-            // Find a generic student user to attach the task to since this is a public API route right now
-            const defaultUser = await prisma.user.findFirst({ where: { role: 'STUDENT' } });
-            
-            if (defaultUser) {
-              await prisma.task.create({
-                data: {
-                  title,
-                  deadline: deadline ? new Date(deadline) : new Date(Date.now() + 86400000),
-                  estimatedMin,
-                  priority: priority || 'MEDIUM',
-                  userId: defaultUser.id,
-                }
-              });
-              return { success: true, message: `Task "${title}" created successfully.` };
+  try {
+    const result = await streamText({
+      model: nvidia('meta/llama-3.1-70b-instruct'), 
+      system: systemPrompt,
+      messages,
+      tools: {
+        createTask: tool({
+          description: 'Create a new task or assignment in the student planner.',
+          parameters: z.object({
+            title: z.string().describe('The name of the task or assignment.'),
+            deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
+            estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
+            priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional().describe('The priority of the task.'),
+          }),
+          execute: async ({ title, deadline, estimatedMin, priority }) => {
+            try {
+              const defaultUser = await prisma.user.findFirst({ where: { role: 'STUDENT' } });
+              
+              if (defaultUser) {
+                await prisma.task.create({
+                  data: {
+                    title,
+                    deadline: deadline ? new Date(deadline) : new Date(Date.now() + 86400000),
+                    estimatedMin,
+                    priority: priority || 'MEDIUM',
+                    userId: defaultUser.id,
+                  }
+                });
+                return { success: true, message: `Task "${title}" created successfully.` };
+              }
+              return { success: false, message: "No active user found to attach task to." };
+            } catch (e) {
+              console.error("Task creation failed:", e);
+              return { success: false, message: "Database error while creating task." };
             }
-            return { success: false, message: "No active user found to attach task to." };
-          } catch (e) {
-            console.error("Task creation failed:", e);
-            return { success: false, message: "Database error while creating task." };
-          }
-        },
-      }),
-    },
-  });
+          },
+        }),
+      },
+    });
 
-  return result.toDataStreamResponse();
+    return result.toDataStreamResponse();
+  } catch (error: any) {
+    console.error("Chat API Error:", error);
+    return Response.json({ success: false, message: error.message || String(error), stack: error.stack }, { status: 500 });
+  }
 }
