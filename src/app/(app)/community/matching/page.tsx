@@ -2,31 +2,49 @@
 
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { PageHeader, Badge } from "@/components/ui/shared";
-import { ArrowLeft, Users, Shield, MessagesSquare, CheckCircle2, Video } from "lucide-react";
+import { Shield, MessagesSquare, CheckCircle2, Video, ArrowLeft, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { findPeerMatch } from "@/actions/matching";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 
 const dimensions = [
   "Exam Stress", "Academic Pressure", "Homesickness", "Loneliness", "Project Stress", "Career Uncertainty"
 ];
 
 export default function MatchingPage() {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const [searching, setSearching] = useState(false);
   const [matched, setMatched] = useState(false);
+  const [roomId, setRoomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const toggle = (d: string) => {
     setSelected(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d]);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
+    if (!user) return alert("Please log in first");
+    
     setSearching(true);
-    setTimeout(() => {
-      setSearching(false);
+    const res = await findPeerMatch(user.uid, selected);
+    setSearching(false);
+    
+    if (res.success && res.match) {
       setMatched(true);
-    }, 2000);
+      setRoomId(res.match.roomId);
+    } else {
+      alert("Failed to find a match. Please try again.");
+    }
   };
 
   return (
@@ -115,7 +133,7 @@ export default function MatchingPage() {
               </div>
               <div className="flex flex-col gap-3 pt-4">
                 <Button className="w-full gap-2 bg-[var(--primary)] hover:bg-[#1E5C41] text-[var(--primary-foreground)]" asChild>
-                  <Link href="/spaces/call">
+                  <Link href={`/spaces/call?room=${roomId}`}>
                     <Video className="w-4 h-4" /> Join Secure Video/Audio Call
                   </Link>
                 </Button>

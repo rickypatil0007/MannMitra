@@ -339,3 +339,20 @@ model SeniorStory {
   authorId    String
   author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
+
+// ==========================================
+// SPACES
+// ==========================================
+
+model QuietSpace {
+  id          String   @id @default(uuid())
+  name        String
+  location    String
+  description String?
+  capacity    Int?
+  noiseLevel  String   @default("low") // low, medium
+  isAvailable Boolean  @default(true)
+  features    String[] // e.g. ["power outlets", "wifi", "natural light"]
+  createdAt   DateTime @default(now())
+}
+

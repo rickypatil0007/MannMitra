@@ -1,23 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { PageHeader, Badge } from "@/components/ui/shared";
-import { MapPin, VolumeX, Users, Navigation } from "lucide-react";
+import { PageHeader, Badge, EmptyState } from "@/components/ui/shared";
+import { MapPin, VolumeX, Users, Navigation, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getQuietSpaces } from "@/actions/spaces";
 
-const spaces = [
-  { id: 1, name: "Central Library - 3rd Floor Quiet Zone", distance: "2 mins", noise: "Silent", occupancy: "Low", type: "Study" },
-  { id: 2, name: "North Campus Wellness Room", distance: "5 mins", noise: "Silent", occupancy: "Medium", type: "Wellness" },
-  { id: 3, name: "Engineering Block Garden", distance: "8 mins", noise: "Low", occupancy: "High", type: "Outdoors" },
-  { id: 4, name: "Student Union Meditation Space", distance: "12 mins", noise: "Silent", occupancy: "Low", type: "Wellness" },
-];
+interface SpaceData {
+  id: string;
+  name: string;
+  location: string;
+  description: string | null;
+  capacity: number | null;
+  noiseLevel: string;
+  isAvailable: boolean;
+  features: string[];
+}
 
 export default function SpacesPage() {
   const [filter, setFilter] = useState("All");
+  const [spaces, setSpaces] = useState<SpaceData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = filter === "All" ? spaces : spaces.filter(s => s.type === filter);
+  const fetchSpaces = useCallback(async () => {
+    setLoading(true);
+    const res = await getQuietSpaces();
+    if (res.success && res.spaces) {
+      setSpaces(res.spaces as SpaceData[]);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchSpaces();
+  }, [fetchSpaces]);
+
+  // For the MVP, we map DB features/noise to the mock types so the UI looks identical
+  const getSpaceType = (space: SpaceData) => {
+    if (space.features.includes("wellness")) return "Wellness";
+    if (space.features.includes("outdoors")) return "Outdoors";
+    return "Study";
+  };
+
+  const filtered = filter === "All" ? spaces : spaces.filter(s => getSpaceType(s) === filter);
 
   return (
     <motion.div
@@ -48,36 +75,51 @@ export default function SpacesPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {filtered.map((space) => (
-          <Card key={space.id} className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200">
-            <CardContent className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <Badge variant={space.type === "Wellness" ? "green" : "muted"}>{space.type}</Badge>
-                <div className="flex items-center gap-1 text-sm text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md">
-                  <MapPin className="w-3.5 h-3.5" /> {space.distance}
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">{space.name}</h3>
-              
-              <div className="grid grid-cols-2 gap-4 border-t border-[var(--border-subtle)] pt-4 mb-5">
-                <div>
-                  <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><VolumeX className="w-3.5 h-3.5" /> Noise Level</p>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">{space.noise}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Occupancy</p>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">{space.occupancy}</p>
-                </div>
-              </div>
+      {loading ? (
+        <div className="flex justify-center py-10">
+          <Loader2 className="w-6 h-6 animate-spin text-[var(--primary)]" />
+        </div>
+      ) : filtered.length === 0 ? (
+        <EmptyState 
+          icon={<Navigation className="w-10 h-10" />}
+          title="No spaces found"
+          description={filter === "All" ? "No spaces have been added to the database yet." : `No spaces of type ${filter} found.`}
+        />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filtered.map((space) => {
+            const type = getSpaceType(space);
+            return (
+              <Card key={space.id} className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge variant={type === "Wellness" ? "green" : "muted"}>{type}</Badge>
+                    <div className="flex items-center gap-1 text-sm text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md">
+                      <MapPin className="w-3.5 h-3.5" /> {space.location}
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">{space.name}</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4 border-t border-[var(--border-subtle)] pt-4 mb-5">
+                    <div>
+                      <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><VolumeX className="w-3.5 h-3.5" /> Noise Level</p>
+                      <p className="text-sm font-medium text-[var(--text-primary)] capitalize">{space.noiseLevel}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Capacity</p>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{space.capacity ? `${space.capacity} max` : "N/A"}</p>
+                    </div>
+                  </div>
 
-              <Button className="w-full bg-[var(--background-secondary)] text-[var(--primary)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary-hover)] border border-[var(--primary-soft)] gap-2 shadow-none">
-                <Navigation className="w-4 h-4" /> Get Directions
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  <Button className="w-full bg-[var(--background-secondary)] text-[var(--primary)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary-hover)] border border-[var(--primary-soft)] gap-2 shadow-none">
+                    <Navigation className="w-4 h-4" /> Get Directions
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
 
     </motion.div>
   );

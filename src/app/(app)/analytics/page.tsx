@@ -1,24 +1,43 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/shared";
-import { TrendingDown, TrendingUp, CalendarDays, BrainCircuit, Activity } from "lucide-react";
+import { TrendingDown, TrendingUp, CalendarDays, BrainCircuit, Activity, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-// Mock data for charts
-const weeklyData = [
-  { day: "Mon", stress: 3, study: 4 },
-  { day: "Tue", stress: 2, study: 3 },
-  { day: "Wed", stress: 4, study: 6 },
-  { day: "Thu", stress: 5, study: 8 },
-  { day: "Fri", stress: 3, study: 2 },
-  { day: "Sat", stress: 2, study: 1 },
-  { day: "Sun", stress: 2, study: 3 },
-];
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { getWellnessAnalytics } from "@/actions/analytics";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export default function AnalyticsPage() {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [weeklyData, setWeeklyData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchAnalytics(currentUser.uid);
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchAnalytics = useCallback(async (uid: string) => {
+    setLoading(true);
+    const res = await getWellnessAnalytics(uid);
+    if (res.success && res.weeklyData) {
+      setWeeklyData(res.weeklyData);
+    }
+    setLoading(false);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -45,14 +64,16 @@ export default function AnalyticsPage() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-semibold text-[var(--primary-soft)]">Average Stress</p>
-                <p className="text-3xl font-display font-semibold text-[var(--primary-hover)] mt-1">2.8 <span className="text-sm text-[var(--primary-soft)] font-medium">/ 5</span></p>
+                <p className="text-3xl font-display font-semibold text-[var(--primary-hover)] mt-1">
+                  {loading ? "--" : (weeklyData.reduce((acc, curr) => acc + curr.stress, 0) / (weeklyData.filter(d => d.stress > 0).length || 1)).toFixed(1)} <span className="text-sm text-[var(--primary-soft)] font-medium">/ 5</span>
+                </p>
               </div>
               <div className="w-10 h-10 rounded-full bg-[var(--surface)]/60 flex items-center justify-center">
                 <Activity className="w-5 h-5 text-[var(--primary)]" />
               </div>
             </div>
             <p className="text-xs text-[var(--primary)] mt-4 flex items-center gap-1">
-              <TrendingDown className="w-3.5 h-3.5" /> -0.4 from last week
+              <TrendingDown className="w-3.5 h-3.5" /> Tracked over 7 days
             </p>
           </CardContent>
         </Card>
@@ -62,11 +83,13 @@ export default function AnalyticsPage() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-semibold text-[var(--text-secondary)]">Study Hours</p>
-                <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">27 <span className="text-sm text-[var(--text-muted)] font-medium">hrs</span></p>
+                <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">
+                  {loading ? "--" : weeklyData.reduce((acc, curr) => acc + curr.study, 0)} <span className="text-sm text-[var(--text-muted)] font-medium">hrs</span>
+                </p>
               </div>
             </div>
-            <p className="text-xs text-[var(--danger)] mt-4 flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" /> +5 hrs from last week
+            <p className="text-xs text-[var(--text-muted)] mt-4 flex items-center gap-1">
+              Based on scheduled tasks
             </p>
           </CardContent>
         </Card>
@@ -96,39 +119,28 @@ export default function AnalyticsPage() {
           <CardDescription>Notice how your stress levels correspond with heavy study days.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[250px] w-full flex items-end justify-between gap-2 pt-6">
-            {weeklyData.map((d) => (
-              <div key={d.day} className="flex-1 flex flex-col items-center gap-2 group">
-                <div className="w-full flex justify-center gap-1 h-[200px] items-end relative">
-                  {/* Study Bar */}
-                  <div 
-                    className="w-1/3 bg-[var(--border)] rounded-t-sm transition-all group-hover:opacity-80" 
-                    style={{ height: `${(d.study / 10) * 100}%` }}
-                    title={`Study: ${d.study} hrs`}
-                  />
-                  {/* Stress Bar */}
-                  <div 
-                    className={`w-1/3 rounded-t-sm transition-all group-hover:opacity-80 ${
-                      d.stress >= 4 ? 'bg-[var(--accent-warm)]' : 'bg-[var(--primary)]'
-                    }`}
-                    style={{ height: `${(d.stress / 5) * 100}%` }}
-                    title={`Stress: ${d.stress}/5`}
-                  />
-                </div>
-                <span className="text-xs font-medium text-[var(--text-secondary)]">{d.day}</span>
+          <div className="h-[300px] w-full pt-4">
+            {loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
               </div>
-            ))}
-          </div>
-          
-          <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-[var(--border-subtle)]">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[var(--border)]" />
-              <span className="text-xs text-[var(--text-secondary)]">Study Hours</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[var(--primary)]" />
-              <span className="text-xs text-[var(--text-secondary)]">Stress Level</span>
-            </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <YAxis yAxisId="left" orientation="left" stroke="#2E7D5B" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <YAxis yAxisId="right" orientation="right" stroke="#64748b" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
+                    cursor={{ fill: 'rgba(46,125,91,0.05)' }}
+                  />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }} />
+                  <Bar yAxisId="left" name="Stress Level (1-5)" dataKey="stress" fill="#2E7D5B" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                  <Bar yAxisId="right" name="Study Hours" dataKey="study" fill="#CBD5E1" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -142,7 +154,7 @@ export default function AnalyticsPage() {
           <div>
             <h4 className="text-sm font-semibold text-[var(--primary-hover)]">Mitra's Observation</h4>
             <p className="text-sm text-[var(--text-primary)] mt-1 leading-relaxed">
-              Your stress levels consistently spike on Thursdays, aligning with your longest study days. Consider moving some of your Thursday workload to Tuesday, which is currently your lightest day.
+              Based on your recent checks, your stress levels tend to rise on days with heavy task loads. Try to use the AI Planner to break tasks into smaller chunks and spread them evenly across the week.
             </p>
           </div>
         </CardContent>
