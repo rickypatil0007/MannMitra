@@ -126,6 +126,13 @@ export default function StudentLoginPage() {
           Register here
         </Link>
       </p>
+
+      {/* Demo Credentials */}
+      <div className="mt-8 p-4 bg-[var(--surface-secondary)] border border-[var(--border)] rounded-xl text-center">
+        <p className="text-xs text-[var(--text-secondary)] mb-1 uppercase font-semibold tracking-wider">Demo Credentials</p>
+        <p className="text-sm font-medium text-[var(--text-primary)]">student@demo.com</p>
+        <p className="text-sm font-medium text-[var(--text-primary)]">demopassword123</p>
+      </div>
     </div>
   );
 }
