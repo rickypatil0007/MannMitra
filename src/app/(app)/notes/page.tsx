@@ -1,38 +1,104 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader, EmptyState } from "@/components/ui/shared";
-import { Book, Plus, Search, Calendar, X, Save, Mic, Square } from "lucide-react";
+import { Book, Plus, Search, Calendar, X, Save, Mic, Trash2, Pin, PinOff, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { getNotes, createNote, updateNote, deleteNote, togglePinNote } from "@/actions/notes";
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-}
-
-const initialNotes: Note[] = [
-  { id: "1", title: "Thoughts on Midterms", content: "I feel a bit underprepared for CS301, but the rest seems manageable if I stick to the schedule.", date: "Oct 12, 2023" },
-  { id: "2", title: "A Good Day", content: "Met up with Sarah today. We studied in the library and it was actually really productive.", date: "Oct 10, 2023" },
+// ─── Reflection Prompts: curated, rotating daily prompts
+const REFLECTION_PROMPTS = [
+  "What made you smile today, even for a moment?",
+  "What's one thing you learned about yourself this week?",
+  "If you could tell your morning self one thing, what would it be?",
+  "What are you grateful for right now?",
+  "What's something difficult you handled well recently?",
+  "Describe a small moment of peace you experienced today.",
+  "What would you like to let go of?",
+  "Who made a positive difference in your day?",
+  "What's a challenge you're facing, and what's one tiny step forward?",
+  "How did you take care of yourself today?",
+  "What's something you're proud of, no matter how small?",
+  "If your stress could talk, what would it say? What would you say back?",
+  "Write a letter to your future self — what do you hope for?",
+  "What boundary did you set or wish you had set today?",
+  "Describe one thing that felt 'enough' today.",
 ];
 
+function getDailyPrompts(): string[] {
+  const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  const shuffled = [...REFLECTION_PROMPTS].sort((a, b) => {
+    const ha = (dayIndex * 31 + a.length) % REFLECTION_PROMPTS.length;
+    const hb = (dayIndex * 31 + b.length) % REFLECTION_PROMPTS.length;
+    return ha - hb;
+  });
+  return shuffled.slice(0, 3);
+}
+
+interface NoteData {
+  id: string;
+  title: string | null;
+  content: string;
+  isPinned: boolean;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
 export default function NotesPage() {
-  const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [user, setUser] = useState<User | null>(null);
+  const [notes, setNotes] = useState<NoteData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"list" | "edit">("list");
-  
+
   // Edit state
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editContent, setEditContent] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Recording state
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+
+  // Reflection prompts
+  const [dailyPrompts] = useState(() => getDailyPrompts());
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchNotes(currentUser.uid);
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchNotes = useCallback(async (uid: string, searchTerm?: string) => {
+    setLoading(true);
+    const res = await getNotes(uid, searchTerm);
+    if (res.success && res.notes) {
+      setNotes(res.notes as NoteData[]);
+    }
+    setLoading(false);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (!user) return;
+    const timeout = setTimeout(() => {
+      fetchNotes(user.uid, search);
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [search, user, fetchNotes]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -64,41 +130,50 @@ export default function NotesPage() {
     }
   };
 
-  const filtered = notes.filter(
-    (n) => n.title.toLowerCase().includes(search.toLowerCase()) || n.content.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const openNew = () => {
+  const openNew = (prompt?: string) => {
     setActiveNoteId(null);
     setEditTitle("");
-    setEditContent("");
+    setEditContent(prompt ? `💭 ${prompt}\n\n` : "");
     setView("edit");
   };
 
-  const openNote = (n: Note) => {
+  const openNote = (n: NoteData) => {
     setActiveNoteId(n.id);
-    setEditTitle(n.title);
+    setEditTitle(n.title || "");
     setEditContent(n.content);
     setView("edit");
   };
 
-  const saveNote = () => {
-    if (!editTitle.trim() && !editContent.trim()) {
+  const saveNote = async () => {
+    if (!user || (!editTitle.trim() && !editContent.trim())) {
       setView("list");
       return;
     }
 
+    setSaving(true);
     if (activeNoteId) {
-      setNotes((prev) => prev.map((n) => n.id === activeNoteId ? { ...n, title: editTitle || "Untitled", content: editContent } : n));
+      await updateNote(user.uid, activeNoteId, editTitle, editContent);
     } else {
-      setNotes((prev) => [{
-        id: Date.now().toString(),
-        title: editTitle || "Untitled",
-        content: editContent,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      }, ...prev]);
+      await createNote(user.uid, editTitle, editContent);
     }
+    await fetchNotes(user.uid, search);
+    setSaving(false);
     setView("list");
+  };
+
+  const handleDelete = async () => {
+    if (!user || !activeNoteId) return;
+    setDeleting(true);
+    await deleteNote(user.uid, activeNoteId);
+    await fetchNotes(user.uid, search);
+    setDeleting(false);
+    setView("list");
+  };
+
+  const handleTogglePin = async (noteId: string) => {
+    if (!user) return;
+    await togglePinNote(user.uid, noteId);
+    await fetchNotes(user.uid, search);
   };
 
   return (
@@ -108,12 +183,12 @@ export default function NotesPage() {
       transition={{ duration: 0.45, ease: "easeOut" as const }}
       className="space-y-6 max-w-4xl"
     >
-      <PageHeader 
-        title="Personal Diary" 
+      <PageHeader
+        title="Personal Diary"
         description="A private, encrypted space for your thoughts."
         action={
           view === "list" && (
-            <Button onClick={openNew} className="gap-2">
+            <Button onClick={() => openNew()} className="gap-2">
               <Plus className="w-4 h-4" /> New Entry
             </Button>
           )
@@ -123,32 +198,84 @@ export default function NotesPage() {
       <AnimatePresence mode="wait">
         {view === "list" ? (
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+
+            {/* Reflection Prompts */}
+            <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--surface)] to-[var(--surface-secondary)]">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-[var(--primary)]" />
+                  <span className="text-sm font-semibold text-[var(--primary)]">Today&apos;s Reflection Prompts</span>
+                </div>
+                <div className="space-y-2">
+                  {dailyPrompts.map((prompt, i) => (
+                    <button
+                      key={i}
+                      onClick={() => openNew(prompt)}
+                      className="w-full text-left px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border-subtle)] hover:border-[var(--primary-soft)] hover:bg-[var(--surface-secondary)] transition-all text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    >
+                      &ldquo;{prompt}&rdquo;
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Search */}
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
-              <Input 
-                placeholder="Search notes..." 
+              <Input
+                placeholder="Search notes..."
                 className="pl-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
-            {filtered.length === 0 ? (
-              <EmptyState 
+            {/* Notes Grid */}
+            {loading ? (
+              <div className="flex justify-center py-10">
+                <Loader2 className="w-6 h-6 animate-spin text-[var(--primary)]" />
+              </div>
+            ) : notes.length === 0 ? (
+              <EmptyState
                 icon={<Book className="w-10 h-10" />}
                 title="No notes found"
                 description={search ? "Try a different search term." : "Write your first diary entry to start clearing your mind."}
               />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filtered.map((note) => (
-                  <Card key={note.id} className="cursor-pointer hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200" onClick={() => openNote(note)}>
+                {notes.map((note) => (
+                  <Card
+                    key={note.id}
+                    className="cursor-pointer hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200 relative group"
+                    onClick={() => openNote(note)}
+                  >
                     <CardContent className="p-5">
-                      <h3 className="font-semibold text-[var(--text-primary)] truncate">{note.title}</h3>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-semibold text-[var(--text-primary)] truncate flex-1">{note.title || "Untitled"}</h3>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTogglePin(note.id);
+                          }}
+                          className={`shrink-0 p-1 rounded-full transition-colors ${
+                            note.isPinned
+                              ? "text-[var(--primary)]"
+                              : "text-[var(--text-muted)] opacity-0 group-hover:opacity-100"
+                          }`}
+                        >
+                          {note.isPinned ? <Pin className="w-3.5 h-3.5" /> : <PinOff className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                       <p className="text-sm text-[var(--text-secondary)] mt-1.5 line-clamp-2 leading-relaxed">{note.content}</p>
                       <div className="flex items-center gap-1.5 mt-4 text-[var(--text-muted)]">
                         <Calendar className="w-3.5 h-3.5" />
-                        <span className="text-[10px] uppercase font-semibold tracking-wider">{note.date}</span>
+                        <span className="text-[10px] uppercase font-semibold tracking-wider">
+                          {new Date(note.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                        {note.isPinned && (
+                          <span className="ml-auto text-[10px] uppercase font-semibold tracking-wider text-[var(--primary)]">Pinned</span>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -163,10 +290,22 @@ export default function NotesPage() {
                 <X className="w-4 h-4" /> Close
               </Button>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant={isRecording ? "destructive" : "outline"} 
-                  size="sm" 
-                  className={`gap-2 min-w-[140px] ${!isRecording ? "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--primary)]" : "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-red-200"}`} 
+                {activeNoteId && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="gap-2 text-[var(--danger)] border-[var(--danger)]/30 hover:bg-[var(--danger)]/10"
+                  >
+                    {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    Delete
+                  </Button>
+                )}
+                <Button
+                  variant={isRecording ? "destructive" : "outline"}
+                  size="sm"
+                  className={`gap-2 min-w-[140px] ${!isRecording ? "border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--primary)]" : "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border-red-200"}`}
                   onClick={toggleRecording}
                 >
                   {isRecording ? (
@@ -180,8 +319,14 @@ export default function NotesPage() {
                     </>
                   )}
                 </Button>
-                <Button size="sm" onClick={saveNote} className="gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]">
-                  <Save className="w-4 h-4" /> Save Entry
+                <Button
+                  size="sm"
+                  onClick={saveNote}
+                  disabled={saving}
+                  className="gap-2 bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]"
+                >
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Entry
                 </Button>
               </div>
             </div>
@@ -189,9 +334,9 @@ export default function NotesPage() {
             {/* Recording visualizer */}
             <AnimatePresence>
               {isRecording && (
-                <motion.div 
-                  initial={{ height: 0, opacity: 0 }} 
-                  animate={{ height: "auto", opacity: 1 }} 
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   className="bg-red-50 rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-red-100 overflow-hidden"
                 >
@@ -214,15 +359,15 @@ export default function NotesPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-            
-            <input 
+
+            <input
               type="text"
               placeholder="Title"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               className="w-full text-2xl font-display font-semibold text-[var(--text-primary)] placeholder:text-[var(--text-muted)] border-none focus:outline-none focus:ring-0 bg-transparent px-0"
             />
-            
+
             <textarea
               placeholder="Start writing or recording..."
               value={editContent}
@@ -233,7 +378,6 @@ export default function NotesPage() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </motion.div>
   );
 }
