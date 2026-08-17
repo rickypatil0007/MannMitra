@@ -43,6 +43,7 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
       model: nvidia('meta/llama-3.1-70b-instruct'), 
       system: systemPrompt,
       messages,
+      maxSteps: 5,
       tools: {
         createTask: tool({
           description: 'Create a new task or assignment in the student planner.',
