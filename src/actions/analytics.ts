@@ -169,3 +169,188 @@ export async function getStressForecast(firebaseUid: string) {
     return { success: false, error: "Failed to fetch forecast" };
   }
 }
+
+export interface DashboardData {
+  stressTrend: {
+    currentEstimate: "Low" | "Moderate" | "High";
+    trendDirection: "Decreasing" | "Stable" | "Increasing";
+    recentChange: string;
+    interpretation: string;
+  };
+  studyProgress: {
+    tasksPlanned: number;
+    tasksCompleted: number;
+    completionRate: number;
+    studyStreak: number;
+    missedTasks: number;
+    upcomingDeadlines: number;
+  };
+  aiRecommendations: {
+    english: string;
+    hindi: string;
+  };
+  chartData: Array<{
+    day: string;
+    stressIndicator: number; // 1-3
+    tasksCompleted: number;
+    tasksPlanned: number;
+  }>;
+}
+
+const DEMO_DASHBOARD_DATA: DashboardData = {
+  stressTrend: {
+    currentEstimate: "Moderate",
+    trendDirection: "Increasing",
+    recentChange: "+15% this week",
+    interpretation: "Your recent check-ins suggest your stress has been slightly higher this week, likely due to upcoming deadlines. Consider scheduling a short break after your next study session."
+  },
+  studyProgress: {
+    tasksPlanned: 24,
+    tasksCompleted: 18,
+    completionRate: 75,
+    studyStreak: 3,
+    missedTasks: 2,
+    upcomingDeadlines: 5
+  },
+  aiRecommendations: {
+    english: "Your workload is increasing this week. Consider splitting today's remaining tasks into two smaller sessions. A 20-minute break may help.",
+    hindi: "आपका workload बढ़ रहा है। आज के काम को छोटे tasks में बाँटने की कोशिश करें। थोड़ा आराम भी ज़रूरी है। 20 मिनट का ब्रेक लेकर फिर पढ़ाई शुरू करें।"
+  },
+  chartData: [
+    { day: "Mon", stressIndicator: 1.0, tasksCompleted: 2, tasksPlanned: 2 },
+    { day: "Tue", stressIndicator: 1.2, tasksCompleted: 3, tasksPlanned: 3 },
+    { day: "Wed", stressIndicator: 1.5, tasksCompleted: 4, tasksPlanned: 5 },
+    { day: "Thu", stressIndicator: 2.0, tasksCompleted: 5, tasksPlanned: 6 },
+    { day: "Fri", stressIndicator: 2.2, tasksCompleted: 4, tasksPlanned: 5 },
+    { day: "Sat", stressIndicator: 1.8, tasksCompleted: 0, tasksPlanned: 2 },
+    { day: "Sun", stressIndicator: 1.5, tasksCompleted: 0, tasksPlanned: 1 },
+  ]
+};
+
+export async function getDashboardData(firebaseUid: string, useDemo: boolean = false): Promise<{ success: boolean; data?: DashboardData; error?: string }> {
+  try {
+    if (useDemo) {
+      return { success: true, data: DEMO_DASHBOARD_DATA };
+    }
+
+    const user = await prisma.user.findUnique({ where: { firebaseUid } });
+    if (!user) return { success: false, error: "User not found" };
+
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // Planner Data
+    const tasks = await prisma.task.findMany({
+      where: { userId: user.id }
+    });
+
+    const weeklyTasks = tasks.filter(t => new Date(t.createdAt) >= sevenDaysAgo);
+    const tasksPlanned = weeklyTasks.length;
+    const tasksCompleted = weeklyTasks.filter(t => t.isCompleted).length;
+    const completionRate = tasksPlanned > 0 ? Math.round((tasksCompleted / tasksPlanned) * 100) : 0;
+    const missedTasks = tasks.filter(t => !t.isCompleted && new Date(t.deadline) < now).length;
+    const upcomingDeadlines = tasks.filter(t => !t.isCompleted && new Date(t.deadline) >= now && new Date(t.deadline) <= new Date(now.getTime() + 3*24*60*60*1000)).length;
+
+    // A simple streak logic based on consecutive days of completed tasks
+    let studyStreak = 0;
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const hasCompleted = tasks.some(t => t.isCompleted && new Date(t.updatedAt).toDateString() === d.toDateString());
+      if (hasCompleted) studyStreak++;
+      else if (i > 0) break; // Missed a day
+    }
+
+    // Stress Data
+    const stressRecords = await prisma.stressRecord.findMany({
+      where: { userId: user.id, recordedAt: { gte: sevenDaysAgo } },
+      orderBy: { recordedAt: 'asc' }
+    });
+
+    let currentEstimate: "Low" | "Moderate" | "High" = "Low";
+    let trendDirection: "Decreasing" | "Stable" | "Increasing" = "Stable";
+    
+    if (stressRecords.length > 0) {
+      const recent = stressRecords[stressRecords.length - 1].stressLevel;
+      if (recent === "HIGH" || recent === "VERY_HIGH") currentEstimate = "High";
+      else if (recent === "MODERATE") currentEstimate = "Moderate";
+      
+      if (stressRecords.length > 2) {
+        const firstHalf = stressRecords.slice(0, Math.floor(stressRecords.length / 2));
+        const secondHalf = stressRecords.slice(Math.floor(stressRecords.length / 2));
+        
+        const getScore = (level: string) => level.includes("HIGH") ? 3 : level.includes("MODERATE") ? 2 : 1;
+        const avgFirst = firstHalf.reduce((acc, r) => acc + getScore(r.stressLevel), 0) / firstHalf.length;
+        const avgSecond = secondHalf.reduce((acc, r) => acc + getScore(r.stressLevel), 0) / secondHalf.length;
+        
+        if (avgSecond > avgFirst + 0.5) trendDirection = "Increasing";
+        else if (avgSecond < avgFirst - 0.5) trendDirection = "Decreasing";
+      }
+    }
+
+    let interpretation = "Your stress indicator seems stable. Keep up the good work!";
+    let engRec = "You are maintaining a steady pace. Keep focusing on small, manageable tasks.";
+    let hinRec = "आप एक अच्छी गति बनाए हुए हैं। छोटे और आसान कामों पर ध्यान देते रहें।";
+
+    if (currentEstimate === "High" || trendDirection === "Increasing") {
+      interpretation = "Your recent check-ins suggest your stress has been higher this week. Consider scheduling a short break today.";
+      engRec = "Your workload is increasing this week. Consider splitting today's remaining tasks into two smaller sessions. A 20-minute break may help.";
+      hinRec = "आपका workload बढ़ रहा है। आज के काम को छोटे tasks में बाँटने की कोशिश करें। थोड़ा आराम भी ज़रूरी है। 20 मिनट का ब्रेक लेकर फिर पढ़ाई शुरू करें।";
+    }
+
+    // Chart Data Construction
+    const chartDataMap = new Map();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      chartDataMap.set(d.toLocaleDateString("en-US", { weekday: "short" }), {
+        day: d.toLocaleDateString("en-US", { weekday: "short" }),
+        stressIndicator: 1,
+        tasksCompleted: 0,
+        tasksPlanned: 0
+      });
+    }
+
+    weeklyTasks.forEach(t => {
+      const d = new Date(t.createdAt).toLocaleDateString("en-US", { weekday: "short" });
+      if (chartDataMap.has(d)) {
+        chartDataMap.get(d).tasksPlanned++;
+        if (t.isCompleted) chartDataMap.get(d).tasksCompleted++;
+      }
+    });
+
+    stressRecords.forEach(r => {
+      const d = new Date(r.recordedAt).toLocaleDateString("en-US", { weekday: "short" });
+      if (chartDataMap.has(d)) {
+        const score = r.stressLevel.includes("HIGH") ? 3 : r.stressLevel.includes("MODERATE") ? 2 : 1;
+        chartDataMap.get(d).stressIndicator = Math.max(chartDataMap.get(d).stressIndicator, score);
+      }
+    });
+
+    return {
+      success: true,
+      data: {
+        stressTrend: {
+          currentEstimate,
+          trendDirection,
+          recentChange: trendDirection === "Increasing" ? "Elevated" : trendDirection === "Decreasing" ? "Reduced" : "Steady",
+          interpretation
+        },
+        studyProgress: {
+          tasksPlanned,
+          tasksCompleted,
+          completionRate,
+          studyStreak,
+          missedTasks,
+          upcomingDeadlines
+        },
+        aiRecommendations: {
+          english: engRec,
+          hindi: hinRec
+        },
+        chartData: Array.from(chartDataMap.values())
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    return { success: false, error: "Failed to fetch dashboard data" };
+  }
+}

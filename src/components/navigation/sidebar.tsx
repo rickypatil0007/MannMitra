@@ -23,6 +23,7 @@ import {
 
 const authenticatedNavigation = [
   { name: "Dashboard",  href: "/dashboard",   icon: LayoutDashboard },
+  { name: "Daily Insights", href: "/mood",    icon: Activity },
   { name: "Planner",    href: "/planner",     icon: CheckSquare },
   { name: "Analytics",  href: "/analytics",   icon: Activity },
   { name: "Mitra",      href: "/mitra",       icon: MessageSquareHeart },

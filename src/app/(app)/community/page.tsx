@@ -17,7 +17,7 @@ import {
   blockUser
 } from "@/actions/community";
 
-const TAGS = ["Latest", "Exam Stress", "Loneliness", "Success Stories", "Mental Health"];
+const TAGS = ["Latest", "Exam Stress", "Loneliness", "Success Stories", "Mental Health", "Memes"];
 
 import { GuestPrompt } from "@/components/auth/guest-prompt";
 
@@ -234,6 +234,9 @@ export default function CommunityPage() {
                         <div className="space-y-3">
                           {post.comments?.map((c: any) => (
                             <div key={c.id} className="bg-[var(--surface-secondary)] p-3 rounded-xl">
+                              <span className="text-xs font-semibold text-[var(--primary)] mb-1 block">
+                                {c.author?.anonymousName || "Anonymous"}
+                              </span>
                               <p className="text-sm text-[var(--text-primary)]">{c.content}</p>
                               <span className="text-[10px] text-[var(--text-muted)] mt-1 block">
                                 {new Date(c.createdAt).toLocaleDateString()}

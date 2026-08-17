@@ -60,15 +60,6 @@ export function MitraChat({ firebaseUid, conversationId, initialMessages }: Mitr
             <p className="text-xs text-[var(--text-muted)]">Private AI companion</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <a
-            href="/mitra/call"
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)] transition-colors"
-            title="Start Voice/Video Call"
-          >
-            <Mic className="w-4 h-4" />
-          </a>
-        </div>
       </div>
 
       <MitraMessageList 

@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Plus, PanelLeftClose, Loader2, Trash2 } from "lucide-react";
+import { MessageSquare, Plus, PanelLeftClose, Loader2, Trash2, Video } from "lucide-react";
 import { useChatContext } from "@/components/chat/chat-provider";
 import { MitraChat } from "@/features/mitra-ai/components/MitraChat";
+import { useRouter } from "next/navigation";
 
 export default function MitraPage() {
   const {
@@ -20,6 +21,7 @@ export default function MitraPage() {
   } = useChatContext();
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -32,8 +34,22 @@ export default function MitraPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-5rem)] flex relative overflow-hidden -mx-4 sm:mx-0 sm:rounded-2xl sm:border border-[var(--border-subtle)] bg-[var(--surface)]">
+    <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-5rem)] flex flex-col md:flex-row relative overflow-hidden -mx-4 sm:mx-0 sm:rounded-2xl sm:border border-[var(--border-subtle)] bg-[var(--surface)]">
       
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-3 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)]">
+        <div className="flex items-center gap-2">
+          <button onClick={toggleSidebar} className="text-[var(--text-muted)] p-1">
+            <PanelLeftClose className="w-5 h-5 rotate-180" />
+          </button>
+          <h3 className="font-semibold text-sm">Mitra AI</h3>
+        </div>
+        <Button variant="ghost" size="sm" onClick={() => router.push('/mitra/call')} className="h-8 gap-2 text-[var(--primary)] hover:text-[var(--primary-hover)] bg-[var(--primary-soft)] hover:bg-[var(--primary)]/20">
+          <Video className="w-4 h-4" />
+          <span className="text-xs font-semibold">Visual Call</span>
+        </Button>
+      </div>
+
       {/* Sidebar Overlay (Mobile) */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -98,11 +114,21 @@ export default function MitraPage() {
       </motion.div>
 
       {/* Main Chat Area */}
-      <MitraChat
-        firebaseUid={user?.uid || null}
-        conversationId={conversationId || null}
-        initialMessages={messages}
-      />
+      <div className="flex-1 flex flex-col transition-all duration-300 relative">
+        {/* Desktop Visual Call Button Header */}
+        <div className="hidden md:block absolute top-4 right-16 z-10">
+           <Button variant="outline" size="sm" onClick={() => router.push('/mitra/call')} className="gap-2 shadow-sm border-[var(--primary)/20] text-[var(--primary)] bg-[var(--surface)] hover:bg-[var(--primary-soft)] rounded-full px-4">
+             <Video className="w-4 h-4" />
+             Visual Call Mode
+           </Button>
+        </div>
+        
+        <MitraChat
+          firebaseUid={user?.uid || null}
+          conversationId={conversationId || null}
+          initialMessages={messages}
+        />
+      </div>
     </div>
   );
 }

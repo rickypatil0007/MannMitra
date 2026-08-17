@@ -105,13 +105,17 @@ export default function MitraCallPage() {
     }
   }, [isSessionActive, isMicEnabled, append, handleInputChange]);
 
+  // Attach video stream when DOM is ready
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream, isSessionActive, isVideoEnabled]);
+
   const startSession = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
       setIsSessionActive(true);
       if (recognitionRef.current) {
         recognitionRef.current.start();

@@ -248,6 +248,28 @@ export default function SupportPage() {
             </div>
           </CardContent>
         </Card>
+        <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200 lg:col-span-2">
+          <CardHeader>
+            <div className="w-10 h-10 rounded-2xl bg-[var(--surface-secondary)] flex items-center justify-center mb-3">
+              <ShieldAlert className="w-5 h-5 text-[var(--primary)]" />
+            </div>
+            <CardTitle className="text-base">Privacy & Data Support</CardTitle>
+            <CardDescription>Get help with managing your data, withdrawing consent, or understanding our security practices.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 text-sm text-[var(--text-secondary)]">
+              <p>
+                <strong>DPDP Act & SPDI Rules:</strong> MannMitra applies reasonable security practices to protect personal information. Your consent is required before we collect any data.
+              </p>
+              <p>
+                To withdraw consent or request data deletion, please contact our Data Protection Officer at:
+              </p>
+              <a href="mailto:privacy@mannmitra.edu" className="font-medium text-[var(--primary)] hover:underline">
+                privacy@mannmitra.edu
+              </a>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </motion.div>
   );

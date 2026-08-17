@@ -4,380 +4,268 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Smile, Wind, Zap, Frown, AlertCircle, CheckCircle, History, Loader2 } from "lucide-react";
+import { PageHeader } from "@/components/ui/shared";
+import { CheckCircle2, Loader2, PlayCircle, StopCircle, Globe2, Sparkles, TrendingUp, TrendingDown, CheckSquare, ListTodo, Activity } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { recordMood, getMoodHistory } from "@/actions/mood";
-import { StressLevel } from "@/generated/prisma/client";
+import { getDailyInsights, DailyInsightData } from "@/actions/dailyInsights";
+import { recordMood } from "@/actions/mood";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { GuestPrompt } from "@/components/auth/guest-prompt";
 
-// ─── Design spec: 5-point scale, supportive labels (no "Severe Stress")
-// ─── Mood colors: soft emotional tones (NOT medical dashboard colors)
-const stressLevels = [
-  { value: 1, label: "Very Calm",    emoji: "😌", barColor: "bg-[var(--mood-good)]",        textColor: "text-[var(--mood-good)]"  },
-  { value: 2, label: "Mostly Okay",  emoji: "🙂", barColor: "bg-[var(--mood-calm)]",        textColor: "text-[var(--mood-calm)]"  },
-  { value: 3, label: "Some Tension", emoji: "😐", barColor: "bg-[var(--mood-okay)]",        textColor: "text-[var(--text-muted)]"  },
-  { value: 4, label: "High Pressure",emoji: "😟", barColor: "bg-[var(--mood-low)]",         textColor: "text-[var(--accent-ai)]"  },
-  { value: 5, label: "Overwhelmed",  emoji: "😰", barColor: "bg-[var(--mood-overwhelmed)]", textColor: "text-[var(--accent-warm)]"  },
+const emojis = [
+  { val: 1, char: "😌", eng: "You're feeling very calm. Great state for deep work!", hi: "आप बहुत शांत महसूस कर रहे हैं। पढ़ाई के लिए यह बहुत अच्छा समय है!" },
+  { val: 2, char: "🙂", eng: "You're doing well. Keep up the steady pace.", hi: "आप अच्छा कर रहे हैं। अपनी गति बनाए रखें।" },
+  { val: 3, char: "😐", eng: "You're doing okay. Take things one step at a time.", hi: "चिंता मत करो, धीरे-धीरे आगे बढ़ो। तुम अच्छा कर रहे हो।" },
+  { val: 4, char: "😟", eng: "It seems a bit tough today, but you are not alone.", hi: "आज थोड़ा मुश्किल लग रहा है, लेकिन तुम अकेले नहीं हो।" },
+  { val: 5, char: "😣", eng: "Take a deep breath. It's okay to step away and rest.", hi: "गहरी सांस लें। थोड़ी देर आराम करना बिल्कुल ठीक है।" }
 ];
 
-const moods = [
-  { label: "Calm",       icon: Wind  },
-  { label: "Focused",    icon: Zap   },
-  { label: "Anxious",    icon: Frown },
-  { label: "Exhausted",  icon: AlertCircle },
-  { label: "Hopeful",    icon: Smile },
-];
-
-
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
-};
-
-export default function MoodPage() {
+export default function DailyInsightsPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [history, setHistory] = useState<any[]>([]);
+  const [insights, setInsights] = useState<DailyInsightData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-
-  const [selectedStress, setSelectedStress] = useState<number | null>(null);
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [note, setNote] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [view, setView] = useState<"checkin" | "history">("checkin");
+  const useDemo = true;
+  const [lang, setLang] = useState<"english" | "hindi">("english");
+  const [savingEmoji, setSavingEmoji] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        await fetchHistory(currentUser.uid);
+        await fetchData(currentUser.uid, useDemo);
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [useDemo]);
 
-  const fetchHistory = async (uid: string) => {
-    const res = await getMoodHistory(uid);
-    if (res.success && res.records) {
-      const mapped = res.records.map((r: any) => {
-        const levelMap: Record<string, number> = {
-          VERY_LOW: 1, LOW: 2, MODERATE: 3, HIGH: 4, VERY_HIGH: 5
-        };
-        return {
-          date: new Date(r.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }),
-          level: levelMap[r.stressLevel] || 3,
-          mood: r.moodLabel || "Okay",
-          note: r.notes || "",
-        };
-      });
-      setHistory(mapped);
+  const fetchData = async (uid: string, demo: boolean) => {
+    setLoading(true);
+    const res = await getDailyInsights(uid, demo);
+    if (res.success && res.data) {
+      setInsights(res.data);
     }
+    setLoading(false);
   };
 
-  const handleSubmit = async () => {
-    if (selectedStress && selectedMood && user) {
-      setSubmitting(true);
-      const levelMap: Record<number, StressLevel> = {
-        1: "VERY_LOW", 2: "LOW", 3: "MODERATE", 4: "HIGH", 5: "VERY_HIGH"
-      };
-      const stressLevelEnum = levelMap[selectedStress] || "MODERATE";
-      
-      const res = await recordMood(user.uid, selectedStress, stressLevelEnum, selectedMood, note);
-      
-      if (res.success) {
-        setSubmitted(true);
-        await fetchHistory(user.uid);
-      }
-      setSubmitting(false);
+  const handleEmojiClick = async (val: number) => {
+    setSelectedEmoji(val);
+    if (user && !useDemo) {
+      setSavingEmoji(true);
+      const levelMap: Record<number, any> = { 1: "VERY_LOW", 2: "LOW", 3: "MODERATE", 4: "HIGH", 5: "VERY_HIGH" };
+      await recordMood(user.uid, val, levelMap[val], "Emoji Check-in", "");
+      await fetchData(user.uid, false);
+      setSavingEmoji(false);
     }
   };
-
-  const highPressureWarning = selectedStress !== null && selectedStress >= 4;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" as const }}
-      className="space-y-8 max-w-2xl"
+      transition={{ duration: 0.45, ease: "easeOut" as const }}
+      className="space-y-6 max-w-5xl relative min-h-[60vh] pb-10"
     >
-      {/* Page Header */}
+      <GuestPrompt feature="Daily Insights" description="Create an account to track your daily wellness." />
+      
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Wellness Check-in</h1>
-          <p className="text-[var(--text-secondary)] mt-1">A moment to pause and notice how you&apos;re feeling.</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setView("checkin")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              view === "checkin"
-                ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)] border border-[var(--primary-soft)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"
-            }`}
-          >
-            Check-in
-          </button>
-          <button
-            onClick={() => setView("history")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              view === "history"
-                ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)] border border-[var(--primary-soft)]"
-                : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"
-            }`}
-          >
-            <History className="w-4 h-4" /> History
-          </button>
+        <PageHeader 
+          title="Daily Insights" 
+          description="Your personal wellness and study summary."
+        />
+        <div className="flex items-center gap-3 shrink-0">
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-
-        {/* ─── CHECK-IN VIEW ─── */}
-        {view === "checkin" && !submitted && (
-          <motion.div
-            key="checkin"
-            initial="hidden"
-            animate="visible"
-            exit={{ opacity: 0, y: -10 }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-            className="space-y-6"
-          >
-            {/* Stress Scale */}
-            <motion.div variants={fadeInUp}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>How much pressure are you feeling right now?</CardTitle>
-                  <CardDescription>Tap a level — 1 is very calm, 5 is overwhelmed.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-5 gap-2">
-                    {stressLevels.map((s) => (
-                      <button
-                        key={s.value}
-                        onClick={() => setSelectedStress(s.value)}
-                        className={`flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all duration-200 ${
-                          selectedStress === s.value
-                            ? "border-[var(--primary)] bg-[var(--surface-secondary)]"
-                            : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--primary-soft)] hover:bg-[var(--background-secondary)]"
-                        }`}
-                      >
-                        <span className="text-2xl">{s.emoji}</span>
-                        <span className="text-[10px] font-semibold text-center text-[var(--text-secondary)] leading-tight">{s.label}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Visual bar */}
-                  {selectedStress && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-2"
+      {loading ? (
+        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" /></div>
+      ) : insights ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Left Column: Emoji Check-in & Summary */}
+          <div className="lg:col-span-1 space-y-6">
+            
+            {/* Emoji Check-in */}
+            <Card className="border-[var(--primary-soft)] overflow-hidden">
+              <div className="bg-[var(--surface-secondary)] px-4 py-3 border-b border-[var(--border-subtle)] flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[var(--primary)]" />
+                <h3 className="font-semibold text-sm">How are you feeling right now?</h3>
+              </div>
+              <CardContent className="p-4 space-y-4">
+                <div className="flex justify-between">
+                  {emojis.map((e) => (
+                    <button
+                      key={e.val}
+                      onClick={() => handleEmojiClick(e.val)}
+                      disabled={savingEmoji}
+                      className={`text-3xl sm:text-4xl hover:scale-110 transition-transform duration-200 ${selectedEmoji === e.val ? 'scale-125 drop-shadow-md' : 'opacity-70 hover:opacity-100'}`}
                     >
-                      <div className="flex justify-between text-xs text-[var(--text-muted)] mb-1.5">
-                        <span>Very Calm</span>
-                        <span className={`font-semibold ${stressLevels[selectedStress - 1].textColor}`}>
-                          {stressLevels[selectedStress - 1].label}
-                        </span>
-                        <span>Overwhelmed</span>
-                      </div>
-                      <div className="w-full bg-[var(--background-secondary)] h-2 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(selectedStress / 5) * 100}%` }}
-                          transition={{ duration: 0.4, ease: "easeOut" as const }}
-                          className={`${stressLevels[selectedStress - 1].barColor} h-full rounded-full`}
-                        />
-                      </div>
+                      {e.char}
+                    </button>
+                  ))}
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {selectedEmoji && (
+                    <motion.div
+                      key={selectedEmoji}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="bg-[var(--primary-soft)] text-[var(--primary-hover)] p-3 rounded-lg text-sm text-center leading-relaxed"
+                    >
+                      {lang === "english" ? emojis.find(e => e.val === selectedEmoji)?.eng : emojis.find(e => e.val === selectedEmoji)?.hi}
                     </motion.div>
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
+                </AnimatePresence>
+              </CardContent>
+            </Card>
 
-            {/* Safety Guardrail — gentle nudge for high pressure (per spec STU-07-02) */}
-            <AnimatePresence>
-              {highPressureWarning && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="rounded-2xl bg-[#FFF6ED] border border-[#FFD9AE] p-4 flex items-start gap-3"
-                >
-                  <AlertCircle className="w-5 h-5 text-[var(--warning)] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-semibold text-[#7A4A1E]">You&apos;re carrying a lot right now.</p>
-                    <p className="text-sm text-[#7A4A1E]/80 mt-0.5">
-                      That&apos;s okay — you don&apos;t have to carry it alone. Consider{" "}
-                      <a href="/mitra" className="underline font-medium text-[var(--warning)]">talking to Mitra</a>{" "}
-                      or <a href="/support" className="underline font-medium text-[var(--warning)]">booking a counsellor</a>.
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Mood Selector */}
-            <motion.div variants={fadeInUp}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>What&apos;s the dominant feeling?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {moods.map((m) => (
-                      <button
-                        key={m.label}
-                        onClick={() => setSelectedMood(m.label)}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-                          selectedMood === m.label
-                            ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]"
-                            : "bg-[var(--surface)] text-[var(--text-secondary)] border-[var(--border)] hover:border-[var(--primary-soft)] hover:text-[var(--primary)]"
-                        }`}
-                      >
-                        <m.icon className="w-4 h-4" />
-                        {m.label}
-                      </button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Optional Note */}
-            <motion.div variants={fadeInUp}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Anything else on your mind? <span className="text-[var(--text-muted)] font-normal text-sm">(optional)</span></CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <textarea
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder="Write a short note for yourself… it stays private."
-                    rows={3}
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] resize-none focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[rgba(95,184,166,0.15)] transition-all duration-200"
-                  />
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={fadeInUp}>
-              <Button
-                className="w-full h-13 text-base rounded-full"
-                onClick={handleSubmit}
-                disabled={!selectedStress || !selectedMood || submitting || !user}
-              >
-                {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Check-in"}
-              </Button>
-              {(!selectedStress || !selectedMood) && (
-                <p className="text-xs text-center text-[var(--text-muted)] mt-2">Select a stress level and a mood to continue.</p>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* ─── SUCCESS STATE ─── */}
-        {view === "checkin" && submitted && (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-16 space-y-5"
-          >
-            <div className="w-16 h-16 mx-auto rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-[var(--primary)]" />
-            </div>
-            <h2 className="text-2xl font-display font-semibold text-[var(--primary-hover)]">Check-in saved.</h2>
-            <p className="text-[var(--text-secondary)] max-w-sm mx-auto leading-relaxed">
-              Thank you for pausing. Noticing how you feel is the first step to taking care of yourself. 🌿
-            </p>
-            <div className="flex gap-3 justify-center pt-4">
-              <Button variant="secondary" onClick={() => { setSubmitted(false); setSelectedStress(null); setSelectedMood(null); setNote(""); }}>
-                Log another
-              </Button>
-              <Button onClick={() => setView("history")}>
-                View history
-              </Button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* ─── HISTORY VIEW ─── */}
-        {view === "history" && (
-          <motion.div
-            key="history"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-4"
-          >
-            {/* 7-day bar chart (visual-only prototype) */}
+            {/* Daily Summary */}
             <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Last 5 Check-ins</CardTitle>
-                <CardDescription>Your stress trend over time.</CardDescription>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">Today's Summary</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-end gap-3 h-20">
-                  {history.slice().reverse().map((h, i) => {
-                    const lvl = stressLevels[h.level - 1];
-                    return (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
-                        <motion.div
-                          initial={{ height: 0 }}
-                          animate={{ height: `${(h.level / 5) * 100}%` }}
-                          transition={{ delay: i * 0.07, duration: 0.4, ease: "easeOut" as const }}
-                          className={`w-full rounded-t-lg ${lvl.barColor} opacity-80 min-h-[6px]`}
-                          style={{ height: `${(h.level / 5) * 64}px` }}
-                        />
-                        <span className="text-[10px] text-[var(--text-muted)]">{i === history.length - 1 ? "Today" : `${history.length - 1 - i}d`}</span>
-                      </div>
-                    );
-                  })}
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-[var(--background-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                      <CheckSquare className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-[var(--text-secondary)] font-medium">Completed</p>
+                      <p className="text-lg font-bold">{insights.summary.tasksCompleted} Tasks</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-[var(--background-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                      <ListTodo className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-[var(--text-secondary)] font-medium">Remaining</p>
+                      <p className="text-lg font-bold">{insights.summary.tasksRemaining} Tasks</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-[var(--background-secondary)] rounded-lg border border-[var(--border-subtle)]">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${insights.summary.stressIndicator >= 4 ? 'bg-red-100' : 'bg-green-100'}`}>
+                      <Activity className={`w-4 h-4 ${insights.summary.stressIndicator >= 4 ? 'text-red-600' : 'text-green-600'}`} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-[var(--text-secondary)] font-medium">Stress Indicator</p>
+                      <p className="text-lg font-bold">{insights.summary.stressIndicator >= 4 ? "High" : insights.summary.stressIndicator === 3 ? "Moderate" : "Low"}</p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Empty state check */}
-            {history.length === 0 ? (
-              <div className="py-16 text-center space-y-3">
-                <p className="text-lg font-semibold text-[var(--text-primary)]">You haven&apos;t logged how you&apos;re feeling yet today.</p>
-                <p className="text-[var(--text-secondary)] text-sm">Check-ins help you spot patterns over time.</p>
-                <Button onClick={() => setView("checkin")} className="mt-4">Do your first check-in</Button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {history.map((h, i) => {
-                  const lvl = stressLevels[h.level - 1];
-                  return (
-                    <Card key={i}>
-                      <CardContent className="p-4 flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-[var(--surface-secondary)]`}>
-                          {lvl.emoji}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className={`text-sm font-semibold ${lvl.textColor}`}>{lvl.label}</span>
-                            <span className="text-xs text-[var(--text-muted)] flex-shrink-0">{h.date}</span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs font-medium text-[var(--text-secondary)] px-2 py-0.5 rounded-full bg-[var(--surface-secondary)] border border-[var(--primary-soft)]">{h.mood}</span>
-                            {h.note && <span className="text-xs text-[var(--text-muted)] truncate">{h.note}</span>}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+
+          {/* Right Column: Charts & Report */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Weekly Bar Graph */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Weekly Activity & Stress</CardTitle>
+                <CardDescription>Your reported stress versus tasks completed over the last 7 days.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[280px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={insights.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle)" />
+                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-secondary)' }} />
+                      <YAxis yAxisId="left" orientation="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-muted)' }} />
+                      <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--primary)' }} domain={[0, 5]} ticks={[1,3,5]} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}
+                        cursor={{ fill: 'var(--surface-secondary)' }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                      <Bar yAxisId="left" name="Tasks Completed" dataKey="tasksCompleted" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                      <Bar yAxisId="right" name="Stress Level (1-5)" dataKey="stressLevel" fill="var(--primary)" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Stress Report generated text */}
+            <Card className="border-[var(--border-subtle)] bg-[var(--surface)]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center gap-2">
+                  Generated Stress Report
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {insights.detailedInsights ? (
+                  <div className="space-y-4">
+                    <div className="bg-[var(--background-secondary)] p-3 rounded-lg border border-[var(--border-subtle)]">
+                      <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1">Today's Summary</p>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{insights.detailedInsights.today}</p>
+                    </div>
+                    <div className="bg-[var(--background-secondary)] p-3 rounded-lg border border-[var(--border-subtle)]">
+                      <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1">Wellness Insight</p>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{insights.detailedInsights.wellness}</p>
+                    </div>
+                    <div className="bg-[var(--background-secondary)] p-3 rounded-lg border border-[var(--border-subtle)]">
+                      <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-1">Study Insight</p>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{insights.detailedInsights.study}</p>
+                    </div>
+                    <div className="bg-[var(--primary-soft)] p-3 rounded-lg border border-[var(--primary)]/30">
+                      <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-wide mb-1">Suggested Action</p>
+                      <p className="text-sm font-medium text-[var(--primary-hover)]">{insights.detailedInsights.action}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wide text-[var(--text-muted)]">Current Indicator</p>
+                        <p className="font-semibold text-[var(--text-primary)]">{insights.stressReport.currentIndicator}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wide text-[var(--text-muted)]">Weekly Trend</p>
+                        <p className="font-semibold flex items-center gap-1">
+                          {insights.stressReport.weeklyTrend}
+                          {insights.stressReport.weeklyTrend === "Improving" && <TrendingDown className="w-3.5 h-3.5 text-green-500" />}
+                          {insights.stressReport.weeklyTrend === "Increasing" && <TrendingUp className="w-3.5 h-3.5 text-amber-500" />}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wide text-[var(--text-muted)]">Highest Stress Day</p>
+                        <p className="font-semibold text-amber-600">{insights.stressReport.highestDay}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wide text-[var(--text-muted)]">Lowest Stress Day</p>
+                        <p className="font-semibold text-green-600">{insights.stressReport.lowestDay}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-[var(--background-secondary)] border border-[var(--border-subtle)] p-4 rounded-lg">
+                      <p className="text-sm font-semibold mb-1 text-[var(--text-primary)]">Mitra's Recommendation</p>
+                      <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                        "{insights.stressReport.recommendation}"
+                      </p>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-center py-20"><p>Failed to load insights.</p></div>
+      )}
     </motion.div>
   );
 }
