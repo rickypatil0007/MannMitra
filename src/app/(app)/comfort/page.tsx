@@ -6,17 +6,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Headphones, Wind, BookHeart, Play, Pause, X, Music, ExternalLink, SkipForward, SkipBack } from "lucide-react";
 
-const lofiTracks = [
+type LofiTrack = {
+  id: string;
+  title: string;
+  description: string;
+  youtubeVideoId: string;
+};
+
+const lofiTracks: LofiTrack[] = [
   {
-    id: "track1",
-    title: "Lofi Hip Hop Radio — Beats to Relax/Study To",
-    embedUrl: "https://www.youtube.com/embed/jfKfPfyJRdk",
+    id: "focus",
+    title: "Lofi Focus",
+    description: "Soft beats for focused study sessions.",
+    youtubeVideoId: "jfKfPfyJRdk"
   },
   {
-    id: "track2",
-    title: "Chillhop Radio — Jazzy & Lofi Hip Hop Beats",
-    embedUrl: "https://www.youtube.com/embed/5yx6BWlEVcY",
-  },
+    id: "chill",
+    title: "Lofi Chill",
+    description: "Relaxing background music for quiet breaks.",
+    youtubeVideoId: "5yx6BWlEVcY"
+  }
 ];
 
 const resources = [
@@ -110,77 +119,72 @@ export default function ComfortPage() {
       {activeResource === "lofi" && (
         <Card className="bg-[#F0F5FF] border-[#5B7FD4]/30 border overflow-hidden">
           <CardContent className="p-6 sm:p-8">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[var(--surface)] flex items-center justify-center shadow-sm">
-                  <Music className="w-5 h-5 text-[#5B7FD4]" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-[var(--text-primary)]">Lo-Fi Study Beats</h3>
-                  <p className="text-xs text-[var(--text-muted)]">Press play to start — no autoplay</p>
-                </div>
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-2xl font-display font-semibold text-[var(--text-primary)]">Lofi Study Space</h3>
+                <p className="text-sm text-[var(--text-secondary)] mt-1">Take a breath, settle in, and focus.</p>
               </div>
-              <Button size="icon" variant="ghost" className="rounded-full text-[var(--text-muted)] hover:text-[var(--danger)] hover:bg-[var(--danger-soft)]" onClick={closeResource}>
+              <Button size="icon" variant="ghost" className="rounded-full text-[var(--text-muted)] hover:text-[var(--danger)] hover:bg-[var(--danger-soft)] shrink-0" onClick={closeResource}>
                 <X className="w-5 h-5" />
-              </Button>
-            </div>
-
-            {/* Track selector */}
-            <div className="flex items-center gap-2 mb-4">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="w-8 h-8 rounded-full"
-                disabled={currentTrackIndex === 0}
-                onClick={() => { setCurrentTrackIndex((i) => i - 1); setEmbedError(false); }}
-              >
-                <SkipBack className="w-4 h-4" />
-              </Button>
-              <div className="flex-1 text-center">
-                <p className="text-sm font-medium text-[var(--text-primary)] truncate px-2">
-                  {lofiTracks[currentTrackIndex].title}
-                </p>
-                <p className="text-xs text-[var(--text-muted)]">
-                  Track {currentTrackIndex + 1} of {lofiTracks.length}
-                </p>
-              </div>
-              <Button
-                size="icon"
-                variant="ghost"
-                className="w-8 h-8 rounded-full"
-                disabled={currentTrackIndex === lofiTracks.length - 1}
-                onClick={() => { setCurrentTrackIndex((i) => i + 1); setEmbedError(false); }}
-              >
-                <SkipForward className="w-4 h-4" />
               </Button>
             </div>
 
             {/* YouTube Embed */}
             {embedError ? (
-              <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] p-8 text-center">
+              <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] p-8 text-center mb-6">
                 <Headphones className="w-10 h-10 text-[var(--text-muted)] mx-auto mb-3 opacity-50" />
-                <p className="text-sm text-[var(--text-secondary)] font-medium">Unable to load the music player</p>
-                <p className="text-xs text-[var(--text-muted)] mt-1 mb-4">The embed might be blocked by your browser or network.</p>
-                <Button variant="outline" size="sm" className="gap-2" asChild>
-                  <a href={lofiTracks[currentTrackIndex].embedUrl.replace('/embed/', '/watch?v=')} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    Open on YouTube
-                  </a>
-                </Button>
+                <p className="text-sm text-[var(--text-secondary)] font-medium">Lofi player couldn't be loaded right now. Please try another track.</p>
+                <div className="flex justify-center mt-4">
+                  <Button variant="outline" size="sm" onClick={() => setEmbedError(false)}>Retry</Button>
+                </div>
               </div>
             ) : (
-              <div className="rounded-xl overflow-hidden bg-black/5 shadow-sm">
+              <div className="rounded-xl overflow-hidden bg-black/5 shadow-sm mb-6 w-full">
                 <iframe
                   key={lofiTracks[currentTrackIndex].id}
-                  src={lofiTracks[currentTrackIndex].embedUrl}
+                  src={`https://www.youtube.com/embed/${lofiTracks[currentTrackIndex].youtubeVideoId}?rel=0&modestbranding=1`}
                   title={lofiTracks[currentTrackIndex].title}
-                  className="w-full aspect-video rounded-xl"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full aspect-video rounded-xl border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   onError={() => setEmbedError(true)}
                 />
               </div>
             )}
+
+            {/* Track Info & Selection */}
+            <div className="space-y-6">
+              <div>
+                <h4 className="font-semibold text-lg text-[var(--text-primary)]">Lofi Study Session</h4>
+                <p className="text-sm text-[var(--text-secondary)] mt-1">Background music for studying, reading, or taking a quiet break.</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide mb-3">Choose your vibe</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {lofiTracks.map((track, idx) => (
+                    <button
+                      key={track.id}
+                      onClick={() => { setCurrentTrackIndex(idx); setEmbedError(false); }}
+                      className={`text-left p-4 rounded-xl border transition-all duration-200 ${
+                        currentTrackIndex === idx 
+                        ? "bg-[#5B7FD4]/10 border-[#5B7FD4] shadow-sm" 
+                        : "bg-[var(--surface)] border-[var(--border)] hover:border-[#5B7FD4]/50 opacity-80 hover:opacity-100"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 mb-1">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${currentTrackIndex === idx ? "bg-[#5B7FD4] text-white" : "bg-[var(--surface-secondary)] text-[var(--text-muted)]"}`}>
+                          {currentTrackIndex === idx ? <Headphones className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+                        </div>
+                        <p className="font-semibold text-[var(--text-primary)] text-sm">{track.title}</p>
+                      </div>
+                      <p className="text-xs text-[var(--text-secondary)] pl-11">{track.description}</p>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-center text-[var(--text-muted)] mt-5">Music starts when you press play.</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
