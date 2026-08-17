@@ -66,6 +66,7 @@ export default function MitraPage() {
     api: "/api/chat",
     initialMessages: initialDbMessages,
     body: { firebaseUid: user?.uid, conversationId },
+    maxSteps: 5,
   });
 
   const bottomRef = useRef<HTMLDivElement>(null);
