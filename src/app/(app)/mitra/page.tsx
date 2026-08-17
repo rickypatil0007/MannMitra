@@ -3,9 +3,8 @@
 import { useRef, useState, useEffect, KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Brain, Send, RotateCcw, Mic, CheckCircle2, Loader2, MessageSquare, Plus, PanelLeftClose, PanelLeftOpen, Trash2 } from "lucide-react";
-import { useChat, Message } from "ai/react";
-import { User } from "firebase/auth";
+import { Brain, Send, RotateCcw, Mic, CheckCircle2, Loader2, MessageSquare, Plus, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { useChatContext } from "@/components/chat/chat-provider";
 
 const suggestedPrompts = [
   "Help me plan my week",
@@ -14,86 +13,24 @@ const suggestedPrompts = [
   "I failed an exam and I don't know how to feel",
 ];
 
-const initialMitraMessage: Message = {
-  id: "0",
-  role: "assistant",
-  content: "Hi 👋 I'm Mitra. This is a safe, private space. You can share how you're feeling, ask for help planning your week, or just talk. What's on your mind today?",
-};
-
 export default function MitraPage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loadingHistory, setLoadingHistory] = useState(true);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [conversations, setConversations] = useState<any[]>([]);
-  
-  const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [initialDbMessages, setInitialDbMessages] = useState<Message[]>([initialMitraMessage]);
+  const {
+    user,
+    historyLoaded,
+    conversationId,
+    conversations,
+    messages,
+    input,
+    isLoading,
+    handleInputChange,
+    handleSubmit,
+    append,
+    loadActiveConversation,
+    reset,
+  } = useChatContext();
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
-
-  useEffect(() => {
-    import("@/lib/firebase").then(({ auth }) => {
-      import("firebase/auth").then(({ onAuthStateChanged }) => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-          if (currentUser) {
-            setUser(currentUser);
-            await loadConversationsList(currentUser.uid);
-            await loadActiveConversation(currentUser.uid);
-          } else {
-            setHistoryLoaded(true);
-            setLoadingHistory(false);
-          }
-        });
-        return () => unsubscribe();
-      });
-    });
-  }, []);
-
-  const loadConversationsList = async (uid: string) => {
-    const { getUserConversations } = await import("@/actions/chat");
-    const res = await getUserConversations(uid);
-    if (res.success && res.conversations) {
-      setConversations(res.conversations);
-    }
-  };
-
-  const loadActiveConversation = async (uid: string, cid?: string) => {
-    setLoadingHistory(true);
-    setHistoryLoaded(false);
-    const { getConversationHistory } = await import("@/actions/chat");
-    const res = await getConversationHistory(uid, cid);
-    
-    if (res.success && res.conversationId) {
-      setConversationId(res.conversationId);
-      if (res.messages && res.messages.length > 0) {
-        const mapped = res.messages.map((m: any) => ({
-          id: m.id,
-          role: m.role as "user" | "assistant",
-          content: m.content
-        }));
-        setInitialDbMessages(mapped);
-      } else {
-        setInitialDbMessages([initialMitraMessage]);
-      }
-    }
-    setHistoryLoaded(true);
-    setLoadingHistory(false);
-  };
-
-  const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages, append } = useChat({
-    api: "/api/chat",
-    initialMessages: initialDbMessages,
-    body: { firebaseUid: user?.uid, conversationId },
-    maxSteps: 5,
-  });
-
-  // Re-sync messages state when initialDbMessages changes (e.g. when switching chats)
-  useEffect(() => {
-    if (historyLoaded) {
-      setMessages(initialDbMessages);
-    }
-  }, [initialDbMessages, historyLoaded, setMessages]);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -114,17 +51,6 @@ export default function MitraPage() {
       e.preventDefault();
       handleSubmit(e as any);
     }
-  };
-
-  const reset = async () => {
-    if (!user) return;
-    const { createNewConversation } = await import("@/actions/chat");
-    const res = await createNewConversation(user.uid);
-    if (res.success && res.conversationId) {
-      await loadConversationsList(user.uid);
-      await loadActiveConversation(user.uid, res.conversationId);
-    }
-    if (window.innerWidth < 768) setIsSidebarOpen(false);
   };
 
   const sendSuggested = (prompt: string) => {
@@ -184,7 +110,7 @@ export default function MitraPage() {
         className={`absolute md:relative z-30 h-full w-64 bg-[var(--surface-secondary)] border-r border-[var(--border-subtle)] flex flex-col transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-64 w-0 md:block"
         }`}
-        style={{ width: isSidebarOpen ? 256 : undefined }} // force width when toggled on mobile
+        style={{ width: isSidebarOpen ? 256 : undefined }}
       >
         <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
           <h3 className="font-semibold text-sm text-[var(--text-primary)]">Chat History</h3>
@@ -193,7 +119,7 @@ export default function MitraPage() {
           </button>
         </div>
         <div className="p-3">
-          <Button onClick={reset} className="w-full gap-2 bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)]">
+          <Button onClick={() => { reset(); if (window.innerWidth < 768) setIsSidebarOpen(false); }} className="w-full gap-2 bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)]">
             <Plus className="w-4 h-4" /> New Chat
           </Button>
         </div>
@@ -254,51 +180,58 @@ export default function MitraPage() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
-            >
-              {msg.role === "assistant" && (
-                <div className="w-8 h-8 rounded-full bg-[var(--surface-ai)] border border-[var(--border-subtle)] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-soft">
-                  <Brain className="w-4 h-4 text-[var(--accent-ai)]" />
-                </div>
-              )}
+          <AnimatePresence initial={false}>
+            {messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+              >
+                {msg.role === "assistant" && (
+                  <div className="w-8 h-8 rounded-full bg-[var(--surface-ai)] border border-[var(--border-subtle)] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-soft">
+                    <Brain className="w-4 h-4 text-[var(--accent-ai)]" />
+                  </div>
+                )}
 
-              <div className={`max-w-[85%] md:max-w-[75%] space-y-2 ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
-                <div
-                  className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-sm"
-                      : "bg-[var(--surface-ai)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-tl-sm whitespace-pre-wrap"
-                  } ${!msg.content && msg.toolInvocations ? 'bg-transparent border-none px-0 py-0' : ''}`}
-                >
-                  {msg.content}
-                  
-                  {/* Tool Invocations */}
-                  {msg.toolInvocations?.map((toolInvocation, index) => {
-                    const isDone = 'result' in toolInvocation;
-                    return (
-                      <div key={index} className={`text-xs mt-2 flex items-center gap-1.5 px-3 py-2 rounded-lg border ${isDone ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-[var(--accent-ai)]/10 border-[var(--accent-ai)]/20 text-[var(--accent-ai)] animate-pulse'}`}>
-                        {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                        {isDone ? 'Action completed' : 'Mitra is processing an action...'}
-                      </div>
-                    );
-                  })}
+                <div className={`max-w-[85%] md:max-w-[75%] space-y-2 ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
+                  <div
+                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === "user"
+                        ? "bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-sm"
+                        : "bg-[var(--surface-ai)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-tl-sm whitespace-pre-wrap"
+                    } ${!msg.content && msg.toolInvocations ? 'bg-transparent border-none px-0 py-0' : ''}`}
+                  >
+                    {msg.content}
+                    
+                    {/* Tool Invocations */}
+                    {msg.toolInvocations?.map((toolInvocation, index) => {
+                      const isDone = 'result' in toolInvocation;
+                      return (
+                        <motion.div 
+                          key={index}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className={`text-xs mt-2 flex items-center gap-1.5 px-3 py-2 rounded-lg border ${isDone ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-[var(--accent-ai)]/10 border-[var(--accent-ai)]/20 text-[var(--accent-ai)] animate-pulse'}`}
+                        >
+                          {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                          {isDone ? 'Action completed' : 'Mitra is processing an action...'}
+                        </motion.div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
 
           <AnimatePresence>
             {isLoading && messages[messages.length - 1]?.role === "user" && (
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 className="flex gap-3"
               >
                 <div className="w-8 h-8 rounded-full bg-[var(--surface-ai)] border border-[var(--border-subtle)] flex items-center justify-center flex-shrink-0 shadow-soft">
@@ -323,14 +256,17 @@ export default function MitraPage() {
 
         {messages.length === 1 && (
           <div className="flex gap-2 flex-wrap px-4 md:px-6 pb-3 shrink-0">
-            {suggestedPrompts.map((p) => (
-              <button
+            {suggestedPrompts.map((p, i) => (
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
                 key={p}
                 onClick={() => sendSuggested(p)}
                 className="px-3 py-1.5 rounded-full bg-[var(--surface-secondary)] border border-[var(--border)] text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--surface)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)] transition-colors"
               >
                 {p}
-              </button>
+              </motion.button>
             ))}
           </div>
         )}
