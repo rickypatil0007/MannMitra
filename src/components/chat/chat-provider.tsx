@@ -94,11 +94,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    chat.handleSubmit(e, { data: { firebaseUid: user?.uid, conversationId } });
+    chat.handleSubmit(e, { data: { firebaseUid: user?.uid || null, conversationId: conversationId || null } as any });
   };
 
   const append = (message: Message | Omit<Message, 'id'>) => {
-    return originalAppend(message, { data: { firebaseUid: user?.uid, conversationId } });
+    return originalAppend(message, { data: { firebaseUid: user?.uid || null, conversationId: conversationId || null } as any });
   };
 
   useEffect(() => {
@@ -128,7 +128,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         messages,
         input,
         isLoading,
-        handleInputChange,
+        handleInputChange: handleInputChange as any,
         handleSubmit,
         setMessages,
         append,
