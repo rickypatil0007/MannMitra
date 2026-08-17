@@ -14,7 +14,6 @@ import {
 
 const navigation = [
   { name: "Dashboard",   href: "/faculty/dashboard", icon: LayoutDashboard },
-  { name: "Cohort Data", href: "/faculty/cohort",    icon: Users },
   { name: "Alerts",      href: "/faculty/alerts",    icon: AlertCircle },
 ];
 

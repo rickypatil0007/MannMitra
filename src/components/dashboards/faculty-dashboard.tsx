@@ -53,7 +53,7 @@ export function FacultyDashboard() {
                 <Users className="w-5 h-5 text-[var(--text-muted)]" />
               </div>
             </div>
-            <p className="text-xs text-[var(--text-muted)] mt-4">76% of enrolled cohort</p>
+            <p className="text-xs text-[var(--text-muted)] mt-4">76% of enrolled students</p>
           </CardContent>
         </Card>
         
@@ -122,7 +122,7 @@ export function FacultyDashboard() {
               <GraduationCap className="w-5 h-5" /> Recommended Institutional Action
             </h4>
             <p className="text-[var(--primary)] text-sm leading-relaxed">
-              Based on aggregated student data, the overlapping deadlines for CS301 and the SE Project are causing severe pressure spikes across the third-year cohort. Consider extending the SE Project milestone by 48 hours to alleviate the bottleneck.
+              Based on aggregated student data, the overlapping deadlines for CS301 and the SE Project are causing severe pressure spikes across the third-year students. Consider extending the SE Project milestone by 48 hours to alleviate the bottleneck.
             </p>
           </div>
         </div>
