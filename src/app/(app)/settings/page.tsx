@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/shared";
-import { User, Bell, Lock, Eye, EyeOff, CheckCircle } from "lucide-react";
+import { User, Bell, Lock, Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { getUserProfile, updateUserProfile } from "@/actions/user";
 
 const sections = ["Profile", "Notifications", "Privacy", "Account"];
 
@@ -14,11 +17,59 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("Profile");
   const [showPassword, setShowPassword] = useState(false);
   const [saved, setSaved] = useState(false);
+  
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  
+  const [profile, setProfile] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    institution: ""
+  });
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const res = await getUserProfile(currentUser.uid);
+        if (res.success && res.profile) {
+          setProfile(res.profile);
+        }
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    const res = await updateUserProfile(user.uid, {
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      institution: profile.institution
+    });
+    if (res.success) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    }
+    setSaving(false);
   };
+
+  const getInitials = () => {
+    if (profile.firstName) return profile.firstName.charAt(0).toUpperCase();
+    return "A";
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -51,11 +102,11 @@ export default function SettingsPage() {
             <CardHeader>
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[var(--primary-soft)] flex items-center justify-center text-[var(--primary-hover)] font-bold font-display text-xl">
-                  A
+                  {getInitials()}
                 </div>
                 <div>
-                  <p className="text-base font-semibold text-[var(--text-primary)]">Alex Student</p>
-                  <p className="text-sm text-[var(--text-secondary)]">alex@university.edu</p>
+                  <p className="text-base font-semibold text-[var(--text-primary)]">{profile.firstName} {profile.lastName}</p>
+                  <p className="text-sm text-[var(--text-secondary)]">{profile.email}</p>
                 </div>
               </div>
             </CardHeader>
@@ -63,20 +114,20 @@ export default function SettingsPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-[var(--text-secondary)]">First name</label>
-                  <Input defaultValue="Alex" />
+                  <Input value={profile.firstName} onChange={(e) => setProfile({ ...profile, firstName: e.target.value })} />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-[var(--text-secondary)]">Last name</label>
-                  <Input defaultValue="Student" />
+                  <Input value={profile.lastName} onChange={(e) => setProfile({ ...profile, lastName: e.target.value })} />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-[var(--text-secondary)]">Email address</label>
-                <Input type="email" defaultValue="alex@university.edu" />
+                <Input type="email" value={profile.email} disabled className="opacity-60 bg-[var(--surface-secondary)] cursor-not-allowed" />
               </div>
               <div className="space-y-1.5">
                 <label className="text-sm font-medium text-[var(--text-secondary)]">University / Institution</label>
-                <Input defaultValue="State University" />
+                <Input value={profile.institution} onChange={(e) => setProfile({ ...profile, institution: e.target.value })} />
               </div>
               <div className="flex items-center justify-between pt-2">
                 {saved && (
@@ -84,7 +135,9 @@ export default function SettingsPage() {
                     <CheckCircle className="w-4 h-4" /> Changes saved
                   </span>
                 )}
-                <Button onClick={handleSave} className="ml-auto">Save changes</Button>
+                <Button onClick={handleSave} disabled={saving} className="ml-auto">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Save changes
+                </Button>
               </div>
             </CardContent>
           </Card>

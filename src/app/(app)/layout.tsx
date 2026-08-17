@@ -2,6 +2,8 @@
 import { Sidebar } from "@/components/navigation/sidebar";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 
+import { AuthGuard } from "@/components/auth/auth-guard";
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-[var(--background-secondary)]">
@@ -14,7 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-5xl mx-auto p-5 sm:p-6 lg:p-8 pb-32 md:pb-8 space-y-6">
-            {children}
+            <AuthGuard>{children}</AuthGuard>
           </div>
         </div>
       </main>

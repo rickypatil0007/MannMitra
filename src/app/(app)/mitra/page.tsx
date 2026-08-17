@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useEffect, KeyboardEvent } from "react";
+import { useRef, useState, useEffect, KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Brain, Send, RotateCcw, Sparkles, Mic, CheckCircle2, Loader2 } from "lucide-react";
 import { useChat, Message } from "ai/react";
+import { User } from "firebase/auth";
 
 const suggestedPrompts = [
   "Help me plan my week",
@@ -20,9 +21,51 @@ const initialMitraMessage: Message = {
 };
 
 export default function MitraPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+
+  // We keep a local state for the loaded history so we can pass it into useChat
+  const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [initialDbMessages, setInitialDbMessages] = useState<Message[]>([initialMitraMessage]);
+
+  useEffect(() => {
+    import("@/lib/firebase").then(({ auth }) => {
+      import("firebase/auth").then(({ onAuthStateChanged }) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+          if (currentUser) {
+            setUser(currentUser);
+            import("@/actions/chat").then(async ({ getConversationHistory }) => {
+              const res = await getConversationHistory(currentUser.uid);
+              if (res.success && res.messages && res.conversationId) {
+                setConversationId(res.conversationId);
+                if (res.messages.length > 0) {
+                  // Map DB messages to ai/react Message format
+                  const mapped = res.messages.map((m: any) => ({
+                    id: m.id,
+                    role: m.role as "user" | "assistant",
+                    content: m.content
+                  }));
+                  setInitialDbMessages(mapped);
+                }
+              }
+              setHistoryLoaded(true);
+              setLoadingHistory(false);
+            });
+          } else {
+            setHistoryLoaded(true);
+            setLoadingHistory(false);
+          }
+        });
+        return () => unsubscribe();
+      });
+    });
+  }, []);
+
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages, append } = useChat({
     api: "/api/chat",
-    initialMessages: [initialMitraMessage],
+    initialMessages: initialDbMessages,
+    body: { firebaseUid: user?.uid, conversationId },
   });
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -47,11 +90,23 @@ export default function MitraPage() {
     }
   };
 
-  const reset = () => setMessages([initialMitraMessage]);
+  const reset = () => {
+    setMessages([initialMitraMessage]);
+    // Also reset conversationId by clearing messages from DB if we wanted, 
+    // but just resetting the client view is fine for the prototype's "New Chat".
+  };
 
   const sendSuggested = (prompt: string) => {
     append({ role: "user", content: prompt });
   };
+
+  if (!historyLoaded) {
+    return (
+      <div className="flex h-[calc(100vh-7rem)] items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto h-[calc(100vh-7rem)] md:h-[calc(100vh-5rem)] flex flex-col">

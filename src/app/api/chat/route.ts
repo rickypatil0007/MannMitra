@@ -14,7 +14,7 @@ const nvidia = createOpenAI({
 });
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, firebaseUid, conversationId } = await req.json();
 
   const systemPrompt = `You are Mitra, an AI-powered student wellness companion for 'MannMitra'. 
 Your primary goal is to help students understand, manage, and reduce academic and personal stress.
@@ -54,16 +54,16 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
             }
 
             try {
-              const defaultUser = await prisma.user.findFirst({ where: { role: 'STUDENT' } });
+              const actualUser = await prisma.user.findUnique({ where: { firebaseUid } });
               
-              if (defaultUser) {
+              if (actualUser) {
                 await prisma.task.create({
                   data: {
                     title,
                     deadline: deadline ? new Date(deadline) : new Date(Date.now() + 86400000),
                     estimatedMin,
                     priority: priority || 'MEDIUM',
-                    userId: defaultUser.id,
+                    userId: actualUser.id,
                   }
                 });
                 return { success: true, message: `Task "${title}" created successfully.` };
@@ -76,6 +76,33 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
           },
         }),
       },
+      onFinish: async ({ text }) => {
+        if (conversationId && messages.length > 0) {
+          try {
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage.role === "user") {
+              await prisma.message.create({
+                data: {
+                  conversationId,
+                  role: "user",
+                  content: lastMessage.content
+                }
+              });
+            }
+            if (text) {
+              await prisma.message.create({
+                data: {
+                  conversationId,
+                  role: "assistant",
+                  content: text
+                }
+              });
+            }
+          } catch (e) {
+            console.error("Failed to save messages to DB:", e);
+          }
+        }
+      }
     });
 
     return result.toDataStreamResponse();

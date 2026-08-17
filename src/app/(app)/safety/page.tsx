@@ -85,13 +85,13 @@ export default function SafetyPage() {
         <div className="w-full space-y-3 mb-8">
           <a
             href="tel:112"
-            className="flex items-center justify-between w-full px-6 py-5 rounded-2xl bg-[var(--danger)] text-[var(--primary-foreground)] font-semibold text-lg hover:bg-[#D45A6A] transition-colors shadow-[0_4px_20px_rgba(233,106,122,0.2)]"
+            className="flex items-center justify-between w-full px-6 py-5 rounded-2xl bg-[var(--danger)] text-black font-semibold text-lg hover:bg-[#D45A6A] transition-colors shadow-[0_4px_20px_rgba(233,106,122,0.2)]"
           >
             <span className="flex items-center gap-3">
               <Phone className="w-6 h-6" />
               Call Emergency Services
             </span>
-            <span className="text-[var(--primary-foreground)]/70 text-base font-normal">112 / 911</span>
+            <span className="text-black/70 text-base font-normal">112 / 911</span>
           </a>
           
           {!sosTriggered && (

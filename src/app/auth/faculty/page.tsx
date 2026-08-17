@@ -28,7 +28,7 @@ export default function FacultyLoginPage() {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <label htmlFor="password" className="text-sm font-medium text-[var(--text-primary)]">Password</label>
-            <Link href="#" className="text-xs text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors font-medium">Forgot password?</Link>
+            <Link href="/support" className="text-xs text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors font-medium">Forgot password?</Link>
           </div>
           <Input id="password" type="password" placeholder="••••••••" />
         </div>

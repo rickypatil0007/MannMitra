@@ -68,6 +68,9 @@
     --destructive: #EF4444;
     --destructive-foreground: #FFFFFF;
 
+    --danger: #EF4444;
+    --danger-soft: #FEE2E2;
+
     --border: #E2E8F0; /* Slate 200 */
     --border-subtle: #F1F5F9; /* Slate 100 */
     
