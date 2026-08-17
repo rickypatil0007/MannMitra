@@ -4,10 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, AlertCircle, Loader2, Users } from "lucide-react";
+import { Send, AlertCircle, Loader2, Users, Mic, PhoneOff, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { LiveKitRoom, RoomAudioRenderer, AudioConference, DisconnectButton, TrackToggle } from "@livekit/components-react";
+import "@livekit/components-styles";
+import { Track } from "livekit-client";
 
 type MatchStatus = "IDLE" | "SEARCHING" | "CONNECTED" | "ENDED";
 
@@ -28,6 +31,10 @@ export default function CompanionPage() {
   const [status, setStatus] = useState<MatchStatus>("IDLE");
   const [topic, setTopic] = useState("Exam Stress");
   const [matchId, setMatchId] = useState<string | null>(null);
+
+  const [inAudioCall, setInAudioCall] = useState(false);
+  const [audioToken, setAudioToken] = useState<string | null>(null);
+  const [liveKitUrl, setLiveKitUrl] = useState<string | null>(null);
   
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
@@ -83,6 +90,27 @@ export default function CompanionPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firebaseUid: user.uid, matchId })
     });
+  };
+
+  const startAudioCall = async () => {
+    if (!user || !matchId) return;
+    try {
+      const res = await fetch("/api/companion/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firebaseUid: user.uid, matchId })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setAudioToken(data.token);
+        setLiveKitUrl(data.url);
+        setInAudioCall(true);
+      } else {
+        alert("Failed to join audio: " + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const sendMessage = async (e: React.FormEvent) => {
@@ -282,10 +310,47 @@ export default function CompanionPage() {
                    </div>
                  </div>
               </div>
-              <Button variant="ghost" size="sm" onClick={endConnection} className="text-red-500 hover:text-red-600 hover:bg-red-50">
-                End Chat
-              </Button>
+              <div className="flex items-center gap-2">
+                {!inAudioCall ? (
+                  <Button variant="outline" size="sm" onClick={startAudioCall} className="gap-2">
+                    <Phone className="w-4 h-4" /> Join Audio
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" onClick={() => setInAudioCall(false)} className="gap-2 text-red-500 hover:text-red-600">
+                    <PhoneOff className="w-4 h-4" /> Leave Audio
+                  </Button>
+                )}
+                <Button variant="ghost" size="sm" onClick={endConnection} className="text-red-500 hover:text-red-600 hover:bg-red-50">
+                  End Chat
+                </Button>
+              </div>
             </div>
+
+            {/* LiveKit Audio Room */}
+            {inAudioCall && audioToken && liveKitUrl && (
+              <LiveKitRoom
+                video={false}
+                audio={true}
+                token={audioToken}
+                serverUrl={liveKitUrl}
+                onDisconnected={() => setInAudioCall(false)}
+                className="border-b bg-[var(--primary)]/5 p-4 shrink-0"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-sm font-medium text-[var(--primary)]">Audio Call Connected</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <TrackToggle source={Track.Source.Microphone} className="h-9 px-4 rounded-md border text-sm font-medium bg-background hover:bg-accent hover:text-accent-foreground" />
+                    <DisconnectButton className="h-9 px-4 rounded-md border text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50">
+                      Leave
+                    </DisconnectButton>
+                  </div>
+                </div>
+                <RoomAudioRenderer />
+              </LiveKitRoom>
+            )}
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">

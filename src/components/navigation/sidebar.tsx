@@ -26,6 +26,7 @@ const authenticatedNavigation = [
   { name: "Planner",    href: "/planner",     icon: CheckSquare },
   { name: "Analytics",  href: "/analytics",   icon: Activity },
   { name: "Mitra",      href: "/mitra",       icon: MessageSquareHeart },
+  { name: "Companion",  href: "/companion",   icon: Users },
   { name: "Diary",      href: "/notes",       icon: NotebookPen },
   { name: "Community",  href: "/community",   icon: Users },
   { name: "Comfort",    href: "/comfort",     icon: BookOpen },
