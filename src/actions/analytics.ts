@@ -84,3 +84,88 @@ export async function getWellnessAnalytics(firebaseUid: string) {
     return { success: false, error: "Failed to fetch analytics" };
   }
 }
+
+export async function getStressForecast(firebaseUid: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { firebaseUid } });
+    if (!user) return { success: false, error: "User not found" };
+
+    const now = new Date();
+    // Start of today
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const sevenDaysFromNow = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    const upcomingTasks = await prisma.task.findMany({
+      where: {
+        userId: user.id,
+        deadline: {
+          gte: startOfToday,
+          lte: sevenDaysFromNow,
+        }
+      },
+      orderBy: { deadline: "asc" }
+    });
+
+    // Group tasks by day (0 = today, 1 = tomorrow, etc.)
+    const timeline = Array.from({ length: 7 }, (_, i) => {
+      const dayDate = new Date(startOfToday.getTime() + i * 24 * 60 * 60 * 1000);
+      const dayStr = dayDate.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+      let isToday = i === 0;
+      let isTomorrow = i === 1;
+      
+      let label = isToday ? "Today" : isTomorrow ? "Tomorrow" : `In ${i} Days`;
+      
+      const dayTasks = upcomingTasks.filter(t => {
+        const tDate = new Date(t.deadline);
+        return tDate.getDate() === dayDate.getDate() && tDate.getMonth() === dayDate.getMonth();
+      });
+
+      let stressScore = 0;
+      let details: string[] = [];
+      
+      dayTasks.forEach(t => {
+        if (t.priority === "CRITICAL" || t.priority === "HIGH") {
+          stressScore += 3;
+          details.push(`${t.priority === "CRITICAL" ? "Major" : "Important"} deadline: ${t.title}`);
+        } else {
+          stressScore += 1;
+        }
+      });
+
+      let level = "Normal Workload";
+      let status: "NORMAL" | "WARNING" | "HIGH" = "NORMAL";
+
+      if (stressScore >= 5) {
+        level = "Peak Stress Window";
+        status = "HIGH";
+      } else if (stressScore >= 3) {
+        level = "Pressure Building";
+        status = "WARNING";
+      }
+
+      return {
+        dayIndex: i,
+        label,
+        dateStr: dayStr,
+        level,
+        status,
+        taskCount: dayTasks.length,
+        details,
+        stressScore
+      };
+    });
+
+    const highPressureDays = timeline.filter(d => d.status === "HIGH");
+
+    return { 
+      success: true, 
+      timeline, 
+      highPressureDetected: highPressureDays.length > 0,
+      highPressureDays
+    };
+
+  } catch (error) {
+    console.error("Error fetching forecast:", error);
+    return { success: false, error: "Failed to fetch forecast" };
+  }
+}
