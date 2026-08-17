@@ -14,7 +14,12 @@ const nvidia = createOpenAI({
 });
 
 export async function POST(req: Request) {
-  const { messages, firebaseUid, conversationId } = await req.json();
+  const body = await req.json();
+  const messages = body.messages;
+  
+  // Extract custom fields from the `data` object sent by useChat
+  const firebaseUid = body.data?.firebaseUid || body.firebaseUid;
+  const conversationId = body.data?.conversationId || body.conversationId;
 
   const systemPrompt = `You are Mitra, an AI-powered student wellness companion for 'MannMitra'. 
 Your primary goal is to help students understand, manage, and reduce academic and personal stress.

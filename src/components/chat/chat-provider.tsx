@@ -84,12 +84,22 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setLoadingHistory(false);
   };
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages, append } = useChat({
+  const chat = useChat({
     api: "/api/chat",
     initialMessages: initialDbMessages,
-    body: { firebaseUid: user?.uid, conversationId },
     maxSteps: 5,
   });
+
+  const { messages, input, handleInputChange, isLoading, setMessages, append: originalAppend } = chat;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    chat.handleSubmit(e, { data: { firebaseUid: user?.uid, conversationId } });
+  };
+
+  const append = (message: Message | Omit<Message, 'id'>) => {
+    return originalAppend(message, { data: { firebaseUid: user?.uid, conversationId } });
+  };
 
   useEffect(() => {
     if (historyLoaded) {
