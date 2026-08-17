@@ -15,6 +15,7 @@ export default function MitraPage() {
     conversations,
     loadActiveConversation,
     reset,
+    messages,
   } = useChatContext();
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -88,6 +89,7 @@ export default function MitraPage() {
       <MitraChat
         firebaseUid={user?.uid || null}
         conversationId={conversationId || null}
+        initialMessages={messages}
       />
     </div>
   );
