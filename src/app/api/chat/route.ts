@@ -45,34 +45,53 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
             title: z.string().describe('The name of the task or assignment.'),
             deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
             estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
-            priority: z.enum(['LOW', 'MEDIUM', 'HIGH']).optional().describe('The priority of the task.'),
+            priority: z.string().optional().describe('The priority of the task (LOW, MEDIUM, HIGH).'),
           }),
           execute: async ({ title, deadline, estimatedMin, priority }) => {
-            // Vercel hobby instances will hang if trying to connect to a localhost Prisma DB
             if (process.env.VERCEL && process.env.DATABASE_URL?.includes('localhost')) {
               console.log("Mocking task creation because Vercel cannot connect to localhost DB.");
               return { success: true, message: `Task "${title}" created successfully.` };
             }
 
             try {
+              if (!firebaseUid) {
+                 return { success: false, message: "Authentication missing. Cannot create task." };
+              }
+
               const actualUser = await prisma.user.findUnique({ where: { firebaseUid } });
               
               if (actualUser) {
+                // Safely parse deadline
+                let parsedDate = new Date(Date.now() + 86400000); // default tomorrow
+                if (deadline && deadline.trim() !== "") {
+                  const d = new Date(deadline);
+                  if (!isNaN(d.getTime())) {
+                    parsedDate = d;
+                  }
+                }
+                
+                // Safely parse priority
+                let safePriority: "LOW" | "MEDIUM" | "HIGH" = "MEDIUM";
+                if (priority) {
+                  const p = priority.toUpperCase();
+                  if (p === "LOW" || p === "HIGH") safePriority = p;
+                }
+
                 await prisma.task.create({
                   data: {
                     title,
-                    deadline: deadline ? new Date(deadline) : new Date(Date.now() + 86400000),
-                    estimatedMin,
-                    priority: priority || 'MEDIUM',
+                    deadline: parsedDate,
+                    estimatedMin: estimatedMin || 30,
+                    priority: safePriority,
                     userId: actualUser.id,
                   }
                 });
                 return { success: true, message: `Task "${title}" created successfully.` };
               }
               return { success: false, message: "No active user found to attach task to." };
-            } catch (e) {
+            } catch (e: any) {
               console.error("Task creation failed:", e);
-              return { success: false, message: "Database error while creating task." };
+              return { success: false, message: `Database error while creating task: ${e.message}` };
             }
           },
         }),
