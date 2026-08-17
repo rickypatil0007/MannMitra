@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader, Badge } from "@/components/ui/shared";
 import { Button } from "@/components/ui/button";
 import { Users, EyeOff, Calendar, MoreVertical, FileText, Save } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+
 
 export default function CaseloadPage() {
   const [expandedNotesId, setExpandedNotesId] = useState<number | null>(null);
@@ -99,9 +99,9 @@ export default function CaseloadPage() {
                     <h4 className="text-sm font-semibold text-[var(--text-primary)]">Clinical Notes (Private)</h4>
                     <span className="text-xs text-[var(--text-muted)]">HIPAA Compliant Encrypted</span>
                   </div>
-                  <Textarea 
+                  <textarea 
                     defaultValue={student.notes} 
-                    className="min-h-[100px] resize-none bg-[var(--surface-secondary)] border-[var(--border-subtle)] focus-visible:ring-[var(--primary-soft)] text-sm mb-3"
+                    className="min-h-[100px] resize-none bg-[var(--surface-secondary)] border border-[var(--border-subtle)] rounded-md focus-visible:ring-1 focus-visible:ring-[var(--primary-soft)] text-sm mb-3 w-full p-3 text-[var(--text-primary)]"
                     placeholder="Add secure case notes here..."
                   />
                   <div className="flex justify-end">
