@@ -85,3 +85,28 @@ export async function createNewConversation(firebaseUid: string) {
     return { success: false, error: "Failed to create conversation" };
   }
 }
+
+export async function deleteConversation(firebaseUid: string, conversationId: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { firebaseUid } });
+    if (!user) return { success: false, error: "User not found" };
+
+    // Verify ownership before deleting
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId }
+    });
+
+    if (!conversation || conversation.userId !== user.id) {
+      return { success: false, error: "Unauthorized or not found" };
+    }
+
+    await prisma.conversation.delete({
+      where: { id: conversationId }
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting conversation:", error);
+    return { success: false, error: "Failed to delete conversation" };
+  }
+}

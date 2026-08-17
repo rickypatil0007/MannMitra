@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Plus, PanelLeftClose, Loader2 } from "lucide-react";
+import { MessageSquare, Plus, PanelLeftClose, Loader2, Trash2 } from "lucide-react";
 import { useChatContext } from "@/components/chat/chat-provider";
 import { MitraChat } from "@/features/mitra-ai/components/MitraChat";
 
@@ -16,6 +16,7 @@ export default function MitraPage() {
     loadActiveConversation,
     reset,
     messages,
+    removeConversation,
   } = useChatContext();
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -66,21 +67,32 @@ export default function MitraPage() {
         </div>
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {conversations.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => {
-                loadActiveConversation(user!.uid, c.id);
-                if (window.innerWidth < 768) setIsSidebarOpen(false);
-              }}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-2 transition-colors ${
-                conversationId === c.id 
-                  ? "bg-[var(--background-primary)] font-medium text-[var(--primary)] shadow-sm" 
-                  : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"
-              }`}
-            >
-              <MessageSquare className="w-4 h-4 shrink-0" />
-              <span className="truncate flex-1">{c.title || "New Conversation"}</span>
-            </button>
+            <div key={c.id} className="relative group flex items-center">
+              <button
+                onClick={() => {
+                  loadActiveConversation(user!.uid, c.id);
+                  if (window.innerWidth < 768) setIsSidebarOpen(false);
+                }}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-2 transition-colors ${
+                  conversationId === c.id 
+                    ? "bg-[var(--background-primary)] font-medium text-[var(--primary)] shadow-sm" 
+                    : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4 shrink-0" />
+                <span className="truncate flex-1 pr-6">{c.title || "New Conversation"}</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeConversation(user!.uid, c.id);
+                }}
+                className="absolute right-2 p-1.5 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-md opacity-0 group-hover:opacity-100 transition-all"
+                title="Delete Chat"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           ))}
         </div>
       </motion.div>

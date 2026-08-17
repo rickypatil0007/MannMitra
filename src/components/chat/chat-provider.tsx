@@ -19,6 +19,7 @@ type ChatContextType = {
   messages: any[];
   loadActiveConversation: (uid: string, cid?: string) => Promise<void>;
   reset: () => Promise<void>;
+  removeConversation: (uid: string, cid: string) => Promise<void>;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -87,6 +88,18 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const removeConversation = async (uid: string, cid: string) => {
+    const { deleteConversation } = await import("@/actions/chat");
+    const res = await deleteConversation(uid, cid);
+    if (res.success) {
+      await loadConversationsList(uid);
+      // If we deleted the active one, reset to a new one
+      if (conversationId === cid) {
+        await reset();
+      }
+    }
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -98,6 +111,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         messages,
         loadActiveConversation,
         reset,
+        removeConversation,
       }}
     >
       {children}
