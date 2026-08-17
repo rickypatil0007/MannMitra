@@ -75,7 +75,7 @@ export default function CaseloadPage() {
                 {/* Actions */}
                 <div className="flex items-center gap-2">
                   <Button 
-                    variant={expandedNotesId === student.id ? "default" : "outline"}
+                    variant={expandedNotesId === student.id ? "primary" : "outline"}
                     size="sm" 
                     className={expandedNotesId === student.id ? "bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white" : "border-[var(--border)] text-[var(--text-secondary)]"}
                     onClick={() => setExpandedNotesId(expandedNotesId === student.id ? null : student.id)}
