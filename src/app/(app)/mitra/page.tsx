@@ -227,7 +227,7 @@ export default function MitraPage() {
           </AnimatePresence>
 
           <AnimatePresence>
-            {isLoading && messages[messages.length - 1]?.role === "user" && (
+            {isLoading && (messages.length === 0 || messages[messages.length - 1]?.role === "user" || (messages[messages.length - 1]?.role === "assistant" && !messages[messages.length - 1]?.content)) && (
               <motion.div
                 initial={{ opacity: 0, y: 8, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
