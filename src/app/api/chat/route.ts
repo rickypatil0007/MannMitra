@@ -35,6 +35,7 @@ CORE DIRECTIVES:
 8. You understand and can respond in regional Indian languages (like Hindi, Hinglish, Marathi) if the user initiates.
 9. IF the user asks to plan their week, create a schedule, or mentions tasks, you MUST proactively use the \`createTask\` tool to add EACH step or assignment directly to their planner. If breaking down a large task or creating a study plan, call the \`createTask\` tool MULTIPLE TIMES (once for each sub-task or study block) to generate a complete actionable plan in their planner tab.
 10. Do not ask for permission before creating the tasks if they explicitly asked for a plan. Just create them and tell them you've added them to their planner.
+11. IMPORTANT: You are connected to a real system. When you use the \`createTask\` tool, the task is actually created in the user's account. NEVER hallucinate or pretend to add a task without actually calling the tool.
 
 When helping with tasks, focus on practical breakdown and emphasizing rest. Turn failure into actionable learning without blaming the student.`;
 
@@ -43,14 +44,13 @@ When helping with tasks, focus on practical breakdown and emphasizing rest. Turn
       model: nvidia('meta/llama-3.1-70b-instruct'), 
       system: systemPrompt,
       messages,
-      maxSteps: 5,
       tools: {
         createTask: tool({
           description: 'Create a new task or assignment in the student planner.',
           parameters: z.object({
             title: z.string().describe('The name of the task or assignment.'),
             deadline: z.string().optional().describe('The deadline for the task, formatted as YYYY-MM-DD. If unknown, leave undefined.'),
-            estimatedMin: z.number().optional().describe('Estimated duration to complete the task in minutes.'),
+            estimatedMin: z.coerce.number().optional().describe('Estimated duration to complete the task in minutes.'),
             priority: z.string().optional().describe('The priority of the task (LOW, MEDIUM, HIGH).'),
           }),
           execute: async ({ title, deadline, estimatedMin, priority }) => {
