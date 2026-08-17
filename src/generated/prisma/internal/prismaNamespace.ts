@@ -416,7 +416,9 @@ export const ModelName = {
   TrustedContact: 'TrustedContact',
   SOSAlert: 'SOSAlert',
   SeniorStory: 'SeniorStory',
-  QuietSpace: 'QuietSpace'
+  QuietSpace: 'QuietSpace',
+  CompanionMatch: 'CompanionMatch',
+  CompanionMessage: 'CompanionMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -432,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "task" | "calendarEvent" | "moodRecord" | "stressRecord" | "stressForecast" | "conversation" | "message" | "voiceNote" | "personalNote" | "communityPost" | "communityComment" | "block" | "postLike" | "report" | "counsellingRequest" | "trustedContact" | "sOSAlert" | "seniorStory" | "quietSpace"
+    modelProps: "user" | "task" | "calendarEvent" | "moodRecord" | "stressRecord" | "stressForecast" | "conversation" | "message" | "voiceNote" | "personalNote" | "communityPost" | "communityComment" | "block" | "postLike" | "report" | "counsellingRequest" | "trustedContact" | "sOSAlert" | "seniorStory" | "quietSpace" | "companionMatch" | "companionMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1916,6 +1918,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CompanionMatch: {
+      payload: Prisma.$CompanionMatchPayload<ExtArgs>
+      fields: Prisma.CompanionMatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanionMatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanionMatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanionMatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanionMatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        findMany: {
+          args: Prisma.CompanionMatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>[]
+        }
+        create: {
+          args: Prisma.CompanionMatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        createMany: {
+          args: Prisma.CompanionMatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanionMatchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanionMatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        update: {
+          args: Prisma.CompanionMatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanionMatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanionMatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanionMatchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanionMatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMatchPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanionMatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanionMatch>
+        }
+        groupBy: {
+          args: Prisma.CompanionMatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanionMatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanionMatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanionMatchCountAggregateOutputType> | number
+        }
+      }
+    }
+    CompanionMessage: {
+      payload: Prisma.$CompanionMessagePayload<ExtArgs>
+      fields: Prisma.CompanionMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanionMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanionMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.CompanionMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanionMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        findMany: {
+          args: Prisma.CompanionMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>[]
+        }
+        create: {
+          args: Prisma.CompanionMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        createMany: {
+          args: Prisma.CompanionMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanionMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>[]
+        }
+        delete: {
+          args: Prisma.CompanionMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        update: {
+          args: Prisma.CompanionMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanionMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanionMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanionMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanionMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanionMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.CompanionMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanionMessage>
+        }
+        groupBy: {
+          args: Prisma.CompanionMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanionMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanionMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanionMessageCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2205,6 +2355,31 @@ export const QuietSpaceScalarFieldEnum = {
 } as const
 
 export type QuietSpaceScalarFieldEnum = (typeof QuietSpaceScalarFieldEnum)[keyof typeof QuietSpaceScalarFieldEnum]
+
+
+export const CompanionMatchScalarFieldEnum = {
+  id: 'id',
+  userAId: 'userAId',
+  userBId: 'userBId',
+  topic: 'topic',
+  status: 'status',
+  createdAt: 'createdAt',
+  connectedAt: 'connectedAt',
+  endedAt: 'endedAt'
+} as const
+
+export type CompanionMatchScalarFieldEnum = (typeof CompanionMatchScalarFieldEnum)[keyof typeof CompanionMatchScalarFieldEnum]
+
+
+export const CompanionMessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt',
+  matchId: 'matchId',
+  senderId: 'senderId'
+} as const
+
+export type CompanionMessageScalarFieldEnum = (typeof CompanionMessageScalarFieldEnum)[keyof typeof CompanionMessageScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2554,6 +2729,8 @@ export type GlobalOmitConfig = {
   sOSAlert?: Prisma.SOSAlertOmit
   seniorStory?: Prisma.SeniorStoryOmit
   quietSpace?: Prisma.QuietSpaceOmit
+  companionMatch?: Prisma.CompanionMatchOmit
+  companionMessage?: Prisma.CompanionMessageOmit
 }
 
 /* Types for Logging */

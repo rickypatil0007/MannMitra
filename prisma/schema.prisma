@@ -97,6 +97,9 @@ model User {
   blocksReceived  Block[] @relation("Blocked")
   postLikes       PostLike[]
   reports         Report[]
+  matchesA        CompanionMatch[] @relation("MatchUserA")
+  matchesB        CompanionMatch[] @relation("MatchUserB")
+  companionMsgs   CompanionMessage[]
 }
 
 // ==========================================
@@ -357,3 +360,35 @@ model QuietSpace {
   createdAt   DateTime @default(now())
 }
 
+// ==========================================
+// COMPANION P2P MATCHING
+// ==========================================
+
+model CompanionMatch {
+  id          String   @id @default(uuid())
+  userAId     String
+  userBId     String?  // Nullable because it starts as SEARCHING
+  topic       String
+  status      String   // SEARCHING, CONNECTED, ENDED
+  createdAt   DateTime @default(now())
+  connectedAt DateTime?
+  endedAt     DateTime?
+
+  userA       User     @relation("MatchUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB       User?    @relation("MatchUserB", fields: [userBId], references: [id], onDelete: Cascade)
+  
+  messages    CompanionMessage[]
+}
+
+model CompanionMessage {
+  id        String   @id @default(uuid())
+  /// @encrypted
+  content   String
+  createdAt DateTime @default(now())
+  
+  matchId   String
+  match     CompanionMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}

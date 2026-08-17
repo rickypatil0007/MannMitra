@@ -70,7 +70,9 @@ export const ModelName = {
   TrustedContact: 'TrustedContact',
   SOSAlert: 'SOSAlert',
   SeniorStory: 'SeniorStory',
-  QuietSpace: 'QuietSpace'
+  QuietSpace: 'QuietSpace',
+  CompanionMatch: 'CompanionMatch',
+  CompanionMessage: 'CompanionMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -339,6 +341,31 @@ export const QuietSpaceScalarFieldEnum = {
 } as const
 
 export type QuietSpaceScalarFieldEnum = (typeof QuietSpaceScalarFieldEnum)[keyof typeof QuietSpaceScalarFieldEnum]
+
+
+export const CompanionMatchScalarFieldEnum = {
+  id: 'id',
+  userAId: 'userAId',
+  userBId: 'userBId',
+  topic: 'topic',
+  status: 'status',
+  createdAt: 'createdAt',
+  connectedAt: 'connectedAt',
+  endedAt: 'endedAt'
+} as const
+
+export type CompanionMatchScalarFieldEnum = (typeof CompanionMatchScalarFieldEnum)[keyof typeof CompanionMatchScalarFieldEnum]
+
+
+export const CompanionMessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt',
+  matchId: 'matchId',
+  senderId: 'senderId'
+} as const
+
+export type CompanionMessageScalarFieldEnum = (typeof CompanionMessageScalarFieldEnum)[keyof typeof CompanionMessageScalarFieldEnum]
 
 
 export const SortOrder = {

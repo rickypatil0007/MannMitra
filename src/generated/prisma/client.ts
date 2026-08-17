@@ -139,3 +139,13 @@ export type SeniorStory = Prisma.SeniorStoryModel
  * 
  */
 export type QuietSpace = Prisma.QuietSpaceModel
+/**
+ * Model CompanionMatch
+ * 
+ */
+export type CompanionMatch = Prisma.CompanionMatchModel
+/**
+ * Model CompanionMessage
+ * 
+ */
+export type CompanionMessage = Prisma.CompanionMessageModel
