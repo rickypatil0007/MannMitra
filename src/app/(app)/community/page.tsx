@@ -19,6 +19,8 @@ import {
 
 const TAGS = ["Latest", "Exam Stress", "Loneliness", "Success Stories", "Mental Health"];
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 export default function CommunityPage() {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<any[]>([]);
@@ -63,7 +65,7 @@ export default function CommunityPage() {
   };
 
   const handleCreatePost = async () => {
-    if (!user || !newPostContent.trim()) return;
+    if (!user || user.isAnonymous || !newPostContent.trim()) return;
     setIsSubmitting(true);
     const res = await createCommunityPost(user.uid, newPostContent, newPostTag);
     if (res.success) {
@@ -75,7 +77,7 @@ export default function CommunityPage() {
   };
 
   const handleLike = async (postId: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) return;
     setInteractionLoading(postId);
     const res = await toggleLikePost(user.uid, postId);
     if (res.success) {
@@ -95,7 +97,7 @@ export default function CommunityPage() {
   };
 
   const handleAddComment = async (postId: string) => {
-    if (!user || !commentText.trim()) return;
+    if (!user || user.isAnonymous || !commentText.trim()) return;
     setCommentingPostId(postId);
     const res = await addComment(user.uid, postId, commentText);
     if (res.success) {
@@ -106,14 +108,14 @@ export default function CommunityPage() {
   };
 
   const handleReport = async (postId: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) return;
     await reportItem(user.uid, postId, "POST", "Inappropriate content");
     setModPostId(null);
     alert("Post reported. Thank you for keeping the community safe.");
   };
 
   const handleBlock = async (authorId: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) return;
     await blockUser(user.uid, authorId);
     setModPostId(null);
     await fetchPosts(user.uid, activeTag);
@@ -124,8 +126,9 @@ export default function CommunityPage() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" as const }}
-      className="space-y-8 max-w-3xl"
+      className="space-y-8 max-w-3xl relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Community" description="Create an account to join the conversation, share anonymously, and connect with peers." />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Community</h1>

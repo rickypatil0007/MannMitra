@@ -20,8 +20,8 @@ export default function SafetyPage() {
   }, []);
 
   const handleSOS = async () => {
-    if (!user) {
-      alert("You must be logged in to trigger a silent SOS.");
+    if (!user || user.isAnonymous) {
+      alert("Guest Mode: You do not have trusted contacts saved. Please use the direct call buttons below for immediate help.");
       return;
     }
     

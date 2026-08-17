@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -16,9 +18,10 @@ import {
   Settings,
   LogOut,
   AlertTriangle,
+  LogIn
 } from "lucide-react";
 
-const navigation = [
+const authenticatedNavigation = [
   { name: "Dashboard",  href: "/dashboard",   icon: LayoutDashboard },
   { name: "Planner",    href: "/planner",     icon: CheckSquare },
   { name: "Analytics",  href: "/analytics",   icon: Activity },
@@ -30,24 +33,25 @@ const navigation = [
   { name: "Support",    href: "/support",     icon: Headset },
 ];
 
+const guestNavigation = [
+  { name: "Dashboard",  href: "/dashboard",   icon: LayoutDashboard },
+];
+
 export function Sidebar() {
   const pathname = usePathname();
-  const [isGuest, setIsGuest] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    import("@/lib/firebase").then(({ auth }) => {
-      import("firebase/auth").then(({ onAuthStateChanged }) => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setIsGuest(!!user?.isAnonymous);
-        });
-        return () => unsubscribe();
-      });
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
     });
+    return () => unsubscribe();
   }, []);
 
-  const visibleNav = isGuest 
-    ? navigation.filter(n => n.name === "Dashboard" || n.name === "Mitra")
-    : navigation;
+  const isGuest = !user || user.isAnonymous;
+  const navigation = loading ? guestNavigation : (isGuest ? guestNavigation : authenticatedNavigation);
 
   return (
     <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Main navigation">
@@ -61,7 +65,7 @@ export function Sidebar() {
 
       {/* Nav links */}
       <nav className="flex-1 px-2.5 pt-3 pb-3 space-y-0.5 overflow-y-auto">
-        {visibleNav.map((item) => {
+        {navigation.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
           return (
             <Link
@@ -100,24 +104,35 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="px-2.5 pb-3 border-t border-[var(--border-subtle)] pt-2.5 space-y-0.5">
+        {!isGuest && (
+          <Link
+            href="/settings"
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+              pathname === "/settings"
+                ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
+                : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
+            )}
+          >
+            <Settings className="w-4 h-4" strokeWidth={2} />
+            Settings
+          </Link>
+        )}
         <Link
-          href="/settings"
-          className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
-            pathname === "/settings"
-              ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
-              : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
-          )}
-        >
-          <Settings className="w-4 h-4" strokeWidth={2} />
-          Settings
-        </Link>
-        <Link
-          href="/auth/login"
+          href={isGuest ? "/auth/login" : "/auth/login"}
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)] transition-all duration-150"
         >
-          <LogOut className="w-4 h-4" strokeWidth={2} />
-          Log out
+          {isGuest ? (
+            <>
+              <LogIn className="w-4 h-4" strokeWidth={2} />
+              Log in
+            </>
+          ) : (
+            <>
+              <LogOut className="w-4 h-4" strokeWidth={2} />
+              Log out
+            </>
+          )}
         </Link>
       </div>
     </aside>

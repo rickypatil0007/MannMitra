@@ -21,6 +21,8 @@ const priorityConfig: Record<string, { badge: string; dot: string }> = {
   LOW:      { badge: "muted",   dot: "bg-[var(--text-muted)]" },
 };
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 export default function PlannerPage() {
   const [user, setUser] = useState<User | null>(null);
   const [tasks, setTasks] = useState<any[]>([]);
@@ -66,7 +68,7 @@ export default function PlannerPage() {
   };
 
   const addTask = async () => {
-    if (!newTitle.trim() || !user) return;
+    if (!newTitle.trim() || !user || user.isAnonymous) return;
     setActionLoading(true);
     
     const deadlineDate = newDeadline ? new Date(newDeadline) : new Date();
@@ -115,8 +117,9 @@ export default function PlannerPage() {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" as const }}
-      className="space-y-6 max-w-3xl"
+      className="space-y-6 max-w-3xl relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Planner" description="Create an account to securely save and track your academic tasks." />
       <PageHeader
         title="Planner"
         description="Organize your academic life with clarity."

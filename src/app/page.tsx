@@ -78,7 +78,7 @@ export default function LandingPage() {
                 </Button>
               </Magnetic>
               <Button size="lg" variant="ghost" className="h-14 px-10 text-base rounded-full w-full sm:w-auto" asChild>
-                <Link href="/auth/login">Log in as Guest</Link>
+                <Link href="/auth/student/login?guest=true">Log in as Guest</Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -229,7 +229,7 @@ export default function LandingPage() {
               </Button>
             </Magnetic>
             <Button size="lg" variant="ghost" className="h-14 px-10 text-base rounded-full text-[var(--primary-foreground)] hover:bg-[var(--surface)]/10 w-full sm:w-auto" asChild>
-              <Link href="/auth/login">Log in as Guest</Link>
+              <Link href="/auth/student/login?guest=true">Log in as Guest</Link>
             </Button>
           </motion.div>
         </motion.div>

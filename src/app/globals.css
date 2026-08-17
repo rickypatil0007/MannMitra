@@ -170,4 +170,9 @@
   .bg-soft { background-color: var(--background-secondary); }
   .bg-green-section { background-color: var(--surface-secondary); }
   .bg-green-light-card { background-color: var(--primary-soft); }
+  
+  /* Safe area utilities */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
 }

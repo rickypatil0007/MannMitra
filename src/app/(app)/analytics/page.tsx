@@ -12,6 +12,8 @@ import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { getWellnessAnalytics } from "@/actions/analytics";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 export default function AnalyticsPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [weeklyData, setWeeklyData] = useState<any[]>([]);
@@ -43,8 +45,9 @@ export default function AnalyticsPage() {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" as const }}
-      className="space-y-6 max-w-4xl"
+      className="space-y-6 max-w-4xl relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Analytics" description="Create an account to track your wellness trends over time." />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader 
           title="Wellness Analytics" 

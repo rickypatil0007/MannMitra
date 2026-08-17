@@ -49,6 +49,8 @@ interface NoteData {
   updatedAt: string | Date;
 }
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 export default function NotesPage() {
   const [user, setUser] = useState<User | null>(null);
   const [notes, setNotes] = useState<NoteData[]>([]);
@@ -131,6 +133,7 @@ export default function NotesPage() {
   };
 
   const openNew = (prompt?: string) => {
+    if (user?.isAnonymous) return;
     setActiveNoteId(null);
     setEditTitle("");
     setEditContent(prompt ? `💭 ${prompt}\n\n` : "");
@@ -138,6 +141,7 @@ export default function NotesPage() {
   };
 
   const openNote = (n: NoteData) => {
+    if (user?.isAnonymous) return;
     setActiveNoteId(n.id);
     setEditTitle(n.title || "");
     setEditContent(n.content);
@@ -145,7 +149,7 @@ export default function NotesPage() {
   };
 
   const saveNote = async () => {
-    if (!user || (!editTitle.trim() && !editContent.trim())) {
+    if (!user || user.isAnonymous || (!editTitle.trim() && !editContent.trim())) {
       setView("list");
       return;
     }
@@ -162,7 +166,7 @@ export default function NotesPage() {
   };
 
   const handleDelete = async () => {
-    if (!user || !activeNoteId) return;
+    if (!user || user.isAnonymous || !activeNoteId) return;
     setDeleting(true);
     await deleteNote(user.uid, activeNoteId);
     await fetchNotes(user.uid, search);
@@ -171,7 +175,7 @@ export default function NotesPage() {
   };
 
   const handleTogglePin = async (noteId: string) => {
-    if (!user) return;
+    if (!user || user.isAnonymous) return;
     await togglePinNote(user.uid, noteId);
     await fetchNotes(user.uid, search);
   };
@@ -181,8 +185,9 @@ export default function NotesPage() {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" as const }}
-      className="space-y-6 max-w-4xl"
+      className="space-y-6 max-w-4xl relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Diary" description="Create an account to securely save your private thoughts and reflections." />
       <PageHeader
         title="Personal Diary"
         description="A private, encrypted space for your thoughts."

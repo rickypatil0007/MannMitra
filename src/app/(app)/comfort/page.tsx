@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Headphones, Wind, BookHeart, Coffee, MapPin } from "lucide-react";
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 const resources = [
   { title: "5-Minute Breathing", category: "Audio", icon: Wind, bg: "bg-[var(--surface-secondary)]", iconColor: "text-[var(--primary)]" },
   { title: "Lo-Fi Study Beats", category: "Music", icon: Headphones, bg: "bg-[#F0F5FF]", iconColor: "text-[#5B7FD4]" },
@@ -16,8 +18,9 @@ export default function ComfortPage() {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" as const }}
-      className="space-y-8"
+      className="space-y-8 relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Comfort Library" description="Create an account to access our curated library of calming resources." />
       <div>
         <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Comfort Library</h1>
         <p className="text-[var(--text-secondary)] mt-1">Curated resources to help you decompress and reset.</p>

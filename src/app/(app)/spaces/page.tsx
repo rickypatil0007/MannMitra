@@ -19,6 +19,8 @@ interface SpaceData {
   features: string[];
 }
 
+import { GuestPrompt } from "@/components/auth/guest-prompt";
+
 export default function SpacesPage() {
   const [filter, setFilter] = useState("All");
   const [spaces, setSpaces] = useState<SpaceData[]>([]);
@@ -51,8 +53,9 @@ export default function SpacesPage() {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" as const }}
-      className="space-y-6 max-w-4xl"
+      className="space-y-6 max-w-4xl relative min-h-[60vh]"
     >
+      <GuestPrompt feature="Spaces" description="Create an account to discover and navigate to quiet study and wellness spaces on campus." />
       <PageHeader 
         title="Quiet Spaces" 
         description="Find a peaceful place on campus when you need privacy or deep concentration."
