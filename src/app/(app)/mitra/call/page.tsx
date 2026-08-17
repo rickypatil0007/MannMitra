@@ -5,10 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, PhoneOff, Video, VideoOff, Brain, Sparkles, Loader2, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useChatContext } from "@/components/chat/chat-provider";
+import { useMitraChat } from "@/features/mitra-ai/hooks/useMitraChat";
 import { useRouter } from "next/navigation";
 
 export default function MitraCallPage() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChatContext();
+  const { user, conversationId } = useChatContext();
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useMitraChat({
+    firebaseUid: user?.uid || null,
+    conversationId: conversationId || null,
+  });
   const router = useRouter();
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -83,7 +88,7 @@ export default function MitraCallPage() {
             
             // Send to AI
             if (finalTranscript.trim()) {
-               append({ role: "user", content: finalTranscript.trim() });
+               append(finalTranscript.trim());
                finalTranscript = ""; // Reset for next sentence
             }
           } else {

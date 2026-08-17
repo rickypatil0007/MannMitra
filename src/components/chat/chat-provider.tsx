@@ -1,11 +1,10 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useChat, Message } from "ai/react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 
-const initialMitraMessage: Message = {
+const initialMitraMessage = {
   id: "0",
   role: "assistant",
   content: "Hi 👋 I'm Mitra. This is a safe, private space. You can share how you're feeling, ask for help planning your week, or just talk. What's on your mind today?",
@@ -17,13 +16,7 @@ type ChatContextType = {
   historyLoaded: boolean;
   conversationId: string | null;
   conversations: any[];
-  messages: Message[];
-  input: string;
-  isLoading: boolean;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  setMessages: (messages: Message[]) => void;
-  append: (message: Message | Omit<Message, 'id'>) => Promise<string | null | undefined>;
+  messages: any[];
   loadActiveConversation: (uid: string, cid?: string) => Promise<void>;
   reset: () => Promise<void>;
 };
@@ -36,7 +29,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<any[]>([]);
   const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [initialDbMessages, setInitialDbMessages] = useState<Message[]>([initialMitraMessage]);
+  const [messages, setMessages] = useState<any[]>([initialMitraMessage]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -75,37 +68,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           content: m.content,
           toolInvocations: m.toolInvocations,
         }));
-        setInitialDbMessages(mapped);
+        setMessages(mapped);
       } else {
-        setInitialDbMessages([initialMitraMessage]);
+        setMessages([initialMitraMessage]);
       }
     }
     setHistoryLoaded(true);
     setLoadingHistory(false);
   };
-
-  const chat = useChat({
-    api: "/api/chat",
-    initialMessages: initialDbMessages,
-    maxSteps: 5,
-  });
-
-  const { messages, input, handleInputChange, isLoading, setMessages, append: originalAppend } = chat;
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    chat.handleSubmit(e, { data: { firebaseUid: user?.uid || null, conversationId: conversationId || null } as any });
-  };
-
-  const append = (message: Message | Omit<Message, 'id'>) => {
-    return originalAppend(message, { data: { firebaseUid: user?.uid || null, conversationId: conversationId || null } as any });
-  };
-
-  useEffect(() => {
-    if (historyLoaded) {
-      setMessages(initialDbMessages);
-    }
-  }, [initialDbMessages, historyLoaded, setMessages]);
 
   const reset = async () => {
     if (!user) return;
@@ -126,12 +96,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         conversationId,
         conversations,
         messages,
-        input,
-        isLoading,
-        handleInputChange: handleInputChange as any,
-        handleSubmit,
-        setMessages,
-        append,
         loadActiveConversation,
         reset,
       }}
