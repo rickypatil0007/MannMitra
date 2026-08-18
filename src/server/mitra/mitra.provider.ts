@@ -1,4 +1,4 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
 
 export const SYSTEM_PROMPT = `You are Mitra, an AI-powered student wellness companion for 'MannMitra'. 
 Your primary goal is to help students understand, manage, and reduce academic and personal stress.
@@ -18,10 +18,11 @@ CORE DIRECTIVES:
 
 When helping with tasks, focus on practical breakdown and emphasizing rest. Turn failure into actionable learning without blaming the student.`;
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GEMINI_API_KEY || "missing_key",
+const nvidia = createOpenAI({
+  baseURL: 'https://integrate.api.nvidia.com/v1',
+  apiKey: process.env.NVIDIA_API_KEY || "missing_key",
 });
 
 export const MitraProvider = {
-  model: google('gemini-1.5-flash'),
+  model: nvidia('meta/llama-3.1-70b-instruct'),
 };
