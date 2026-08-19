@@ -1,0 +1,394 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  STUDENT
+  COUNSELLOR
+  FACULTY
+  ALUMNI
+  ADMIN
+}
+
+enum StressLevel {
+  VERY_LOW
+  LOW
+  MODERATE
+  HIGH
+  VERY_HIGH
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum PostIdentity {
+  ANONYMOUS
+  IDENTIFIED
+}
+
+enum ReportItemType {
+  POST
+  COMMENT
+}
+
+enum StoryCategory {
+  BACKLOGS
+  FAILURE
+  PLACEMENT
+  INTERNSHIP
+  CAREER
+  ACADEMIC_PRESSURE
+  REJECTION
+  RECOVERY
+  SUCCESS
+}
+
+// ==========================================
+// CORE ENTITIES
+// ==========================================
+
+model User {
+  id              String   @id @default(uuid())
+  firebaseUid     String?  @unique // Firebase Auth UID
+  email           String   @unique
+  role            Role     @default(STUDENT)
+  name            String?
+  anonymousName   String?  @unique // Generated anonymous identity
+  department      String?
+  year            Int?
+  institution     String?
+  language        String   @default("English")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  tasks           Task[]
+  events          CalendarEvent[]
+  moods           MoodRecord[]
+  stressRecords   StressRecord[]
+  forecasts       StressForecast[]
+  conversations   Conversation[]
+  voiceNotes      VoiceNote[]
+  personalNotes   PersonalNote[]
+  posts           CommunityPost[]
+  comments        CommunityComment[]
+  counsellingReqs CounsellingRequest[]
+  trustedContacts TrustedContact[]
+  sosAlerts       SOSAlert[]
+  stories         SeniorStory[]
+  blocksGiven     Block[] @relation("Blocker")
+  blocksReceived  Block[] @relation("Blocked")
+  postLikes       PostLike[]
+  reports         Report[]
+  matchesA        CompanionMatch[] @relation("MatchUserA")
+  matchesB        CompanionMatch[] @relation("MatchUserB")
+  companionMsgs   CompanionMessage[]
+}
+
+// ==========================================
+// PLANNER & CALENDAR
+// ==========================================
+
+model Task {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  deadline    DateTime
+  priority    TaskPriority @default(MEDIUM)
+  isCompleted Boolean      @default(false)
+  estimatedMin Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CalendarEvent {
+  id          String   @id @default(uuid())
+  title       String
+  type        String   // Exam, Class, Break, etc.
+  startTime   DateTime
+  endTime     DateTime
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// STRESS & WELLNESS TRACKING
+// ==========================================
+
+model MoodRecord {
+  id          String       @id @default(uuid())
+  stressLevel StressLevel
+  moodScore   Int          // e.g. 1-10
+  /// @encrypted
+  moodLabel   String?      // e.g. "Calm", "Anxious"
+  /// @encrypted
+  trigger     String?
+  /// @encrypted
+  notes       String?
+  createdAt   DateTime     @default(now())
+  
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StressRecord {
+  id          String       @id @default(uuid())
+  stressLevel StressLevel
+  source      String       // manual, ai_inferred, physiological
+  /// @encrypted
+  context     String?
+  recordedAt  DateTime     @default(now())
+
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StressForecast {
+  id             String       @id @default(uuid())
+  riskLevel      StressLevel
+  reasoning      String
+  recommendation String
+  forecastDate   DateTime
+  createdAt      DateTime     @default(now())
+
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// AI CHAT & MEDIA
+// ==========================================
+
+model Conversation {
+  id          String    @id @default(uuid())
+  title       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  /// @encrypted
+  content        String
+  role           String       // user, assistant
+  createdAt      DateTime     @default(now())
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model VoiceNote {
+  id        String   @id @default(uuid())
+  title     String?
+  fileUrl   String
+  duration  Int?
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PersonalNote {
+  id        String   @id @default(uuid())
+  /// @encrypted
+  title     String?
+  /// @encrypted
+  content   String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// COMMUNITY
+// ==========================================
+
+model CommunityPost {
+  id          String       @id @default(uuid())
+  content     String
+  tag         String?
+  hearts      Int          @default(0)
+  identity    PostIdentity @default(ANONYMOUS)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    CommunityComment[]
+  likes       PostLike[]
+}
+
+model CommunityComment {
+  id          String       @id @default(uuid())
+  content     String
+  identity    PostIdentity @default(ANONYMOUS)
+  createdAt   DateTime     @default(now())
+
+  postId      String
+  post        CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Block {
+  id          String   @id @default(uuid())
+  blockerId   String
+  blockedId   String
+  createdAt   DateTime @default(now())
+
+  blocker     User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked     User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  
+  @@unique([blockerId, blockedId])
+}
+
+model PostLike {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  postId    String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model Report {
+  id             String         @id @default(uuid())
+  reportedItemId String
+  itemType       ReportItemType
+  reason         String
+  createdAt      DateTime       @default(now())
+
+  reporterId     String
+  reporter       User           @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// SUPPORT & SOS
+// ==========================================
+
+model CounsellingRequest {
+  id           String   @id @default(uuid())
+  status       String   // pending, scheduled, completed
+  /// @encrypted
+  notes        String?
+  requestedAt  DateTime @default(now())
+
+  studentId    String
+  student      User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model TrustedContact {
+  id          String   @id @default(uuid())
+  name        String
+  /// @encrypted
+  phone       String
+  relationship String?
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SOSAlert {
+  id          String   @id @default(uuid())
+  status      String   // active, resolved
+  triggeredAt DateTime @default(now())
+  resolvedAt  DateTime?
+  location    String?
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SeniorStory {
+  id          String       @id @default(uuid())
+  title       String
+  content     String
+  category    StoryCategory
+  isVerified  Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// SPACES
+// ==========================================
+
+model QuietSpace {
+  id          String   @id @default(uuid())
+  name        String
+  location    String
+  description String?
+  capacity    Int?
+  noiseLevel  String   @default("low") // low, medium
+  isAvailable Boolean  @default(true)
+  features    String[] // e.g. ["power outlets", "wifi", "natural light"]
+  createdAt   DateTime @default(now())
+}
+
+// ==========================================
+// COMPANION P2P MATCHING
+// ==========================================
+
+model CompanionMatch {
+  id          String   @id @default(uuid())
+  userAId     String
+  userBId     String?  // Nullable because it starts as SEARCHING
+  topic       String
+  status      String   // SEARCHING, CONNECTED, ENDED
+  createdAt   DateTime @default(now())
+  connectedAt DateTime?
+  endedAt     DateTime?
+
+  userA       User     @relation("MatchUserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB       User?    @relation("MatchUserB", fields: [userBId], references: [id], onDelete: Cascade)
+  
+  messages    CompanionMessage[]
+}
+
+model CompanionMessage {
+  id        String   @id @default(uuid())
+  /// @encrypted
+  content   String
+  createdAt DateTime @default(now())
+  
+  matchId   String
+  match     CompanionMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}

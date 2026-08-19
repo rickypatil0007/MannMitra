@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
+    "dev": "dotenv -e apikeys/.env.local -e apikeys/.env -- next dev",
+    "build": "dotenv -e apikeys/.env.local -e apikeys/.env -- prisma generate && dotenv -e apikeys/.env.local -e apikeys/.env -- next build",
+    "start": "dotenv -e apikeys/.env.local -e apikeys/.env -- next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "dotenv -e apikeys/.env.local -e apikeys/.env -- prisma generate"
   },
   "dependencies": {
     "@ai-sdk/google": "^0.0.52",
@@ -44,6 +44,7 @@
     "eslint-config-next": "16.3.1",
     "prisma": "^7.9.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "dotenv-cli": "^7.3.0"
   }
 }
