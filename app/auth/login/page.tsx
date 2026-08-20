@@ -4,7 +4,7 @@ import { GraduationCap, ShieldAlert, User, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative glass-card p-6 sm:p-8 rounded-3xl">
       <Link href="/" className="absolute -top-12 left-0 flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
         <ArrowLeft className="w-4 h-4" />
         Back to Home

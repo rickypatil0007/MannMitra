@@ -1,6 +1,6 @@
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[var(--background-primary)]">
+    <div className="relative flex min-h-screen overflow-hidden bg-[var(--background-primary)]">
       {/* Left Pane — Branding */}
       <div className="hidden lg:flex flex-col flex-1 bg-[var(--primary-hover)] relative overflow-hidden text-[var(--primary-foreground)] items-center justify-center p-12">
         {/* Subtle pattern overlay */}

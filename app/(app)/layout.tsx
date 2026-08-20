@@ -7,7 +7,7 @@ import { AuthGuard } from "@/frontend/components/auth/auth-guard";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ChatProvider>
-      <div className="flex min-h-screen bg-[var(--background-secondary)]">
+      <div className="flex min-h-screen bg-transparent">
         {/* Desktop sidebar */}
         <div className="hidden md:flex flex-shrink-0">
           <Sidebar />

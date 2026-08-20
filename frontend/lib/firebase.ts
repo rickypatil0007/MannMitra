@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, type Auth } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -14,7 +14,8 @@ const firebaseConfig = {
 
 // Initialize Firebase only if it hasn't been initialized already
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export const auth = getAuth(app);
+// Firebase Auth is browser-only; keeping SSR from evaluating it prevents static routes from failing.
+export const auth: Auth = typeof window === "undefined" ? (null as unknown as Auth) : getAuth(app);
 
 // Initialize Analytics safely (only runs in browser, not SSR)
 export const initAnalytics = async () => {

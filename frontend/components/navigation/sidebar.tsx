@@ -56,7 +56,7 @@ export function Sidebar() {
   const navigation = loading ? guestNavigation : (isGuest ? guestNavigation : authenticatedNavigation);
 
   return (
-    <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Main navigation">
+    <aside className="flex flex-col w-64 glass-nav min-h-screen" aria-label="Main navigation">
       {/* Logo */}
       <div className="px-5 h-14 flex items-center gap-2.5 border-b border-[var(--border-subtle)] shrink-0">
         <div className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-[var(--primary-foreground)] text-xs font-bold font-display flex-shrink-0" aria-hidden>

@@ -2,7 +2,7 @@ import { FacultySidebar } from "@/frontend/components/navigation/faculty-sidebar
 
 export default function FacultyLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[var(--background-secondary)]">
+    <div className="flex min-h-screen bg-transparent">
       {/* Desktop sidebar */}
       <div className="hidden md:flex flex-shrink-0">
         <FacultySidebar />

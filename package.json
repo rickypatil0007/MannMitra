@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "dotenv -e apikeys/.env.local -e apikeys/.env -- next dev",
-    "build": "dotenv -e apikeys/.env.local -e apikeys/.env -- prisma generate && dotenv -e apikeys/.env.local -e apikeys/.env -- next build",
+    "build": "dotenv -e apikeys/.env.local -e apikeys/.env -- prisma generate && next build",
     "start": "dotenv -e apikeys/.env.local -e apikeys/.env -- next start",
     "lint": "eslint",
     "postinstall": "dotenv -e apikeys/.env.local -e apikeys/.env -- prisma generate"
