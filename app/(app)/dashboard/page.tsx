@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
+import { StaggerContainer, StaggerItem } from "@/frontend/components/ui/animated";
+import { emojiTap } from "@/frontend/lib/motion-presets";
 import { Button } from "@/frontend/components/ui/button";
 import { Plus, Flame, Clock, Sparkles, Check, CheckCircle2, Circle, CheckSquare, MessageSquareHeart, Activity, Users, BookOpen, Headset, NotebookPen, LayoutDashboard, MapPin, Navigation, Globe2, PlayCircle, StopCircle } from "lucide-react";
 import Link from "next/link";
@@ -117,31 +120,44 @@ export default function DashboardPage() {
   const activeTasks = tasksToDisplay.filter(t => !t.isCompleted).sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
   
   return (
-    <div className="space-y-8 pb-12 w-full">
+    <StaggerContainer className="space-y-8 pb-12 w-full">
       {/* ─── Header ─── */}
+      <StaggerItem>
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">
+          <motion.h2
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight"
+          >
             Good afternoon, {user?.displayName?.split(' ')[0] || 'Student'}!
-          </h2>
-          <p className="text-[var(--text-secondary)] mt-1">Here is what's happening with your day.</p>
+          </motion.h2>
+          <p className="text-[var(--text-secondary)] mt-1">Here is what&apos;s happening with your day.</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center gap-3"
+        >
           <Button className="bg-[var(--surface)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--background-secondary)] hidden sm:flex" variant="outline" asChild>
             <Link href="/mitra">
               <Sparkles className="w-4 h-4 mr-2 text-[var(--primary)]" />
               Chat with Mitra
             </Link>
           </Button>
-          <Button className="bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]" asChild>
-            <Link href="/planner">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Task
-            </Link>
-          </Button>
-        </div>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Button className="bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]" asChild>
+              <Link href="/planner">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Task
+              </Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </section>
+      </StaggerItem>
 
       {/* ─── Dashboard Grid ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -150,7 +166,9 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Planner Integration */}
-          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)] relative overflow-hidden">
+          <StaggerItem>
+          <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)] relative overflow-hidden hover-lift">
             <CardHeader className="pb-3 border-b border-[var(--border-subtle)] flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-display font-semibold flex items-center gap-2">
                 <Clock className="w-5 h-5 text-[var(--primary)]" />
@@ -169,16 +187,27 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="divide-y divide-[var(--border-subtle)]">
-                  {activeTasks.slice(0, 5).map((task) => {
+                  <AnimatePresence>
+                  {activeTasks.slice(0, 5).map((task, index) => {
                     const isToday = new Date(task.deadline).toDateString() === new Date().toDateString();
                     return (
-                      <div key={task.id} className="p-4 flex items-start gap-3 hover:bg-[var(--background-secondary)] transition-colors group">
-                        <button
+                      <motion.div
+                        key={task.id}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20, height: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        layout
+                        className="p-4 flex items-start gap-3 hover:bg-[var(--background-secondary)] transition-colors group"
+                      >
+                        <motion.button
                           onClick={() => toggleTask(task.id, task.isCompleted)}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.9 }}
                           className="flex-shrink-0 w-5 h-5 mt-0.5 text-[var(--border)] group-hover:text-[var(--primary)] transition-colors"
                         >
                           <Circle className="w-5 h-5" />
-                        </button>
+                        </motion.button>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-[var(--text-primary)] text-sm">{task.title}</p>
                           <div className="flex items-center gap-2 mt-1">
@@ -197,16 +226,24 @@ export default function DashboardPage() {
                             Urgent
                           </span>
                         )}
-                      </div>
+                      </motion.div>
                     );
                   })}
+                  </AnimatePresence>
                 </div>
               )}
             </CardContent>
           </Card>
+          </motion.div>
+          </StaggerItem>
 
           {/* Mitra Promo Card */}
-          <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--surface-ai)] to-[var(--surface)] shadow-sm">
+          <StaggerItem>
+          <motion.div
+            whileHover={{ scale: 1.01, y: -3 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+          <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--surface-ai)] to-[var(--surface)] shadow-sm animate-shimmer">
             <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
               <div className="w-16 h-16 rounded-2xl bg-[var(--surface)] border border-[var(--primary-soft)] shadow-sm flex items-center justify-center shrink-0 relative">
                 <div className="absolute inset-0 bg-[var(--primary)]/10 rounded-2xl animate-pulse" />
@@ -223,14 +260,24 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+          </motion.div>
+          </StaggerItem>
 
           {/* Quick Actions Grid */}
+          <StaggerItem>
           <div>
             <h3 className="font-display font-semibold text-lg mb-4 text-[var(--text-primary)]">Quick Actions</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {QUICK_ACTIONS.map((action) => (
-                <Link
+              {QUICK_ACTIONS.map((action, i) => (
+                <motion.div
                   key={action.name}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.06 }}
+                  whileHover={{ y: -4, scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                <Link
                   href={action.href}
                   className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border-subtle)] hover:border-[var(--primary-soft)] hover:shadow-sm transition-all text-center group"
                 >
@@ -239,11 +286,14 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-xs font-semibold text-[var(--text-primary)]">{action.name}</span>
                 </Link>
+                </motion.div>
               ))}
             </div>
           </div>
+          </StaggerItem>
           
           {/* Quiet Spaces Preview Section */}
+          <StaggerItem>
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-display font-semibold text-lg text-[var(--text-primary)]">Quiet Spaces Available Now</h3>
@@ -272,8 +322,15 @@ export default function DashboardPage() {
               {spaces
                 .filter(s => spaceFilter === 'All' ? true : s.features.includes(spaceFilter.toLowerCase()))
                 .filter(s => s.isAvailable)
-                .map((space) => (
-                  <Card key={space.id} className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200">
+                .map((space, i) => (
+                  <motion.div
+                    key={space.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                    whileHover={{ y: -3 }}
+                  >
+                  <Card className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200 hover-lift">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-1 text-xs text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md w-fit mb-2">
                         <MapPin className="w-3 h-3" /> {space.location.split(',')[0]}
@@ -290,58 +347,90 @@ export default function DashboardPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </motion.div>
               ))}
             </div>
           </div>
+          </StaggerItem>
         </div>
 
         {/* Right Column (Mood & Insights) */}
         <div className="space-y-6">
           
           {/* Mood Check-in */}
+          <StaggerItem>
+          <motion.div whileHover={{ scale: 1.01 }} transition={{ type: "spring", stiffness: 300 }}>
           <Card className="border-none shadow-soft bg-[var(--primary)] text-[var(--primary-foreground)] relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-110 transition-transform duration-700" />
             
             <CardContent className="p-6 relative z-10">
+              <AnimatePresence mode="wait">
               {moodRecorded && selectedScore ? (
-                <div className="flex flex-col items-center justify-center text-center py-2 space-y-4">
-                  <div className="flex items-center justify-center w-full mb-2">
+                <motion.div
+                  key="complete"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex flex-col items-center justify-center text-center py-2 space-y-4"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    className="flex items-center justify-center w-full mb-2"
+                  >
                     <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                       <Check className="w-5 h-5 text-white" />
                     </div>
-                  </div>
+                  </motion.div>
 
                   <h3 className="font-display font-semibold text-lg">Check-in Complete</h3>
-                  <div className="bg-white/10 p-3 rounded-lg border border-white/20 w-full">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-white/10 p-3 rounded-lg border border-white/20 w-full"
+                  >
                     <p className="text-white font-medium text-sm leading-relaxed">
-                      "{lang === "english" ? AI_RESPONSES[selectedScore].en : AI_RESPONSES[selectedScore].hi}"
+                      &ldquo;{lang === "english" ? AI_RESPONSES[selectedScore].en : AI_RESPONSES[selectedScore].hi}&rdquo;
                     </p>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               ) : (
-                <>
+                <motion.div
+                  key="mood-select"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
                   <h3 className="font-display font-semibold text-lg mb-2">How are you feeling?</h3>
                   <p className="text-white/80 text-sm mb-6">Take a moment to check in with yourself today.</p>
                   
                   <div className={`flex justify-between ${isRecordingMood ? 'opacity-50 pointer-events-none' : ''}`}>
                     {MOODS.map((m, i) => (
-                      <button 
+                      <motion.button 
                         key={i} 
                         onClick={() => handleMoodClick(m.score, m.stress)}
-                        className="text-2xl sm:text-3xl hover:scale-125 transition-transform hover:bg-white/20 p-2 rounded-full cursor-pointer"
+                        {...emojiTap}
+                        className="text-2xl sm:text-3xl hover:bg-white/20 p-2 rounded-full cursor-pointer"
                         title={m.stress}
                       >
                         {m.emoji}
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
-                </>
+                </motion.div>
               )}
+              </AnimatePresence>
             </CardContent>
           </Card>
+          </motion.div>
+          </StaggerItem>
 
           {/* Weekly Wellness Mini Chart */}
-          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)]">
+          <StaggerItem>
+          <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)] hover-lift">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-display font-semibold">Your Week</CardTitle>
             </CardHeader>
@@ -451,9 +540,11 @@ export default function DashboardPage() {
               })()}
             </CardContent>
           </Card>
+          </motion.div>
+          </StaggerItem>
 
         </div>
       </div>
-    </div>
+    </StaggerContainer>
   );
 }

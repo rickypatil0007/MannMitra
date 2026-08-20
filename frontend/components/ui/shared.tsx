@@ -1,5 +1,9 @@
-import * as React from "react"
-import { cn } from "@/frontend/lib/utils"
+"use client";
+
+import * as React from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/frontend/lib/utils";
+import { fadeInUp } from "@/frontend/lib/motion-presets";
 
 // ─── Skeleton ───────────────────────────────────────────────────────────────
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -92,12 +96,26 @@ interface PageHeaderProps {
 }
 export function PageHeader({ title, description, action, className }: PageHeaderProps) {
   return (
-    <div className={cn("flex flex-col sm:flex-row sm:items-center justify-between gap-4", className)}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+      className={cn("flex flex-col sm:flex-row sm:items-center justify-between gap-4", className)}
+    >
       <div>
         <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">{title}</h1>
         {description && <p className="text-[var(--text-secondary)] mt-1 text-base">{description}</p>}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
-    </div>
+      {action && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15, duration: 0.3 }}
+          className="shrink-0"
+        >
+          {action}
+        </motion.div>
+      )}
+    </motion.div>
   )
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/frontend/lib/utils";
 import { auth } from "@/frontend/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -57,60 +58,97 @@ export function Sidebar() {
 
   return (
     <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Main navigation">
-      {/* Logo */}
-      <div className="px-5 h-14 flex items-center gap-2.5 border-b border-[var(--border-subtle)] shrink-0">
-        <div className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-[var(--primary-foreground)] text-xs font-bold font-display flex-shrink-0" aria-hidden>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="px-5 h-14 flex items-center gap-2.5 border-b border-[var(--border-subtle)] shrink-0"
+      >
+        <motion.div
+          whileHover={{ rotate: [0, -5, 5, 0], scale: 1.05 }}
+          transition={{ duration: 0.4 }}
+          className="w-7 h-7 rounded-lg bg-[var(--primary)] flex items-center justify-center text-[var(--primary-foreground)] text-xs font-bold font-display flex-shrink-0"
+          aria-hidden
+        >
           M
-        </div>
+        </motion.div>
         <span className="font-display font-semibold text-base tracking-tight text-[var(--text-primary)]">MannMitra</span>
-      </div>
+      </motion.div>
 
-      {/* Nav links */}
       <nav className="flex-1 px-2.5 pt-3 pb-3 space-y-0.5 overflow-y-auto">
-        {navigation.map((item) => {
+        {navigation.map((item, index) => {
           const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
           return (
-            <Link
+            <motion.div
               key={item.name}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
-                isActive
-                  ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
-              )}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.03, duration: 0.3 }}
             >
-              <item.icon
-                className={cn("w-4 h-4 flex-shrink-0",
-                  isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]"
+              <Link
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-150",
+                  isActive
+                    ? "text-[var(--primary-hover)]"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
                 )}
-                strokeWidth={isActive ? 2.5 : 2}
-              />
-              {item.name}
-            </Link>
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active"
+                    className="absolute inset-0 bg-[var(--surface-secondary)] rounded-xl"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <motion.span
+                  className="relative z-10 flex items-center gap-3"
+                  whileHover={{ x: 2 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                >
+                  <motion.span
+                    animate={isActive ? { scale: [1, 1.15, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <item.icon
+                      className={cn(
+                        "w-4 h-4 flex-shrink-0",
+                        isActive ? "text-[var(--primary)]" : "text-[var(--text-secondary)]"
+                      )}
+                      strokeWidth={isActive ? 2.5 : 2}
+                    />
+                  </motion.span>
+                  {item.name}
+                </motion.span>
+              </Link>
+            </motion.div>
           );
         })}
       </nav>
 
-      {/* SOS — persistent per spec STU-20-01 */}
       <div className="px-2.5 pb-2.5">
-        <Link
-          href="/safety"
-          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--danger)] bg-[var(--danger-soft)] hover:bg-[#FECACA]/30 transition-colors border border-[#FECACA]/50"
-        >
-          <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} />
-          SOS · Urgent Help
-        </Link>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link
+            href="/safety"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--danger)] bg-[var(--danger-soft)] hover:bg-[#FECACA]/30 transition-colors border border-[#FECACA]/50"
+          >
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} />
+            </motion.span>
+            SOS · Urgent Help
+          </Link>
+        </motion.div>
       </div>
 
-      {/* Footer */}
       <div className="px-2.5 pb-3 border-t border-[var(--border-subtle)] pt-2.5 space-y-0.5">
         {!isGuest && (
           <Link
             href="/settings"
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
+              "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
               pathname === "/settings"
                 ? "bg-[var(--surface-secondary)] text-[var(--primary-hover)]"
                 : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
@@ -121,7 +159,7 @@ export function Sidebar() {
           </Link>
         )}
         <Link
-          href={isGuest ? "/auth/login" : "/auth/login"}
+          href="/auth/login"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)] transition-all duration-150"
         >
           {isGuest ? (
