@@ -4,13 +4,13 @@ import { embed } from 'ai';
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  throw new Error('GEMINI_API_KEY is not set in the environment variables.');
+  console.warn('GEMINI_API_KEY is not set in the environment variables. The application might fail at runtime.');
 }
 
 
 // Vercel AI SDK Client for streamText and generative chats
 export const google = createGoogleGenerativeAI({
-  apiKey,
+  apiKey: apiKey || '',
 });
 
 /**
