@@ -2,6 +2,9 @@ import { streamText, tool } from 'ai';
 import { MitraProvider, SYSTEM_PROMPT } from '@/backend/server/mitra/mitra.provider';
 import { MitraService } from '@/backend/server/mitra/mitra.service';
 import { CreateTaskSchema } from '@/backend/server/mitra/mitra.validation';
+import { retrieveRelevantContext } from '@/backend/server/rag/retrieval';
+import { extractSignalsFromChat } from '@/backend/server/risk/signalExtraction';
+import { computeRisk } from '@/backend/server/risk/riskEngine';
 
 export const maxDuration = 30;
 
@@ -14,9 +17,19 @@ export async function POST(req: Request) {
     const firebaseUid = body.data?.firebaseUid || body.firebaseUid;
     const conversationId = body.data?.conversationId || body.conversationId;
 
+    const userMessage = messages.length > 0 ? messages[messages.length - 1].content : "";
+    let systemPromptWithRag = SYSTEM_PROMPT;
+    
+    if (userMessage) {
+      const ragContext = await retrieveRelevantContext(userMessage);
+      if (ragContext) {
+        systemPromptWithRag = `${SYSTEM_PROMPT}\n\n# Available Context from Knowledge Base:\n${ragContext}`;
+      }
+    }
+
     const result = await streamText({
       model: MitraProvider.model,
-      system: SYSTEM_PROMPT,
+      system: systemPromptWithRag,
       messages,
       tools: {
         createTask: tool({
@@ -39,6 +52,22 @@ export async function POST(req: Request) {
             if (text) {
               await MitraService.saveMessage(conversationId, "assistant", text);
             }
+            
+            // Background risk analysis
+            if (firebaseUid) {
+              // Copy messages and add the final assistant text for analysis
+              const fullHistory = [...messages, { role: "assistant", content: text }];
+              
+              // We do not await this, we let it run in the background
+              extractSignalsFromChat(fullHistory).then(async signals => {
+                const { prisma } = await import('@/database/prisma');
+                const user = await prisma.user.findUnique({ where: { firebaseUid } });
+                if (user) {
+                  return computeRisk(user.id, signals);
+                }
+              }).catch(err => console.error("[RiskAnalysis] Failed:", err));
+            }
+
           } catch (e) {
             console.error("[MitraAI] Failed to save messages to DB:", e);
           }

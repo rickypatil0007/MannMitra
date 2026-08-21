@@ -2,13 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-  moduleFormat = "cjs"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 // ==========================================
@@ -100,6 +102,9 @@ model User {
   matchesA        CompanionMatch[] @relation("MatchUserA")
   matchesB        CompanionMatch[] @relation("MatchUserB")
   companionMsgs   CompanionMessage[]
+  riskAssessments RiskAssessment[]
+  counselorAlerts CounselorAlert[]
+  questionnaireSubmissions QuestionnaireSubmission[]
 }
 
 // ==========================================
@@ -392,3 +397,51 @@ model CompanionMessage {
   senderId  String
   sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
+
+// ==========================================
+// RAG & RISK ENGINE
+// ==========================================
+
+model QuestionnaireSubmission {
+  id          String   @id @default(uuid())
+  type        String   // e.g. "PHQ-9", "GAD-7"
+  score       Int      // Raw calculated score
+  severity    Float    // Normalized 0-1 for risk engine
+  rawAnswers  Json?    // Store exact choices made
+  createdAt   DateTime @default(now())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RagDocument {
+  id        String   @id @default(uuid())
+  content   String   // The chunked text
+  source    String   // Origin, e.g., "brochure.pdf" or "personal_note_123"
+  metadata  Json?    // Any extra fields (e.g., page number, author)
+  embedding Unsupported("vector(768)")?
+  createdAt DateTime @default(now())
+}
+
+model RiskAssessment {
+  id             String      @id @default(uuid())
+  riskScore      Float       // 0 to 100
+  riskBand       String      // LOW, MODERATE, HIGH, CRISIS
+  signals        Json        // The breakdown: { questionnaire: 0.8, sentiment: 0.5, etc. }
+  createdAt      DateTime    @default(now())
+
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CounselorAlert {
+  id             String      @id @default(uuid())
+  alertType      String      // e.g., "HIGH_RISK_DETECTED", "CRISIS_KEYWORD"
+  description    String
+  isRead         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+
+  studentId      String
+  student        User        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+

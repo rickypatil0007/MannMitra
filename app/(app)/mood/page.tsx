@@ -12,34 +12,43 @@ import { getDailyInsights, DailyInsightData } from "@/backend/actions/dailyInsig
 import { recordMood } from "@/backend/actions/mood";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { GuestPrompt } from "@/frontend/components/auth/guest-prompt";
+import { RiskGraph } from "@/frontend/components/analytics/RiskGraph";
 
 const emojis = [
   { val: 1, char: "😌", eng: "You're feeling very calm. Great state for deep work!", hi: "आप बहुत शांत महसूस कर रहे हैं। पढ़ाई के लिए यह बहुत अच्छा समय है!" },
   { val: 2, char: "🙂", eng: "You're doing well. Keep up the steady pace.", hi: "आप अच्छा कर रहे हैं। अपनी गति बनाए रखें।" },
   { val: 3, char: "😐", eng: "You're doing okay. Take things one step at a time.", hi: "चिंता मत करो, धीरे-धीरे आगे बढ़ो। तुम अच्छा कर रहे हो।" },
   { val: 4, char: "😟", eng: "It seems a bit tough today, but you are not alone.", hi: "आज थोड़ा मुश्किल लग रहा है, लेकिन तुम अकेले नहीं हो।" },
-  { val: 5, char: "😣", eng: "Take a deep breath. It's okay to step away and rest.", hi: "गहरी सांस लें। थोड़ी देर आराम करना बिल्कुल ठीक है।" }
+  { val: 5, char: "😣", eng: "Take a deep breath. It's okay to step away and rest.", hi: "गहरी सांस लें। थोड़ी देर आराम करना बिल्कुल ठीक है。" }
 ];
 
 export default function DailyInsightsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [insights, setInsights] = useState<DailyInsightData | null>(null);
   const [loading, setLoading] = useState(true);
-  const useDemo = true;
+  const useDemo = false;
   const [lang, setLang] = useState<"english" | "hindi">("english");
   const [savingEmoji, setSavingEmoji] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
+  const [riskRefreshTrigger, setRiskRefreshTrigger] = useState(0);
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         await fetchData(currentUser.uid, useDemo);
+        interval = setInterval(() => {
+          fetchData(currentUser.uid, useDemo);
+        }, 5000);
       } else {
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (interval) clearInterval(interval);
+    };
   }, [useDemo]);
 
   const fetchData = async (uid: string, demo: boolean) => {
@@ -57,8 +66,16 @@ export default function DailyInsightsPage() {
       setSavingEmoji(true);
       const levelMap: Record<number, any> = { 1: "VERY_LOW", 2: "LOW", 3: "MODERATE", 4: "HIGH", 5: "VERY_HIGH" };
       await recordMood(user.uid, val, levelMap[val], "Emoji Check-in", "");
-      await fetchData(user.uid, false);
-      setSavingEmoji(false);
+      
+      // We give the backend a small delay to finish running the computeRisk async task 
+      // before refreshing the frontend graph.
+      setTimeout(async () => {
+        await fetchData(user.uid, false);
+        setRiskRefreshTrigger(prev => prev + 1);
+        setSavingEmoji(false);
+      }, 1000);
+    } else {
+      setTimeout(() => setSavingEmoji(false), 500);
     }
   };
 
@@ -122,6 +139,10 @@ export default function DailyInsightsPage() {
                   )}
                 </AnimatePresence>
               </div>
+            </div>
+            {/* Dynamic Risk Insights Graph */}
+            <div className="mt-8 border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden p-5">
+              <RiskGraph refreshTrigger={riskRefreshTrigger} />
             </div>
 
             {/* Daily Summary */}

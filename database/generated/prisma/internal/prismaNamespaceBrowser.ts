@@ -72,7 +72,11 @@ export const ModelName = {
   SeniorStory: 'SeniorStory',
   QuietSpace: 'QuietSpace',
   CompanionMatch: 'CompanionMatch',
-  CompanionMessage: 'CompanionMessage'
+  CompanionMessage: 'CompanionMessage',
+  QuestionnaireSubmission: 'QuestionnaireSubmission',
+  RagDocument: 'RagDocument',
+  RiskAssessment: 'RiskAssessment',
+  CounselorAlert: 'CounselorAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -368,12 +372,75 @@ export const CompanionMessageScalarFieldEnum = {
 export type CompanionMessageScalarFieldEnum = (typeof CompanionMessageScalarFieldEnum)[keyof typeof CompanionMessageScalarFieldEnum]
 
 
+export const QuestionnaireSubmissionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  score: 'score',
+  severity: 'severity',
+  rawAnswers: 'rawAnswers',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type QuestionnaireSubmissionScalarFieldEnum = (typeof QuestionnaireSubmissionScalarFieldEnum)[keyof typeof QuestionnaireSubmissionScalarFieldEnum]
+
+
+export const RagDocumentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  source: 'source',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type RagDocumentScalarFieldEnum = (typeof RagDocumentScalarFieldEnum)[keyof typeof RagDocumentScalarFieldEnum]
+
+
+export const RiskAssessmentScalarFieldEnum = {
+  id: 'id',
+  riskScore: 'riskScore',
+  riskBand: 'riskBand',
+  signals: 'signals',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type RiskAssessmentScalarFieldEnum = (typeof RiskAssessmentScalarFieldEnum)[keyof typeof RiskAssessmentScalarFieldEnum]
+
+
+export const CounselorAlertScalarFieldEnum = {
+  id: 'id',
+  alertType: 'alertType',
+  description: 'description',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  studentId: 'studentId'
+} as const
+
+export type CounselorAlertScalarFieldEnum = (typeof CounselorAlertScalarFieldEnum)[keyof typeof CounselorAlertScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -390,4 +457,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

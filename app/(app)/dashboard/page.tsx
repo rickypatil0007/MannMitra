@@ -47,7 +47,7 @@ export default function DashboardPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [weeklyData, setWeeklyData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [useDemo, setUseDemo] = useState(true); // Default to demo mode for judges
+  const [useDemo, setUseDemo] = useState(false); // Changed to real data
   const [insights, setInsights] = useState<DailyInsightData | null>(null);
   
   const [moodRecorded, setMoodRecorded] = useState(false);
@@ -56,15 +56,22 @@ export default function DashboardPage() {
   const [lang, setLang] = useState<"english" | "hindi">("english");
 
   useEffect(() => {
+    let interval: NodeJS.Timeout;
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         fetchData(currentUser.uid);
+        interval = setInterval(() => {
+          fetchData(currentUser.uid);
+        }, 5000);
       } else {
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   const [spaces, setSpaces] = useState<any[]>([]);
@@ -88,15 +95,18 @@ export default function DashboardPage() {
   };
 
   const handleMoodClick = async (score: number, stress: StressLevel) => {
-    if (!user || isRecordingMood || moodRecorded) return;
+    if (!user || isRecordingMood) return;
     setIsRecordingMood(true);
     setSelectedScore(score);
     
     if (!useDemo) {
       await recordMood(user.uid, score, stress, "Recorded via quick dashboard emoji");
     }
-    setMoodRecorded(true);
-    setIsRecordingMood(false);
+    
+    setTimeout(() => {
+      setIsRecordingMood(false);
+      // Keep the selected score highlighted so the user sees their choice
+    }, 1000);
   };
 
   const toggleTask = async (id: string, currentStatus: boolean) => {

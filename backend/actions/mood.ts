@@ -24,6 +24,50 @@ export async function recordMood(
       }
     });
 
+    // Mirror to StressRecord so analytics charts pick it up
+    await prisma.stressRecord.create({
+      data: {
+        stressLevel,
+        source: "manual",
+        context: moodLabel || "Emoji Check-in",
+        userId: user.id
+      }
+    });
+
+    // Fire off risk calculation asynchronously
+    // 1. Fetch the last assessment to preserve chat signals
+    const lastAssessment = await prisma.riskAssessment.findFirst({
+      where: { userId: user.id },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    // 2. Default neutral chat signals if no previous assessment
+    let chatSignal = {
+      sentimentScore: 1.0, 
+      hasCrisisKeywords: false,
+      keywordFlagScore: 0,
+      matchedCategories: [] as string[]
+    };
+    
+    if (lastAssessment) {
+      const signals = lastAssessment.signals as any;
+      if (signals) {
+        chatSignal = {
+          sentimentScore: 1.0 - (signals.chatSentiment || 0), // un-invert
+          hasCrisisKeywords: signals.hasCrisisKeywords || false,
+          keywordFlagScore: signals.keywordFlagScore || 0,
+          matchedCategories: signals.matchedCategories || []
+        };
+      }
+    }
+    
+    // 3. Import and execute computeRisk (using dynamic import to avoid circular dependencies in server actions if any)
+    const { computeRisk } = await import('@/backend/server/risk/riskEngine');
+    // Pass false to explicitly prevent emoji check-ins from spawning a counselor alert
+    computeRisk(user.id, chatSignal, false).catch(err => {
+      console.error("Failed to compute risk on mood update:", err);
+    });
+
     return { success: true, moodRecord };
   } catch (error) {
     console.error("Error recording mood:", error);

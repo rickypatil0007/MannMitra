@@ -1,15 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/frontend/components/ui/button";
 import { 
   Users, ShieldAlert, Clock, CheckCircle2, MessageSquare, 
   AlertTriangle, EyeOff, Lock
 } from "lucide-react";
+import { getActiveAlerts, markAlertAsRead } from "@/backend/actions/counselor";
 
 export function CounsellorDashboard() {
   const [status, setStatus] = useState<"available" | "busy" | "offline">("available");
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [acknowledgedAlerts, setAcknowledgedAlerts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAlerts = async () => {
+      try {
+        const data = await getActiveAlerts();
+        setAlerts(data);
+      } catch (err) {
+        console.error("Failed to fetch alerts:", err);
+      }
+    };
+    fetchAlerts();
+    const interval = setInterval(fetchAlerts, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleAcknowledgeAlert = async (id: string) => {
+    await markAlertAsRead(id);
+    const alert = alerts.find(a => a.id === id);
+    if (alert) {
+      setAcknowledgedAlerts(prev => [alert, ...prev]);
+    }
+    setAlerts(prev => prev.filter(a => a.id !== id));
+  };
 
   return (
     <motion.div
@@ -62,15 +88,21 @@ export function CounsellorDashboard() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-sm font-medium text-white/70">High Priority Alerts</p>
-              <p className="text-3xl font-display font-medium text-white mt-1">0</p>
+              <p className="text-3xl font-display font-medium text-white mt-1">{alerts.length}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-              <ShieldAlert className="w-5 h-5 text-white/60" />
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${alerts.length > 0 ? "bg-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.4)]" : "bg-white/10"}`}>
+              <ShieldAlert className={`w-5 h-5 ${alerts.length > 0 ? "text-red-500 animate-pulse" : "text-white/60"}`} />
             </div>
           </div>
-          <p className="text-xs text-[var(--sky-deep)] mt-4 flex items-center gap-1 font-medium">
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--sky-deep)]" /> All clear
-          </p>
+          {alerts.length === 0 ? (
+            <p className="text-xs text-[var(--sky-deep)] mt-4 flex items-center gap-1 font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--sky-deep)]" /> All clear
+            </p>
+          ) : (
+            <p className="text-xs text-red-400 mt-4 flex items-center gap-1 font-medium animate-pulse">
+              <AlertTriangle className="w-3.5 h-3.5" /> Immediate review required
+            </p>
+          )}
         </div>
       </div>
 
@@ -114,6 +146,52 @@ export function CounsellorDashboard() {
               </div>
             </div>
           </div>
+
+          {/* ACTIVE ALERTS */}
+          {alerts.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="border border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.15)] bg-red-950/20 backdrop-blur-md rounded-2xl overflow-hidden"
+            >
+              <div className="pb-3 border-b border-red-500/20 p-5 bg-red-500/5">
+                <div className="text-lg flex items-center gap-2">
+                  <ShieldAlert className="w-5 h-5 text-red-500 animate-pulse" />
+                  <span className="font-display font-medium text-red-100">Crisis & High Risk Alerts</span>
+                </div>
+              </div>
+              <div className="p-0">
+                <div className="divide-y divide-red-500/10">
+                  {alerts.map((alert) => (
+                    <div key={alert.id} className="p-5 hover:bg-red-500/5 transition-colors">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="bg-red-500 text-white px-2 py-0.5 rounded-sm text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-pulse">
+                              {alert.alertType.replace('_', ' ')}
+                            </span>
+                            <span className="text-xs font-medium text-red-300">
+                              {new Date(alert.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </span>
+                          </div>
+                          <h4 className="font-medium text-white flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-red-400" /> {alert.student.name || alert.student.anonymousName || "Anonymous Student"}
+                          </h4>
+                          <p className="text-sm font-light text-red-200 mt-1">{alert.description}</p>
+                        </div>
+                        <div className="flex gap-2 sm:shrink-0">
+                          <Button size="sm" variant="outline" className="text-red-300 border-red-500/30 hover:bg-red-500/10 bg-transparent">View Case</Button>
+                          <Button onClick={() => handleAcknowledgeAlert(alert.id)} size="sm" className="bg-red-500 hover:bg-red-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            Acknowledge
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Right Panel: Security & Case Notes */}
@@ -144,9 +222,29 @@ export function CounsellorDashboard() {
               </div>
             </div>
             <div className="p-0">
-              <div className="p-8 text-center text-white/40 font-light text-sm">
-                No unread messages from active students.
-              </div>
+              {acknowledgedAlerts.length > 0 ? (
+                <div className="divide-y divide-white/10">
+                  {acknowledgedAlerts.map(alert => (
+                    <div key={alert.id} className="p-4 hover:bg-white/5 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+                          <MessageSquare className="w-5 h-5 text-red-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-white font-medium truncate">{alert.student.name || alert.student.anonymousName || "Anonymous"}</h4>
+                          <p className="text-white/60 text-xs truncate">Email: {alert.student.email}</p>
+                          <p className="text-[var(--moonlit-cyan)] text-xs mt-1 font-medium">Status: Active Case</p>
+                        </div>
+                        <Button size="sm" className="bg-[var(--sky-deep)] text-white hover:bg-[var(--moonlit-cyan)]">Open Chat</Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 text-center text-white/40 font-light text-sm">
+                  No unread messages from active students.
+                </div>
+              )}
             </div>
           </div>
         </div>

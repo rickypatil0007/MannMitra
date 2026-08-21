@@ -87,6 +87,12 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
       orderBy: { recordedAt: 'asc' }
     });
 
+    // Fetch Risk Assessments
+    const riskAssessments = await prisma.riskAssessment.findMany({
+      where: { userId: user.id, createdAt: { gte: sevenDaysAgo } },
+      orderBy: { createdAt: 'asc' }
+    });
+
     // Helper: Map enum to 1-5
     const getScore = (level: string) => {
       if (level === "VERY_LOW") return 1;
@@ -98,18 +104,37 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
     };
 
     let todaysStress = 3;
-    if (stressRecords.length > 0) {
-      todaysStress = getScore(stressRecords[stressRecords.length - 1].stressLevel);
+    let todayStressSum = 0;
+    let todayStressCount = 0;
+
+    // Get today's stress from manual logs
+    const todayStressLogs = stressRecords.filter(r => new Date(r.recordedAt).toDateString() === todayStr);
+    todayStressLogs.forEach(r => {
+      todayStressSum += getScore(r.stressLevel);
+      todayStressCount++;
+    });
+    
+    let isCrisisMode = false;
+    const todayRisks = riskAssessments.filter(ra => new Date(ra.createdAt).toDateString() === todayStr);
+    todayRisks.forEach(ra => {
+      todayStressSum += Math.max(1, Math.ceil(ra.riskScore / 20));
+      todayStressCount++;
+      if (ra.riskScore >= 80) isCrisisMode = true;
+    });
+
+    if (todayStressCount > 0) {
+      todaysStress = Math.round(todayStressSum / todayStressCount);
     }
 
-    // Build Chart Data
+    // Build Chart Data by Averaging
     const chartMap = new Map();
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dayName = d.toLocaleDateString("en-US", { weekday: "short" });
       chartMap.set(d.toDateString(), {
         day: dayName,
-        stressLevel: 0,
+        stressSum: 0,
+        stressCount: 0,
         tasksCompleted: 0,
       });
     }
@@ -126,11 +151,25 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
     stressRecords.forEach(r => {
       const dStr = new Date(r.recordedAt).toDateString();
       if (chartMap.has(dStr)) {
-        chartMap.get(dStr).stressLevel = Math.max(chartMap.get(dStr).stressLevel, getScore(r.stressLevel));
+        chartMap.get(dStr).stressSum += getScore(r.stressLevel);
+        chartMap.get(dStr).stressCount++;
       }
     });
 
-    const chartData = Array.from(chartMap.values());
+    riskAssessments.forEach(ra => {
+      const dStr = new Date(ra.createdAt).toDateString();
+      if (chartMap.has(dStr)) {
+        const riskLevel = Math.max(1, Math.ceil(ra.riskScore / 20)); // 1-5
+        chartMap.get(dStr).stressSum += riskLevel;
+        chartMap.get(dStr).stressCount++;
+      }
+    });
+
+    const chartData = Array.from(chartMap.values()).map(d => ({
+      day: d.day,
+      stressLevel: d.stressCount > 0 ? Math.round(d.stressSum / d.stressCount) : 0,
+      tasksCompleted: d.tasksCompleted
+    }));
 
     // Stress Report Logic
     let highestScore = -1;
@@ -146,7 +185,8 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
     });
 
     let currentIndicator = "Low";
-    if (todaysStress >= 4) currentIndicator = "High";
+    if (todaysStress >= 5 || isCrisisMode) currentIndicator = "Crisis";
+    else if (todaysStress === 4) currentIndicator = "High";
     else if (todaysStress === 3) currentIndicator = "Moderate";
 
     let weeklyTrend = "Stable";
@@ -157,11 +197,29 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
       if (secondHalf < firstHalf - 0.5) weeklyTrend = "Improving";
     }
 
-    let recommendation = "You are maintaining a steady pace. Keep focusing on small, manageable tasks.";
-    if (weeklyTrend === "Increasing") {
-      recommendation = `Your stress trend is increasing, peaking on ${highestDay !== "N/A" ? highestDay : "recently"}. Consider lighter scheduling tomorrow.`;
-    } else if (weeklyTrend === "Improving") {
-      recommendation = "Your weekly stress trend is improving! The strategies you are using are working well.";
+    let recommendation = "Maintain your current routine. Try adding a 10-min meditation block if you want to optimize focus.";
+    if (currentIndicator === "Crisis") {
+      recommendation = "Your stress and distress signals are very high. Please prioritize immediate rest, halt non-essential tasks, and connect with a counselor.";
+    } else if (currentIndicator === "High") {
+      recommendation = "Your stress levels are elevated. Prioritize rest, scale back non-essential tasks, and don't hesitate to reach out for support.";
+    } else if (highestDay !== "N/A" && highestScore >= 4) {
+      recommendation = `Your stress was highest around ${highestDay}. Consider lighter scheduling on heavy days.`;
+    }
+
+    let wellnessInsight = "Your recent check-ins indicate moderate stress. Taking a short break before your next focused study session may help maintain concentration.";
+    if (currentIndicator === "Crisis") {
+      wellnessInsight = "Your recent chat interactions indicate significant distress. You are not alone. Please talk to a counselor immediately using the Support page.";
+    } else if (currentIndicator === "High") {
+      wellnessInsight = "You've been experiencing elevated stress. It's important to step away from work and clear your mind.";
+    } else if (currentIndicator === "Low") {
+      wellnessInsight = "You've been managing your stress well. Keep up the good work!";
+    }
+
+    let actionInsight = "Complete your high-priority tasks first, then take a short break.";
+    if (currentIndicator === "Crisis") {
+      actionInsight = "PAUSE your tasks. Please reach out to the counselor or use the Support resources immediately.";
+    } else if (currentIndicator === "High") {
+      actionInsight = "Try to tackle only the most urgent task today and leave the rest for later. Focus on self-care.";
     }
 
     return {
@@ -180,6 +238,12 @@ export async function getDailyInsights(firebaseUid: string, useDemo: boolean = f
           highestDay: highestDay !== "N/A" ? highestDay : "None recorded",
           lowestDay: lowestDay !== "N/A" ? lowestDay : "None recorded",
           recommendation
+        },
+        detailedInsights: {
+          today: `Today you completed ${tasksCompleted} of your ${todaysTasks.length} planned tasks. Your workload is ${todaysTasks.length > 4 ? 'higher than' : 'around'} your recent average.`,
+          wellness: wellnessInsight,
+          study: `You have completed ${completionRate}% of your planned tasks today.`,
+          action: actionInsight
         }
       }
     };

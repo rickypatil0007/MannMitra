@@ -16,25 +16,14 @@ import { getDashboardData, DashboardData } from "@/backend/actions/analytics";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ComposedChart } from 'recharts';
 
 import { GuestPrompt } from "@/frontend/components/auth/guest-prompt";
+import { RiskGraph } from "@/frontend/components/analytics/RiskGraph";
 
 export default function AnalyticsPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const useDemo = true;
+  const useDemo = false;
   const [lang, setLang] = useState<"english" | "hindi">("english");
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        await fetchAnalytics(currentUser.uid, useDemo);
-      } else {
-        setLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, [useDemo]);
 
   const fetchAnalytics = useCallback(async (uid: string, demo: boolean) => {
     setLoading(true);
@@ -44,6 +33,25 @@ export default function AnalyticsPage() {
     }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchAnalytics(currentUser.uid, useDemo);
+        interval = setInterval(() => {
+          fetchAnalytics(currentUser.uid, useDemo);
+        }, 5000);
+      } else {
+        setLoading(false);
+      }
+    });
+    return () => {
+      unsubscribe();
+      if (interval) clearInterval(interval);
+    };
+  }, [useDemo, fetchAnalytics]);
 
 
   const shouldReduceMotion = useReducedMotion();
@@ -93,7 +101,8 @@ export default function AnalyticsPage() {
                   <span className={`text-h1 font-display font-medium ${
                     dashboardData.stressTrend.currentEstimate === 'Low' ? 'text-emerald-400' :
                     dashboardData.stressTrend.currentEstimate === 'Moderate' ? 'text-amber-400' :
-                    'text-red-400'
+                    dashboardData.stressTrend.currentEstimate === 'High' ? 'text-orange-500' :
+                    'text-red-600'
                   }`}>
                     {dashboardData.stressTrend.currentEstimate}
                   </span>
@@ -152,6 +161,10 @@ export default function AnalyticsPage() {
 
           </div>
 
+          {/* Risk Insights */}
+          <SlideUp delay={0.15}>
+            <RiskGraph />
+          </SlideUp>
           {/* Combined Chart */}
           <SlideUp delay={0.2}>
           <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">

@@ -1,4 +1,4 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { google } from '../ai/gemini';
 
 export const SYSTEM_PROMPT = `You are Mitra, an AI-powered student wellness companion for 'MannMitra'. 
 Your primary goal is to help students understand, manage, and reduce academic and personal stress.
@@ -18,11 +18,6 @@ CORE DIRECTIVES:
 
 When helping with tasks, focus on practical breakdown and emphasizing rest. Turn failure into actionable learning without blaming the student.`;
 
-const nvidia = createOpenAI({
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY || "missing_key",
-});
-
 export const MitraProvider = {
-  model: nvidia('meta/llama-3.1-70b-instruct'),
+  model: google('gemini-3.6-flash'),
 };

@@ -293,6 +293,9 @@ export type UserWhereInput = {
   matchesA?: Prisma.CompanionMatchListRelationFilter
   matchesB?: Prisma.CompanionMatchListRelationFilter
   companionMsgs?: Prisma.CompanionMessageListRelationFilter
+  riskAssessments?: Prisma.RiskAssessmentListRelationFilter
+  counselorAlerts?: Prisma.CounselorAlertListRelationFilter
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -329,6 +332,9 @@ export type UserOrderByWithRelationInput = {
   matchesA?: Prisma.CompanionMatchOrderByRelationAggregateInput
   matchesB?: Prisma.CompanionMatchOrderByRelationAggregateInput
   companionMsgs?: Prisma.CompanionMessageOrderByRelationAggregateInput
+  riskAssessments?: Prisma.RiskAssessmentOrderByRelationAggregateInput
+  counselorAlerts?: Prisma.CounselorAlertOrderByRelationAggregateInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -368,6 +374,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   matchesA?: Prisma.CompanionMatchListRelationFilter
   matchesB?: Prisma.CompanionMatchListRelationFilter
   companionMsgs?: Prisma.CompanionMessageListRelationFilter
+  riskAssessments?: Prisma.RiskAssessmentListRelationFilter
+  counselorAlerts?: Prisma.CounselorAlertListRelationFilter
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionListRelationFilter
 }, "id" | "firebaseUid" | "email" | "anonymousName">
 
 export type UserOrderByWithAggregationInput = {
@@ -442,6 +451,9 @@ export type UserCreateInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -478,6 +490,9 @@ export type UserUncheckedCreateInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -514,6 +529,9 @@ export type UserUpdateInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -550,6 +568,9 @@ export type UserUncheckedUpdateInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -980,6 +1001,48 @@ export type UserUpdateOneRequiredWithoutCompanionMsgsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCompanionMsgsInput, Prisma.UserUpdateWithoutCompanionMsgsInput>, Prisma.UserUncheckedUpdateWithoutCompanionMsgsInput>
 }
 
+export type UserCreateNestedOneWithoutQuestionnaireSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedCreateWithoutQuestionnaireSubmissionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuestionnaireSubmissionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQuestionnaireSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedCreateWithoutQuestionnaireSubmissionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuestionnaireSubmissionsInput
+  upsert?: Prisma.UserUpsertWithoutQuestionnaireSubmissionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuestionnaireSubmissionsInput, Prisma.UserUpdateWithoutQuestionnaireSubmissionsInput>, Prisma.UserUncheckedUpdateWithoutQuestionnaireSubmissionsInput>
+}
+
+export type UserCreateNestedOneWithoutRiskAssessmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRiskAssessmentsInput, Prisma.UserUncheckedCreateWithoutRiskAssessmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRiskAssessmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRiskAssessmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRiskAssessmentsInput, Prisma.UserUncheckedCreateWithoutRiskAssessmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRiskAssessmentsInput
+  upsert?: Prisma.UserUpsertWithoutRiskAssessmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRiskAssessmentsInput, Prisma.UserUpdateWithoutRiskAssessmentsInput>, Prisma.UserUncheckedUpdateWithoutRiskAssessmentsInput>
+}
+
+export type UserCreateNestedOneWithoutCounselorAlertsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCounselorAlertsInput, Prisma.UserUncheckedCreateWithoutCounselorAlertsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCounselorAlertsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCounselorAlertsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCounselorAlertsInput, Prisma.UserUncheckedCreateWithoutCounselorAlertsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCounselorAlertsInput
+  upsert?: Prisma.UserUpsertWithoutCounselorAlertsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCounselorAlertsInput, Prisma.UserUpdateWithoutCounselorAlertsInput>, Prisma.UserUncheckedUpdateWithoutCounselorAlertsInput>
+}
+
 export type UserCreateWithoutTasksInput = {
   id?: string
   firebaseUid?: string | null
@@ -1013,6 +1076,9 @@ export type UserCreateWithoutTasksInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
@@ -1048,6 +1114,9 @@ export type UserUncheckedCreateWithoutTasksInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -1099,6 +1168,9 @@ export type UserUpdateWithoutTasksInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
@@ -1134,6 +1206,9 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventsInput = {
@@ -1169,6 +1244,9 @@ export type UserCreateWithoutEventsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -1204,6 +1282,9 @@ export type UserUncheckedCreateWithoutEventsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -1255,6 +1336,9 @@ export type UserUpdateWithoutEventsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -1290,6 +1374,9 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMoodsInput = {
@@ -1325,6 +1412,9 @@ export type UserCreateWithoutMoodsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMoodsInput = {
@@ -1360,6 +1450,9 @@ export type UserUncheckedCreateWithoutMoodsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMoodsInput = {
@@ -1411,6 +1504,9 @@ export type UserUpdateWithoutMoodsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMoodsInput = {
@@ -1446,6 +1542,9 @@ export type UserUncheckedUpdateWithoutMoodsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStressRecordsInput = {
@@ -1481,6 +1580,9 @@ export type UserCreateWithoutStressRecordsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStressRecordsInput = {
@@ -1516,6 +1618,9 @@ export type UserUncheckedCreateWithoutStressRecordsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStressRecordsInput = {
@@ -1567,6 +1672,9 @@ export type UserUpdateWithoutStressRecordsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStressRecordsInput = {
@@ -1602,6 +1710,9 @@ export type UserUncheckedUpdateWithoutStressRecordsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutForecastsInput = {
@@ -1637,6 +1748,9 @@ export type UserCreateWithoutForecastsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutForecastsInput = {
@@ -1672,6 +1786,9 @@ export type UserUncheckedCreateWithoutForecastsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutForecastsInput = {
@@ -1723,6 +1840,9 @@ export type UserUpdateWithoutForecastsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutForecastsInput = {
@@ -1758,6 +1878,9 @@ export type UserUncheckedUpdateWithoutForecastsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsInput = {
@@ -1793,6 +1916,9 @@ export type UserCreateWithoutConversationsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsInput = {
@@ -1828,6 +1954,9 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsInput = {
@@ -1879,6 +2008,9 @@ export type UserUpdateWithoutConversationsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsInput = {
@@ -1914,6 +2046,9 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVoiceNotesInput = {
@@ -1949,6 +2084,9 @@ export type UserCreateWithoutVoiceNotesInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVoiceNotesInput = {
@@ -1984,6 +2122,9 @@ export type UserUncheckedCreateWithoutVoiceNotesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVoiceNotesInput = {
@@ -2035,6 +2176,9 @@ export type UserUpdateWithoutVoiceNotesInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVoiceNotesInput = {
@@ -2070,6 +2214,9 @@ export type UserUncheckedUpdateWithoutVoiceNotesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPersonalNotesInput = {
@@ -2105,6 +2252,9 @@ export type UserCreateWithoutPersonalNotesInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPersonalNotesInput = {
@@ -2140,6 +2290,9 @@ export type UserUncheckedCreateWithoutPersonalNotesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPersonalNotesInput = {
@@ -2191,6 +2344,9 @@ export type UserUpdateWithoutPersonalNotesInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPersonalNotesInput = {
@@ -2226,6 +2382,9 @@ export type UserUncheckedUpdateWithoutPersonalNotesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
@@ -2261,6 +2420,9 @@ export type UserCreateWithoutPostsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -2296,6 +2458,9 @@ export type UserUncheckedCreateWithoutPostsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -2347,6 +2512,9 @@ export type UserUpdateWithoutPostsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -2382,6 +2550,9 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -2417,6 +2588,9 @@ export type UserCreateWithoutCommentsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -2452,6 +2626,9 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -2503,6 +2680,9 @@ export type UserUpdateWithoutCommentsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -2538,6 +2718,9 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBlocksGivenInput = {
@@ -2573,6 +2756,9 @@ export type UserCreateWithoutBlocksGivenInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBlocksGivenInput = {
@@ -2608,6 +2794,9 @@ export type UserUncheckedCreateWithoutBlocksGivenInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBlocksGivenInput = {
@@ -2648,6 +2837,9 @@ export type UserCreateWithoutBlocksReceivedInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBlocksReceivedInput = {
@@ -2683,6 +2875,9 @@ export type UserUncheckedCreateWithoutBlocksReceivedInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBlocksReceivedInput = {
@@ -2734,6 +2929,9 @@ export type UserUpdateWithoutBlocksGivenInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksGivenInput = {
@@ -2769,6 +2967,9 @@ export type UserUncheckedUpdateWithoutBlocksGivenInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutBlocksReceivedInput = {
@@ -2815,6 +3016,9 @@ export type UserUpdateWithoutBlocksReceivedInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
@@ -2850,6 +3054,9 @@ export type UserUncheckedUpdateWithoutBlocksReceivedInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostLikesInput = {
@@ -2885,6 +3092,9 @@ export type UserCreateWithoutPostLikesInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostLikesInput = {
@@ -2920,6 +3130,9 @@ export type UserUncheckedCreateWithoutPostLikesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostLikesInput = {
@@ -2971,6 +3184,9 @@ export type UserUpdateWithoutPostLikesInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostLikesInput = {
@@ -3006,6 +3222,9 @@ export type UserUncheckedUpdateWithoutPostLikesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReportsInput = {
@@ -3041,6 +3260,9 @@ export type UserCreateWithoutReportsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReportsInput = {
@@ -3076,6 +3298,9 @@ export type UserUncheckedCreateWithoutReportsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReportsInput = {
@@ -3127,6 +3352,9 @@ export type UserUpdateWithoutReportsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReportsInput = {
@@ -3162,6 +3390,9 @@ export type UserUncheckedUpdateWithoutReportsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCounsellingReqsInput = {
@@ -3197,6 +3428,9 @@ export type UserCreateWithoutCounsellingReqsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounsellingReqsInput = {
@@ -3232,6 +3466,9 @@ export type UserUncheckedCreateWithoutCounsellingReqsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCounsellingReqsInput = {
@@ -3283,6 +3520,9 @@ export type UserUpdateWithoutCounsellingReqsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounsellingReqsInput = {
@@ -3318,6 +3558,9 @@ export type UserUncheckedUpdateWithoutCounsellingReqsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTrustedContactsInput = {
@@ -3353,6 +3596,9 @@ export type UserCreateWithoutTrustedContactsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTrustedContactsInput = {
@@ -3388,6 +3634,9 @@ export type UserUncheckedCreateWithoutTrustedContactsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTrustedContactsInput = {
@@ -3439,6 +3688,9 @@ export type UserUpdateWithoutTrustedContactsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTrustedContactsInput = {
@@ -3474,6 +3726,9 @@ export type UserUncheckedUpdateWithoutTrustedContactsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSosAlertsInput = {
@@ -3509,6 +3764,9 @@ export type UserCreateWithoutSosAlertsInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSosAlertsInput = {
@@ -3544,6 +3802,9 @@ export type UserUncheckedCreateWithoutSosAlertsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSosAlertsInput = {
@@ -3595,6 +3856,9 @@ export type UserUpdateWithoutSosAlertsInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSosAlertsInput = {
@@ -3630,6 +3894,9 @@ export type UserUncheckedUpdateWithoutSosAlertsInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStoriesInput = {
@@ -3665,6 +3932,9 @@ export type UserCreateWithoutStoriesInput = {
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStoriesInput = {
@@ -3700,6 +3970,9 @@ export type UserUncheckedCreateWithoutStoriesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStoriesInput = {
@@ -3751,6 +4024,9 @@ export type UserUpdateWithoutStoriesInput = {
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoriesInput = {
@@ -3786,6 +4062,9 @@ export type UserUncheckedUpdateWithoutStoriesInput = {
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMatchesAInput = {
@@ -3821,6 +4100,9 @@ export type UserCreateWithoutMatchesAInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMatchesAInput = {
@@ -3856,6 +4138,9 @@ export type UserUncheckedCreateWithoutMatchesAInput = {
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMatchesAInput = {
@@ -3896,6 +4181,9 @@ export type UserCreateWithoutMatchesBInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMatchesBInput = {
@@ -3931,6 +4219,9 @@ export type UserUncheckedCreateWithoutMatchesBInput = {
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMatchesBInput = {
@@ -3982,6 +4273,9 @@ export type UserUpdateWithoutMatchesAInput = {
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMatchesAInput = {
@@ -4017,6 +4311,9 @@ export type UserUncheckedUpdateWithoutMatchesAInput = {
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMatchesBInput = {
@@ -4063,6 +4360,9 @@ export type UserUpdateWithoutMatchesBInput = {
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMatchesBInput = {
@@ -4098,6 +4398,9 @@ export type UserUncheckedUpdateWithoutMatchesBInput = {
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCompanionMsgsInput = {
@@ -4133,6 +4436,9 @@ export type UserCreateWithoutCompanionMsgsInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
   matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanionMsgsInput = {
@@ -4168,6 +4474,9 @@ export type UserUncheckedCreateWithoutCompanionMsgsInput = {
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
   matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanionMsgsInput = {
@@ -4219,6 +4528,9 @@ export type UserUpdateWithoutCompanionMsgsInput = {
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanionMsgsInput = {
@@ -4254,6 +4566,513 @@ export type UserUncheckedUpdateWithoutCompanionMsgsInput = {
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
   matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutQuestionnaireSubmissionsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutQuestionnaireSubmissionsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordUncheckedCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordUncheckedCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactUncheckedCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertUncheckedCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryUncheckedCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutQuestionnaireSubmissionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedCreateWithoutQuestionnaireSubmissionsInput>
+}
+
+export type UserUpsertWithoutQuestionnaireSubmissionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedUpdateWithoutQuestionnaireSubmissionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedCreateWithoutQuestionnaireSubmissionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQuestionnaireSubmissionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQuestionnaireSubmissionsInput, Prisma.UserUncheckedUpdateWithoutQuestionnaireSubmissionsInput>
+}
+
+export type UserUpdateWithoutQuestionnaireSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQuestionnaireSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUncheckedUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUncheckedUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUncheckedUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUncheckedUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUncheckedUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutRiskAssessmentsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  counselorAlerts?: Prisma.CounselorAlertCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutRiskAssessmentsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordUncheckedCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordUncheckedCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactUncheckedCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertUncheckedCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryUncheckedCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedCreateNestedManyWithoutStudentInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutRiskAssessmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRiskAssessmentsInput, Prisma.UserUncheckedCreateWithoutRiskAssessmentsInput>
+}
+
+export type UserUpsertWithoutRiskAssessmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRiskAssessmentsInput, Prisma.UserUncheckedUpdateWithoutRiskAssessmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRiskAssessmentsInput, Prisma.UserUncheckedCreateWithoutRiskAssessmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRiskAssessmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRiskAssessmentsInput, Prisma.UserUncheckedUpdateWithoutRiskAssessmentsInput>
+}
+
+export type UserUpdateWithoutRiskAssessmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRiskAssessmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUncheckedUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUncheckedUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUncheckedUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUncheckedUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUncheckedUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  counselorAlerts?: Prisma.CounselorAlertUncheckedUpdateManyWithoutStudentNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCounselorAlertsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentCreateNestedManyWithoutUserInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCounselorAlertsInput = {
+  id?: string
+  firebaseUid?: string | null
+  email: string
+  role?: $Enums.Role
+  name?: string | null
+  anonymousName?: string | null
+  department?: string | null
+  year?: number | null
+  institution?: string | null
+  language?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  moods?: Prisma.MoodRecordUncheckedCreateNestedManyWithoutUserInput
+  stressRecords?: Prisma.StressRecordUncheckedCreateNestedManyWithoutUserInput
+  forecasts?: Prisma.StressForecastUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutUserInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedCreateNestedManyWithoutUserInput
+  personalNotes?: Prisma.PersonalNoteUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedCreateNestedManyWithoutStudentInput
+  trustedContacts?: Prisma.TrustedContactUncheckedCreateNestedManyWithoutUserInput
+  sosAlerts?: Prisma.SOSAlertUncheckedCreateNestedManyWithoutUserInput
+  stories?: Prisma.SeniorStoryUncheckedCreateNestedManyWithoutAuthorInput
+  blocksGiven?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockerInput
+  blocksReceived?: Prisma.BlockUncheckedCreateNestedManyWithoutBlockedInput
+  postLikes?: Prisma.PostLikeUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  matchesA?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserAInput
+  matchesB?: Prisma.CompanionMatchUncheckedCreateNestedManyWithoutUserBInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedCreateNestedManyWithoutSenderInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedCreateNestedManyWithoutUserInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCounselorAlertsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCounselorAlertsInput, Prisma.UserUncheckedCreateWithoutCounselorAlertsInput>
+}
+
+export type UserUpsertWithoutCounselorAlertsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCounselorAlertsInput, Prisma.UserUncheckedUpdateWithoutCounselorAlertsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCounselorAlertsInput, Prisma.UserUncheckedCreateWithoutCounselorAlertsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCounselorAlertsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCounselorAlertsInput, Prisma.UserUncheckedUpdateWithoutCounselorAlertsInput>
+}
+
+export type UserUpdateWithoutCounselorAlertsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUpdateManyWithoutUserNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCounselorAlertsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firebaseUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anonymousName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  year?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  institution?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  moods?: Prisma.MoodRecordUncheckedUpdateManyWithoutUserNestedInput
+  stressRecords?: Prisma.StressRecordUncheckedUpdateManyWithoutUserNestedInput
+  forecasts?: Prisma.StressForecastUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutUserNestedInput
+  voiceNotes?: Prisma.VoiceNoteUncheckedUpdateManyWithoutUserNestedInput
+  personalNotes?: Prisma.PersonalNoteUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  counsellingReqs?: Prisma.CounsellingRequestUncheckedUpdateManyWithoutStudentNestedInput
+  trustedContacts?: Prisma.TrustedContactUncheckedUpdateManyWithoutUserNestedInput
+  sosAlerts?: Prisma.SOSAlertUncheckedUpdateManyWithoutUserNestedInput
+  stories?: Prisma.SeniorStoryUncheckedUpdateManyWithoutAuthorNestedInput
+  blocksGiven?: Prisma.BlockUncheckedUpdateManyWithoutBlockerNestedInput
+  blocksReceived?: Prisma.BlockUncheckedUpdateManyWithoutBlockedNestedInput
+  postLikes?: Prisma.PostLikeUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  matchesA?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserANestedInput
+  matchesB?: Prisma.CompanionMatchUncheckedUpdateManyWithoutUserBNestedInput
+  companionMsgs?: Prisma.CompanionMessageUncheckedUpdateManyWithoutSenderNestedInput
+  riskAssessments?: Prisma.RiskAssessmentUncheckedUpdateManyWithoutUserNestedInput
+  questionnaireSubmissions?: Prisma.QuestionnaireSubmissionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -4283,6 +5102,9 @@ export type UserCountOutputType = {
   matchesA: number
   matchesB: number
   companionMsgs: number
+  riskAssessments: number
+  counselorAlerts: number
+  questionnaireSubmissions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4307,6 +5129,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   matchesA?: boolean | UserCountOutputTypeCountMatchesAArgs
   matchesB?: boolean | UserCountOutputTypeCountMatchesBArgs
   companionMsgs?: boolean | UserCountOutputTypeCountCompanionMsgsArgs
+  riskAssessments?: boolean | UserCountOutputTypeCountRiskAssessmentsArgs
+  counselorAlerts?: boolean | UserCountOutputTypeCountCounselorAlertsArgs
+  questionnaireSubmissions?: boolean | UserCountOutputTypeCountQuestionnaireSubmissionsArgs
 }
 
 /**
@@ -4466,6 +5291,27 @@ export type UserCountOutputTypeCountCompanionMsgsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.CompanionMessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRiskAssessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RiskAssessmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCounselorAlertsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CounselorAlertWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQuestionnaireSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuestionnaireSubmissionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4501,6 +5347,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   matchesA?: boolean | Prisma.User$matchesAArgs<ExtArgs>
   matchesB?: boolean | Prisma.User$matchesBArgs<ExtArgs>
   companionMsgs?: boolean | Prisma.User$companionMsgsArgs<ExtArgs>
+  riskAssessments?: boolean | Prisma.User$riskAssessmentsArgs<ExtArgs>
+  counselorAlerts?: boolean | Prisma.User$counselorAlertsArgs<ExtArgs>
+  questionnaireSubmissions?: boolean | Prisma.User$questionnaireSubmissionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4572,6 +5421,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   matchesA?: boolean | Prisma.User$matchesAArgs<ExtArgs>
   matchesB?: boolean | Prisma.User$matchesBArgs<ExtArgs>
   companionMsgs?: boolean | Prisma.User$companionMsgsArgs<ExtArgs>
+  riskAssessments?: boolean | Prisma.User$riskAssessmentsArgs<ExtArgs>
+  counselorAlerts?: boolean | Prisma.User$counselorAlertsArgs<ExtArgs>
+  questionnaireSubmissions?: boolean | Prisma.User$questionnaireSubmissionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -4601,6 +5453,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     matchesA: Prisma.$CompanionMatchPayload<ExtArgs>[]
     matchesB: Prisma.$CompanionMatchPayload<ExtArgs>[]
     companionMsgs: Prisma.$CompanionMessagePayload<ExtArgs>[]
+    riskAssessments: Prisma.$RiskAssessmentPayload<ExtArgs>[]
+    counselorAlerts: Prisma.$CounselorAlertPayload<ExtArgs>[]
+    questionnaireSubmissions: Prisma.$QuestionnaireSubmissionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5030,6 +5885,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   matchesA<T extends Prisma.User$matchesAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$matchesAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanionMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matchesB<T extends Prisma.User$matchesBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$matchesBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanionMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   companionMsgs<T extends Prisma.User$companionMsgsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$companionMsgsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanionMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  riskAssessments<T extends Prisma.User$riskAssessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$riskAssessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RiskAssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  counselorAlerts<T extends Prisma.User$counselorAlertsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$counselorAlertsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CounselorAlertPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  questionnaireSubmissions<T extends Prisma.User$questionnaireSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$questionnaireSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionnaireSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5965,6 +6823,78 @@ export type User$companionMsgsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.CompanionMessageScalarFieldEnum | Prisma.CompanionMessageScalarFieldEnum[]
+}
+
+/**
+ * User.riskAssessments
+ */
+export type User$riskAssessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RiskAssessment
+   */
+  select?: Prisma.RiskAssessmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RiskAssessment
+   */
+  omit?: Prisma.RiskAssessmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RiskAssessmentInclude<ExtArgs> | null
+  where?: Prisma.RiskAssessmentWhereInput
+  orderBy?: Prisma.RiskAssessmentOrderByWithRelationInput | Prisma.RiskAssessmentOrderByWithRelationInput[]
+  cursor?: Prisma.RiskAssessmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RiskAssessmentScalarFieldEnum | Prisma.RiskAssessmentScalarFieldEnum[]
+}
+
+/**
+ * User.counselorAlerts
+ */
+export type User$counselorAlertsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CounselorAlert
+   */
+  select?: Prisma.CounselorAlertSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CounselorAlert
+   */
+  omit?: Prisma.CounselorAlertOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CounselorAlertInclude<ExtArgs> | null
+  where?: Prisma.CounselorAlertWhereInput
+  orderBy?: Prisma.CounselorAlertOrderByWithRelationInput | Prisma.CounselorAlertOrderByWithRelationInput[]
+  cursor?: Prisma.CounselorAlertWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CounselorAlertScalarFieldEnum | Prisma.CounselorAlertScalarFieldEnum[]
+}
+
+/**
+ * User.questionnaireSubmissions
+ */
+export type User$questionnaireSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionnaireSubmission
+   */
+  select?: Prisma.QuestionnaireSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionnaireSubmission
+   */
+  omit?: Prisma.QuestionnaireSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionnaireSubmissionInclude<ExtArgs> | null
+  where?: Prisma.QuestionnaireSubmissionWhereInput
+  orderBy?: Prisma.QuestionnaireSubmissionOrderByWithRelationInput | Prisma.QuestionnaireSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.QuestionnaireSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuestionnaireSubmissionScalarFieldEnum | Prisma.QuestionnaireSubmissionScalarFieldEnum[]
 }
 
 /**

@@ -20,6 +20,15 @@ export async function getWellnessAnalytics(firebaseUid: string) {
       orderBy: { recordedAt: "asc" },
     });
 
+    // Fetch Risk Assessments for the past 7 days
+    const riskAssessments = await prisma.riskAssessment.findMany({
+      where: {
+        userId: user.id,
+        createdAt: { gte: sevenDaysAgo },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
     // Fetch mood records
     const moodRecords = await prisma.moodRecord.findMany({
       where: {
@@ -50,6 +59,18 @@ export async function getWellnessAnalytics(firebaseUid: string) {
         if (record.stressLevel === "VERY_HIGH") numericLevel = 4;
         
         current.stress += numericLevel;
+        current.stressCount += 1;
+      }
+    });
+
+    // Process RiskAssessments as stress overrides
+    riskAssessments.forEach((ra) => {
+      const dayStr = new Date(ra.createdAt).toLocaleDateString("en-US", { weekday: "short" });
+      const current = weeklyDataMap.get(dayStr);
+      if (current) {
+        // Map 0-100 to 1-5 stress level
+        const riskLevel = Math.max(1, Math.ceil(ra.riskScore / 20));
+        current.stress += riskLevel;
         current.stressCount += 1;
       }
     });
@@ -95,6 +116,15 @@ export async function getStressForecast(firebaseUid: string) {
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const sevenDaysFromNow = new Date(startOfToday.getTime() + 7 * 24 * 60 * 60 * 1000);
 
+    const recentRisks = await prisma.riskAssessment.findMany({
+      where: { 
+        userId: user.id, 
+        createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } // Last 24 hours
+      },
+      orderBy: { createdAt: "desc" }
+    });
+    const hasHighRisk = recentRisks.some(r => r.riskScore >= 75);
+
     const upcomingTasks = await prisma.task.findMany({
       where: {
         userId: user.id,
@@ -120,8 +150,15 @@ export async function getStressForecast(firebaseUid: string) {
         return tDate.getDate() === dayDate.getDate() && tDate.getMonth() === dayDate.getMonth();
       });
 
+      // Check for recent high risk (if looking at today)
       let stressScore = 0;
       let details: string[] = [];
+
+      // If it's today and they have a high risk assessment, force a high stress score
+      if (isToday) {
+        // We will fetch risk assessments in the parent scope
+        // wait, I can just do a query for recent risks at the top of getStressForecast
+      }
       
       dayTasks.forEach(t => {
         if (t.priority === "CRITICAL" || t.priority === "HIGH") {
@@ -131,6 +168,11 @@ export async function getStressForecast(firebaseUid: string) {
           stressScore += 1;
         }
       });
+
+      if (isToday && hasHighRisk) {
+        stressScore += 10;
+        details.push("Elevated psychological distress detected from recent activity.");
+      }
 
       let level = "Normal Workload";
       let status: "NORMAL" | "WARNING" | "HIGH" = "NORMAL";
@@ -172,7 +214,7 @@ export async function getStressForecast(firebaseUid: string) {
 
 export interface DashboardData {
   stressTrend: {
-    currentEstimate: "Low" | "Moderate" | "High";
+    currentEstimate: "Low" | "Moderate" | "High" | "Crisis";
     trendDirection: "Decreasing" | "Stable" | "Increasing";
     recentChange: string;
     interpretation: string;
@@ -266,21 +308,45 @@ export async function getDashboardData(firebaseUid: string, useDemo: boolean = f
       orderBy: { recordedAt: 'asc' }
     });
 
-    let currentEstimate: "Low" | "Moderate" | "High" = "Low";
+    const riskAssessments = await prisma.riskAssessment.findMany({
+      where: { userId: user.id, createdAt: { gte: sevenDaysAgo } },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    let currentEstimate: "Low" | "Moderate" | "High" | "Crisis" = "Low";
     let trendDirection: "Decreasing" | "Stable" | "Increasing" = "Stable";
     
-    if (stressRecords.length > 0) {
-      const recent = stressRecords[stressRecords.length - 1].stressLevel;
-      if (recent === "HIGH" || recent === "VERY_HIGH") currentEstimate = "High";
-      else if (recent === "MODERATE") currentEstimate = "Moderate";
+    // Create an array of daily stress scores (1-5 scale) combining manual and risk
+    const dailyScoresMap = new Map<string, {sum: number, count: number}>();
+    stressRecords.forEach(r => {
+      const d = new Date(r.recordedAt).toDateString();
+      if (!dailyScoresMap.has(d)) dailyScoresMap.set(d, {sum: 0, count: 0});
+      const score = r.stressLevel.includes("HIGH") ? 3 : r.stressLevel.includes("MODERATE") ? 2 : 1;
+      dailyScoresMap.get(d)!.sum += score;
+      dailyScoresMap.get(d)!.count++;
+    });
+    riskAssessments.forEach(ra => {
+      const d = new Date(ra.createdAt).toDateString();
+      if (!dailyScoresMap.has(d)) dailyScoresMap.set(d, {sum: 0, count: 0});
+      const score = Math.max(1, Math.ceil(ra.riskScore / 20)); // Map 0-100 to 1-5
+      dailyScoresMap.get(d)!.sum += score;
+      dailyScoresMap.get(d)!.count++;
+    });
+
+    const dailyAverages = Array.from(dailyScoresMap.values()).map(val => val.sum / val.count);
+
+    if (dailyAverages.length > 0) {
+      const recent = dailyAverages[dailyAverages.length - 1];
+      if (recent >= 4.5) currentEstimate = "Crisis";
+      else if (recent >= 3) currentEstimate = "High";
+      else if (recent >= 2) currentEstimate = "Moderate";
       
-      if (stressRecords.length > 2) {
-        const firstHalf = stressRecords.slice(0, Math.floor(stressRecords.length / 2));
-        const secondHalf = stressRecords.slice(Math.floor(stressRecords.length / 2));
+      if (dailyAverages.length > 2) {
+        const firstHalf = dailyAverages.slice(0, Math.floor(dailyAverages.length / 2));
+        const secondHalf = dailyAverages.slice(Math.floor(dailyAverages.length / 2));
         
-        const getScore = (level: string) => level.includes("HIGH") ? 3 : level.includes("MODERATE") ? 2 : 1;
-        const avgFirst = firstHalf.reduce((acc, r) => acc + getScore(r.stressLevel), 0) / firstHalf.length;
-        const avgSecond = secondHalf.reduce((acc, r) => acc + getScore(r.stressLevel), 0) / secondHalf.length;
+        const avgFirst = firstHalf.reduce((acc, r) => acc + r, 0) / firstHalf.length;
+        const avgSecond = secondHalf.reduce((acc, r) => acc + r, 0) / secondHalf.length;
         
         if (avgSecond > avgFirst + 0.5) trendDirection = "Increasing";
         else if (avgSecond < avgFirst - 0.5) trendDirection = "Decreasing";
@@ -291,18 +357,23 @@ export async function getDashboardData(firebaseUid: string, useDemo: boolean = f
     let engRec = "You are maintaining a steady pace. Keep focusing on small, manageable tasks.";
     let hinRec = "आप एक अच्छी गति बनाए हुए हैं। छोटे और आसान कामों पर ध्यान देते रहें।";
 
-    if (currentEstimate === "High" || trendDirection === "Increasing") {
+    if (currentEstimate === "Crisis") {
+      interpretation = "URGENT: Your recent inputs indicate severe distress or crisis. Please connect with a counselor immediately.";
+      engRec = "PAUSE your tasks immediately. Your mental wellbeing is the priority right now. Reach out to the counselor via the Support page.";
+      hinRec = "कृपया अपने काम को अभी रोक दें। आपकी मानसिक भलाई सबसे महत्वपूर्ण है। सहायता पृष्ठ के माध्यम से तुरंत काउंसलर से संपर्क करें।";
+    } else if (currentEstimate === "High" || trendDirection === "Increasing") {
       interpretation = "Your recent check-ins suggest your stress has been higher this week. Consider scheduling a short break today.";
       engRec = "Your workload is increasing this week. Consider splitting today's remaining tasks into two smaller sessions. A 20-minute break may help.";
       hinRec = "आपका workload बढ़ रहा है। आज के काम को छोटे tasks में बाँटने की कोशिश करें। थोड़ा आराम भी ज़रूरी है। 20 मिनट का ब्रेक लेकर फिर पढ़ाई शुरू करें।";
     }
 
-    // Chart Data Construction
     const chartDataMap = new Map();
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       chartDataMap.set(d.toLocaleDateString("en-US", { weekday: "short" }), {
         day: d.toLocaleDateString("en-US", { weekday: "short" }),
+        stressIndicatorSum: 0,
+        stressIndicatorCount: 0,
         stressIndicator: 1,
         tasksCompleted: 0,
         tasksPlanned: 0
@@ -321,8 +392,32 @@ export async function getDashboardData(firebaseUid: string, useDemo: boolean = f
       const d = new Date(r.recordedAt).toLocaleDateString("en-US", { weekday: "short" });
       if (chartDataMap.has(d)) {
         const score = r.stressLevel.includes("HIGH") ? 3 : r.stressLevel.includes("MODERATE") ? 2 : 1;
-        chartDataMap.get(d).stressIndicator = Math.max(chartDataMap.get(d).stressIndicator, score);
+        chartDataMap.get(d).stressIndicatorSum += score;
+        chartDataMap.get(d).stressIndicatorCount++;
       }
+    });
+
+    riskAssessments.forEach(ra => {
+      const d = new Date(ra.createdAt).toLocaleDateString("en-US", { weekday: "short" });
+      if (chartDataMap.has(d)) {
+        const riskLevel1to5 = Math.max(1, Math.ceil(ra.riskScore / 20));
+        // Map 1-5 to 1-3 for this specific chart
+        const score = riskLevel1to5 >= 4 ? 3 : riskLevel1to5 >= 3 ? 2 : 1;
+        chartDataMap.get(d).stressIndicatorSum += score;
+        chartDataMap.get(d).stressIndicatorCount++;
+      }
+    });
+
+    const finalChartData = Array.from(chartDataMap.values()).map(data => {
+      if (data.stressIndicatorCount > 0) {
+        data.stressIndicator = Number((data.stressIndicatorSum / data.stressIndicatorCount).toFixed(1));
+      }
+      return {
+        day: data.day,
+        stressIndicator: data.stressIndicator,
+        tasksCompleted: data.tasksCompleted,
+        tasksPlanned: data.tasksPlanned
+      };
     });
 
     return {
@@ -346,7 +441,7 @@ export async function getDashboardData(firebaseUid: string, useDemo: boolean = f
           english: engRec,
           hindi: hinRec
         },
-        chartData: Array.from(chartDataMap.values())
+        chartData: finalChartData
       }
     };
   } catch (error) {

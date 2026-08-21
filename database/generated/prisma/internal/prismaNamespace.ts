@@ -418,7 +418,11 @@ export const ModelName = {
   SeniorStory: 'SeniorStory',
   QuietSpace: 'QuietSpace',
   CompanionMatch: 'CompanionMatch',
-  CompanionMessage: 'CompanionMessage'
+  CompanionMessage: 'CompanionMessage',
+  QuestionnaireSubmission: 'QuestionnaireSubmission',
+  RagDocument: 'RagDocument',
+  RiskAssessment: 'RiskAssessment',
+  CounselorAlert: 'CounselorAlert'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -434,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "task" | "calendarEvent" | "moodRecord" | "stressRecord" | "stressForecast" | "conversation" | "message" | "voiceNote" | "personalNote" | "communityPost" | "communityComment" | "block" | "postLike" | "report" | "counsellingRequest" | "trustedContact" | "sOSAlert" | "seniorStory" | "quietSpace" | "companionMatch" | "companionMessage"
+    modelProps: "user" | "task" | "calendarEvent" | "moodRecord" | "stressRecord" | "stressForecast" | "conversation" | "message" | "voiceNote" | "personalNote" | "communityPost" | "communityComment" | "block" | "postLike" | "report" | "counsellingRequest" | "trustedContact" | "sOSAlert" | "seniorStory" | "quietSpace" | "companionMatch" | "companionMessage" | "questionnaireSubmission" | "ragDocument" | "riskAssessment" | "counselorAlert"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2066,6 +2070,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuestionnaireSubmission: {
+      payload: Prisma.$QuestionnaireSubmissionPayload<ExtArgs>
+      fields: Prisma.QuestionnaireSubmissionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuestionnaireSubmissionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuestionnaireSubmissionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        findFirst: {
+          args: Prisma.QuestionnaireSubmissionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuestionnaireSubmissionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        findMany: {
+          args: Prisma.QuestionnaireSubmissionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>[]
+        }
+        create: {
+          args: Prisma.QuestionnaireSubmissionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        createMany: {
+          args: Prisma.QuestionnaireSubmissionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuestionnaireSubmissionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>[]
+        }
+        delete: {
+          args: Prisma.QuestionnaireSubmissionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        update: {
+          args: Prisma.QuestionnaireSubmissionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuestionnaireSubmissionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuestionnaireSubmissionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuestionnaireSubmissionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuestionnaireSubmissionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionnaireSubmissionPayload>
+        }
+        aggregate: {
+          args: Prisma.QuestionnaireSubmissionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuestionnaireSubmission>
+        }
+        groupBy: {
+          args: Prisma.QuestionnaireSubmissionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionnaireSubmissionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuestionnaireSubmissionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionnaireSubmissionCountAggregateOutputType> | number
+        }
+      }
+    }
+    RagDocument: {
+      payload: Prisma.$RagDocumentPayload<ExtArgs>
+      fields: Prisma.RagDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RagDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RagDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.RagDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RagDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.RagDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.RagDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.RagDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RagDocumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>[]
+        }
+        delete: {
+          args: Prisma.RagDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        update: {
+          args: Prisma.RagDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RagDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RagDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RagDocumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.RagDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RagDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.RagDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRagDocument>
+        }
+        groupBy: {
+          args: Prisma.RagDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RagDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RagDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RagDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    RiskAssessment: {
+      payload: Prisma.$RiskAssessmentPayload<ExtArgs>
+      fields: Prisma.RiskAssessmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RiskAssessmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RiskAssessmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        findFirst: {
+          args: Prisma.RiskAssessmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RiskAssessmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        findMany: {
+          args: Prisma.RiskAssessmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+        }
+        create: {
+          args: Prisma.RiskAssessmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        createMany: {
+          args: Prisma.RiskAssessmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RiskAssessmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+        }
+        delete: {
+          args: Prisma.RiskAssessmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        update: {
+          args: Prisma.RiskAssessmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RiskAssessmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RiskAssessmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RiskAssessmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.RiskAssessmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RiskAssessmentPayload>
+        }
+        aggregate: {
+          args: Prisma.RiskAssessmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRiskAssessment>
+        }
+        groupBy: {
+          args: Prisma.RiskAssessmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RiskAssessmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RiskAssessmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RiskAssessmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    CounselorAlert: {
+      payload: Prisma.$CounselorAlertPayload<ExtArgs>
+      fields: Prisma.CounselorAlertFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CounselorAlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CounselorAlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        findFirst: {
+          args: Prisma.CounselorAlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CounselorAlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        findMany: {
+          args: Prisma.CounselorAlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>[]
+        }
+        create: {
+          args: Prisma.CounselorAlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        createMany: {
+          args: Prisma.CounselorAlertCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CounselorAlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>[]
+        }
+        delete: {
+          args: Prisma.CounselorAlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        update: {
+          args: Prisma.CounselorAlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        deleteMany: {
+          args: Prisma.CounselorAlertDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CounselorAlertUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CounselorAlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>[]
+        }
+        upsert: {
+          args: Prisma.CounselorAlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CounselorAlertPayload>
+        }
+        aggregate: {
+          args: Prisma.CounselorAlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCounselorAlert>
+        }
+        groupBy: {
+          args: Prisma.CounselorAlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CounselorAlertGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CounselorAlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CounselorAlertCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2382,12 +2682,75 @@ export const CompanionMessageScalarFieldEnum = {
 export type CompanionMessageScalarFieldEnum = (typeof CompanionMessageScalarFieldEnum)[keyof typeof CompanionMessageScalarFieldEnum]
 
 
+export const QuestionnaireSubmissionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  score: 'score',
+  severity: 'severity',
+  rawAnswers: 'rawAnswers',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type QuestionnaireSubmissionScalarFieldEnum = (typeof QuestionnaireSubmissionScalarFieldEnum)[keyof typeof QuestionnaireSubmissionScalarFieldEnum]
+
+
+export const RagDocumentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  source: 'source',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type RagDocumentScalarFieldEnum = (typeof RagDocumentScalarFieldEnum)[keyof typeof RagDocumentScalarFieldEnum]
+
+
+export const RiskAssessmentScalarFieldEnum = {
+  id: 'id',
+  riskScore: 'riskScore',
+  riskBand: 'riskBand',
+  signals: 'signals',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type RiskAssessmentScalarFieldEnum = (typeof RiskAssessmentScalarFieldEnum)[keyof typeof RiskAssessmentScalarFieldEnum]
+
+
+export const CounselorAlertScalarFieldEnum = {
+  id: 'id',
+  alertType: 'alertType',
+  description: 'description',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  studentId: 'studentId'
+} as const
+
+export type CounselorAlertScalarFieldEnum = (typeof CounselorAlertScalarFieldEnum)[keyof typeof CounselorAlertScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -2404,6 +2767,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2556,6 +2928,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 /**
@@ -2731,6 +3117,10 @@ export type GlobalOmitConfig = {
   quietSpace?: Prisma.QuietSpaceOmit
   companionMatch?: Prisma.CompanionMatchOmit
   companionMessage?: Prisma.CompanionMessageOmit
+  questionnaireSubmission?: Prisma.QuestionnaireSubmissionOmit
+  ragDocument?: Prisma.RagDocumentOmit
+  riskAssessment?: Prisma.RiskAssessmentOmit
+  counselorAlert?: Prisma.CounselorAlertOmit
 }
 
 /* Types for Logging */

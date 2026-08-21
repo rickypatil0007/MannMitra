@@ -127,3 +127,23 @@ export type CompanionMatch = Prisma.CompanionMatchModel
  * 
  */
 export type CompanionMessage = Prisma.CompanionMessageModel
+/**
+ * Model QuestionnaireSubmission
+ * 
+ */
+export type QuestionnaireSubmission = Prisma.QuestionnaireSubmissionModel
+/**
+ * Model RagDocument
+ * 
+ */
+export type RagDocument = Prisma.RagDocumentModel
+/**
+ * Model RiskAssessment
+ * 
+ */
+export type RiskAssessment = Prisma.RiskAssessmentModel
+/**
+ * Model CounselorAlert
+ * 
+ */
+export type CounselorAlert = Prisma.CounselorAlertModel
