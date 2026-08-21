@@ -11,18 +11,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn(
           // Base
-          "flex h-12 w-full rounded-xl border bg-[var(--background-secondary)] px-4 py-2 text-sm text-[var(--text-primary)]",
+          "flex h-12 w-full rounded-2xl border bg-[var(--background-secondary)] px-5 py-2 text-sm text-[var(--text-primary)] shadow-sm",
           // Border
-          "border-[var(--border)]",
+          "border-[rgba(255,255,255,0.08)]",
           // Placeholder
           "placeholder:text-[var(--text-muted)]",
           // Focus Glow
-          "focus-visible:outline-none focus-visible:border-[var(--primary)] focus-visible:ring-4 focus-visible:ring-[rgba(224,122,95,0.12)] transition-all duration-300",
+          "focus-visible:outline-none focus-visible:border-[var(--primary)] focus-visible:ring-4 focus-visible:ring-[rgba(143,185,168,0.12)] focus-visible:bg-[rgba(255,255,255,0.04)]",
           // Disabled
           "disabled:cursor-not-allowed disabled:opacity-50",
           // Error (via data attr)
           "data-[invalid=true]:border-[var(--danger)]",
-          "transition-all duration-200",
+          "transition-all duration-300 ease-[var(--ease-soft)]",
           className
         )}
         ref={ref}

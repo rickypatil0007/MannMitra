@@ -86,16 +86,16 @@ export default function ReflectionPage() {
           ) : (
             <div className="space-y-3">
               {reflections.map((r) => (
-                <Card key={r.id} className="cursor-pointer hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200"
+                <div key={r.id} className="border border-white/10 bg-white/5 backdrop-blur-md rounded-xl cursor-pointer hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(121,175,194,0.1)] transition-all duration-200"
                   onClick={() => { setReading(r); setView("reading"); }}>
-                  <CardContent className="p-5 flex items-center justify-between">
+                  <div className="p-5 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">{r.date}</p>
-                      <p className="text-sm text-[var(--text-primary)]">{r.preview}</p>
+                      <p className="text-xs font-medium text-[var(--moonlit-cyan)]/70 uppercase tracking-wider mb-1">{r.date}</p>
+                      <p className="text-sm text-white/90 font-light">{r.preview}</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0" />
-                  </CardContent>
-                </Card>
+                    <ChevronRight className="w-4 h-4 text-white/40 flex-shrink-0" />
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -104,24 +104,24 @@ export default function ReflectionPage() {
 
       {view === "reading" && reading && (
         <>
-          <button onClick={() => setView("list")} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+          <button onClick={() => setView("list")} className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back
           </button>
           <div className="space-y-6">
             <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-1">{reading.date}</p>
-              <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)]">Reflection</h2>
+              <p className="text-xs font-medium text-[var(--moonlit-cyan)]/70 uppercase tracking-wider mb-1">{reading.date}</p>
+              <h2 className="text-2xl font-display font-medium text-white">Reflection</h2>
             </div>
             {prompts.map((p) => (
               <div key={p.id} className="space-y-2">
-                <p className="text-sm font-semibold text-[var(--text-secondary)]">{p.label}</p>
-                <Card variant="soft">
-                  <CardContent className="p-4">
-                    <p className="text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-wrap">
-                      {reading.answers[p.id] || <span className="text-[var(--text-muted)] italic">Not answered</span>}
+                <p className="text-sm font-medium text-[var(--moonlit-cyan)]">{p.label}</p>
+                <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-xl">
+                  <div className="p-5">
+                    <p className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap font-light">
+                      {reading.answers[p.id] || <span className="text-white/30 italic">Not answered</span>}
                     </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -130,14 +130,14 @@ export default function ReflectionPage() {
 
       {view === "new" && !saved && (
         <>
-          <button onClick={resetNew} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+          <button onClick={resetNew} className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" /> Cancel
           </button>
 
           {/* Progress dots */}
           <div className="flex items-center gap-2">
             {prompts.map((_, i) => (
-              <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= step ? "bg-[var(--primary)]" : "bg-[var(--border-subtle)]"}`} />
+              <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= step ? "bg-[var(--moonlit-cyan)] shadow-[0_0_8px_rgba(121,175,194,0.5)]" : "bg-white/10"}`} />
             ))}
           </div>
 
@@ -151,10 +151,10 @@ export default function ReflectionPage() {
               className="space-y-4"
             >
               <div>
-                <p className="text-xs font-semibold text-[var(--primary-soft)] uppercase tracking-wider mb-2">
+                <p className="text-xs font-medium text-[var(--moonlit-cyan)]/80 uppercase tracking-wider mb-2">
                   Question {step + 1} of {prompts.length}
                 </p>
-                <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)] leading-tight">
+                <h2 className="text-2xl font-display font-medium text-white leading-tight">
                   {currentPrompt.label}
                 </h2>
               </div>
@@ -166,14 +166,14 @@ export default function ReflectionPage() {
                 placeholder={currentPrompt.placeholder}
                 rows={6}
                 autoFocus
-                className="w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[rgba(46,125,91,0.15)] transition-all leading-relaxed"
+                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-4 py-3 text-sm text-white placeholder:text-white/30 font-light focus:outline-none focus:border-[var(--moonlit-cyan)]/50 focus:ring-1 focus:ring-[var(--moonlit-cyan)]/30 transition-all leading-relaxed"
               />
 
               <div className="flex gap-3 justify-between">
                 {step > 0 && (
-                  <Button variant="ghost" onClick={() => setStep(s => s - 1)}>Back</Button>
+                  <Button variant="ghost" onClick={() => setStep(s => s - 1)} className="text-white/60 hover:text-white hover:bg-white/5">Back</Button>
                 )}
-                <Button className="ml-auto" onClick={next} variant="secondary">
+                <Button className="ml-auto bg-[var(--moonlit-cyan)]/80 text-white hover:bg-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30" onClick={next} variant="secondary">
                   {isLast ? "Save reflection" : "Next →"}
                 </Button>
               </div>
@@ -188,14 +188,14 @@ export default function ReflectionPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center py-16 space-y-5"
         >
-          <div className="w-16 h-16 mx-auto rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
-            <CheckCircle className="w-8 h-8 text-[var(--primary)]" />
+          <div className="w-16 h-16 mx-auto rounded-full bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 flex items-center justify-center shadow-[0_0_30px_rgba(121,175,194,0.15)]">
+            <CheckCircle className="w-8 h-8 text-[var(--moonlit-cyan)]" />
           </div>
-          <h2 className="text-2xl font-display font-semibold text-[var(--primary-hover)]">Reflection saved.</h2>
-          <p className="text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed text-sm">
+          <h2 className="text-2xl font-display font-medium text-white">Reflection saved.</h2>
+          <p className="text-white/60 font-light max-w-xs mx-auto leading-relaxed text-sm">
             Taking time to reflect is a powerful act of self-care. It gets easier with practice. 🌿
           </p>
-          <Button variant="secondary" onClick={resetNew}>View all reflections</Button>
+          <Button variant="secondary" onClick={resetNew} className="bg-white/5 text-white hover:bg-white/10 border border-white/10">View all reflections</Button>
         </motion.div>
       )}
     </motion.div>

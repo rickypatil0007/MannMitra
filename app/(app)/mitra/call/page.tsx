@@ -172,15 +172,15 @@ export default function MitraCallPage() {
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }} 
             animate={{ scale: 1, opacity: 1 }}
-            className="w-24 h-24 rounded-full bg-[var(--surface-ai)] border border-[var(--border-subtle)] flex items-center justify-center mb-6 shadow-soft"
+            className="w-24 h-24 rounded-full bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 flex items-center justify-center mb-6 shadow-[0_0_30px_var(--moonlit-cyan)] shadow-[var(--moonlit-cyan)]/20"
           >
-            <Sparkles className="w-10 h-10 text-[var(--accent-ai)]" />
+            <Sparkles className="w-10 h-10 text-[var(--moonlit-cyan)] drop-shadow-[0_0_8px_var(--moonlit-cyan)]" />
           </motion.div>
           <h2 className="text-2xl font-display font-bold text-white mb-2">Visual-Talking Mode</h2>
           <p className="text-gray-400 max-w-md mb-8 text-sm">
             Experience an immersive, hands-free conversation with Mitra. Allow camera and microphone access to begin. This session is entirely private.
           </p>
-          <Button onClick={startSession} className="h-12 px-8 rounded-full bg-[var(--primary)] text-white font-medium hover:bg-[var(--primary-hover)] transition-all">
+          <Button onClick={startSession} className="h-12 px-8 rounded-full bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 hover:scale-105 transition-all backdrop-blur-md">
             Start Session
           </Button>
         </div>
@@ -200,7 +200,7 @@ export default function MitraCallPage() {
                     : { scale: [1, 1.05, 1], rotate: 0, opacity: 0.6 }
                 }
                 transition={{ duration: isLoading ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
-                className={`absolute w-64 h-64 md:w-96 md:h-96 rounded-full blur-[100px] ${isLoading ? 'bg-[var(--accent-ai)]' : 'bg-slate-700'}`}
+                className={`absolute w-64 h-64 md:w-96 md:h-96 rounded-full blur-[100px] ${isLoading ? 'bg-[var(--moonlit-cyan)]' : 'bg-slate-700'}`}
               />
               
               <div className="z-10 flex flex-col items-center text-center">

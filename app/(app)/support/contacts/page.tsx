@@ -97,58 +97,61 @@ export default function TrustedContactsPage() {
         }
       />
 
-      <div className="bg-[var(--background-secondary)] border border-[var(--primary-soft)] rounded-2xl p-4 flex gap-3 items-start">
-        <Shield className="w-5 h-5 text-[var(--primary)] shrink-0 mt-0.5" />
-        <div className="text-sm text-[var(--primary-hover)]">
-          <p className="font-semibold mb-1">How SOS works</p>
-          <p className="opacity-90 leading-relaxed">When you trigger the silent SOS, these contacts will immediately receive an SMS with your location and a request to check on you. We will never contact them without your explicit SOS trigger.</p>
+      <div className="bg-[var(--accent-warm)]/10 border border-[var(--accent-warm)]/20 rounded-2xl p-4 flex gap-3 items-start backdrop-blur-sm">
+        <Shield className="w-5 h-5 text-[var(--accent-warm)] shrink-0 mt-0.5" />
+        <div className="text-sm text-[var(--accent-warm)]/90">
+          <p className="font-medium mb-1 text-[var(--accent-warm)]">How SOS works</p>
+          <p className="font-light leading-relaxed">When you trigger the silent SOS, these contacts will immediately receive an SMS with your location and a request to check on you. We will never contact them without your explicit SOS trigger.</p>
         </div>
       </div>
 
       {showAddForm && (
-        <Card className="border-[var(--primary-soft)] border-2">
-          <CardContent className="p-6">
-            <h3 className="font-semibold text-[var(--text-primary)] mb-4">Add New Contact</h3>
+        <div className="border border-[var(--moonlit-cyan)]/40 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden shadow-[0_0_30px_rgba(121,175,194,0.15)]">
+          <div className="p-6">
+            <h3 className="font-medium text-white mb-4">Add New Contact</h3>
             <form onSubmit={handleAdd} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Name *</label>
+                  <label className="text-sm font-medium text-white/70">Name *</label>
                   <Input 
                     required 
                     placeholder="e.g., Jane Doe" 
                     value={name} 
                     onChange={e => setName(e.target.value)} 
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[var(--moonlit-cyan)]/50 focus:ring-1 focus:ring-[var(--moonlit-cyan)]/50"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone Number *</label>
+                  <label className="text-sm font-medium text-white/70">Phone Number *</label>
                   <Input 
                     required 
                     type="tel" 
                     placeholder="+91 98765 43210" 
                     value={phone} 
                     onChange={e => setPhone(e.target.value)} 
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[var(--moonlit-cyan)]/50 focus:ring-1 focus:ring-[var(--moonlit-cyan)]/50"
                   />
                 </div>
                 <div className="space-y-2 sm:col-span-2">
-                  <label className="text-sm font-medium">Relationship (Optional)</label>
+                  <label className="text-sm font-medium text-white/70">Relationship (Optional)</label>
                   <Input 
                     placeholder="e.g., Parent, Friend" 
                     value={relationship} 
                     onChange={e => setRelationship(e.target.value)} 
+                    className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-[var(--moonlit-cyan)]/50 focus:ring-1 focus:ring-[var(--moonlit-cyan)]/50"
                   />
                 </div>
               </div>
               <div className="flex gap-2 justify-end pt-2">
-                <Button type="button" variant="ghost" onClick={() => setShowAddForm(false)}>Cancel</Button>
-                <Button type="submit" disabled={submitting}>
+                <Button type="button" variant="ghost" onClick={() => setShowAddForm(false)} className="text-white/50 hover:text-white hover:bg-white/5">Cancel</Button>
+                <Button type="submit" disabled={submitting} className="bg-[var(--moonlit-cyan)] hover:bg-[var(--moonlit-cyan)]/90 text-white shadow-lg">
                   {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                   Save Contact
                 </Button>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {loading ? (
@@ -158,48 +161,48 @@ export default function TrustedContactsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {contacts.map((contact, i) => (
-            <Card key={contact.id} className="relative overflow-hidden group">
+            <div key={contact.id} className="relative overflow-hidden group border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 transition-all duration-200">
               {i === 0 && (
                 <div className="absolute top-0 right-0 p-2">
-                  <Badge variant="green" className="text-[10px]">Primary SOS</Badge>
+                  <Badge variant="green" className="text-[10px] bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/30">Primary SOS</Badge>
                 </div>
               )}
-              <CardContent className="p-6">
+              <div className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${i === 0 ? 'bg-[var(--surface-secondary)] text-[var(--primary)]' : 'bg-[var(--background-secondary)] text-[var(--text-secondary)]'}`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center border ${i === 0 ? 'bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/30' : 'bg-white/5 text-white/50 border-white/10'}`}>
                     <User className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[var(--text-primary)]">{contact.name}</h3>
-                    <p className="text-sm text-[var(--text-secondary)]">{contact.relationship || "Contact"}</p>
+                    <h3 className="font-medium text-white">{contact.name}</h3>
+                    <p className="text-sm text-white/50 font-light">{contact.relationship || "Contact"}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
-                  <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] font-mono">
-                    <Phone className="w-4 h-4" /> {contact.phone}
+                <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                  <div className="flex items-center gap-2 text-sm text-white/70 font-mono font-light">
+                    <Phone className="w-4 h-4 text-white/40" /> {contact.phone}
                   </div>
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-8 h-8 p-0 rounded-full text-[var(--text-muted)] hover:text-[var(--danger)] hover:bg-[var(--danger-soft)]"
+                    className="w-8 h-8 p-0 rounded-full text-white/30 hover:text-[var(--danger)] hover:bg-[var(--danger)]/10"
                     onClick={() => handleDelete(contact.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
           
           {!showAddForm && (
             <button 
               onClick={() => setShowAddForm(true)}
-              className="border-2 border-dashed border-[var(--border)] rounded-xl flex flex-col items-center justify-center p-8 text-[var(--text-muted)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)] hover:bg-[var(--background-secondary)] transition-all group"
+              className="border border-dashed border-white/20 rounded-3xl flex flex-col items-center justify-center p-8 text-white/50 hover:text-white hover:border-[var(--moonlit-cyan)]/50 hover:bg-white/5 hover:shadow-[0_0_20px_rgba(121,175,194,0.1)] transition-all group backdrop-blur-sm"
             >
-              <div className="w-12 h-12 rounded-full bg-[var(--background-secondary)] group-hover:bg-[var(--surface-secondary)] flex items-center justify-center mb-3 transition-colors">
+              <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 group-hover:bg-[var(--moonlit-cyan)]/20 group-hover:border-[var(--moonlit-cyan)]/30 group-hover:text-[var(--moonlit-cyan)] flex items-center justify-center mb-3 transition-colors">
                 <Plus className="w-6 h-6" />
               </div>
-              <p className="font-medium">{contacts.length === 0 ? "Add your first contact" : "Add another contact"}</p>
+              <p className="font-medium font-light">{contacts.length === 0 ? "Add your first contact" : "Add another contact"}</p>
             </button>
           )}
         </div>

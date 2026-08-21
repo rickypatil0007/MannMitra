@@ -71,52 +71,52 @@ export default function ForecastPage() {
 
       {/* Primary Forecast Alert */}
       {highPressureDetected ? (
-        <div className="rounded-2xl bg-[#FFF6ED] border border-[#FFD9AE] p-6 relative overflow-hidden">
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-[var(--accent-warm)]/10 rounded-full blur-2xl" />
+        <div className="rounded-2xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-md p-6 relative overflow-hidden shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/20 rounded-full blur-2xl" />
           <div className="relative z-10 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-            <div className="w-12 h-12 rounded-full bg-[var(--accent-warm)]/10 flex items-center justify-center shrink-0">
-              <AlertCircle className="w-6 h-6 text-[var(--accent-warm)]" />
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+              <AlertCircle className="w-6 h-6 text-amber-400" />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-display font-semibold text-[#7A4A1E]">High Pressure Window</h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--accent-warm)] text-[var(--primary-foreground)]">UPCOMING</span>
+                <h2 className="text-xl font-display font-medium text-white/90">High Pressure Window</h2>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white shadow-sm">UPCOMING</span>
               </div>
-              <p className="text-sm text-[#7A4A1E]/80 mt-1 leading-relaxed">
+              <p className="text-sm text-white/70 mt-1 leading-relaxed font-light">
                 Based on your schedule, there are multiple critical deadlines approaching. Specifically on: {highPressureDays.map((d: any) => d.dateStr).join(", ")}.
               </p>
             </div>
           </div>
           
-          <div className="relative z-10 mt-6 pt-5 border-t border-[#FFD9AE]/50 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="relative z-10 mt-6 pt-5 border-t border-amber-500/20 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <h4 className="text-xs font-semibold text-[#7A4A1E] uppercase tracking-wider">Contributing Factors</h4>
+              <h4 className="text-xs font-medium text-white/50 uppercase tracking-wider">Contributing Factors</h4>
               <ul className="space-y-1.5">
                 {highPressureDays[0]?.details.map((detail: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-[#7A4A1E]/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-warm)] mt-1.5 shrink-0" />
+                  <li key={idx} className="flex items-start gap-2 text-sm text-white/80 font-light">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
                     {detail}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="space-y-2">
-              <h4 className="text-xs font-semibold text-[#7A4A1E] uppercase tracking-wider">Suggested Action</h4>
-              <Button size="sm" asChild className="w-full bg-[#7A4A1E] hover:bg-[#5C3716] text-[var(--primary-foreground)] gap-2">
+              <h4 className="text-xs font-medium text-white/50 uppercase tracking-wider">Suggested Action</h4>
+              <Button size="sm" asChild className="w-full bg-amber-500/80 hover:bg-amber-500 text-white border border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.3)] gap-2">
                 <Link href="/mitra">Generate Preventive Plan</Link>
               </Button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="rounded-2xl bg-[var(--surface-community)] border border-[var(--primary-soft)] p-6 relative overflow-hidden">
+        <div className="rounded-2xl bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 backdrop-blur-md p-6 relative overflow-hidden shadow-[0_0_30px_rgba(121,175,194,0.1)]">
           <div className="relative z-10 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
-            <div className="w-12 h-12 rounded-full bg-[var(--primary-soft)] flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-6 h-6 text-[var(--primary)]" />
+            <div className="w-12 h-12 rounded-full bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-6 h-6 text-[var(--moonlit-cyan)]" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-display font-semibold text-[var(--text-primary)]">All Clear</h2>
-              <p className="text-sm text-[var(--text-secondary)] mt-1 leading-relaxed">
+              <h2 className="text-xl font-display font-medium text-white/90">All Clear</h2>
+              <p className="text-sm text-white/70 mt-1 leading-relaxed font-light">
                 Your upcoming week looks manageable. Keep up the good work and don't forget to take breaks!
               </p>
             </div>
@@ -125,41 +125,42 @@ export default function ForecastPage() {
       )}
 
       {/* 7-Day Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">7-Day Horizon</CardTitle>
-          <CardDescription>Your upcoming week at a glance.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative border-l-2 border-[var(--border-subtle)] ml-3 space-y-6 pb-2">
+      {/* 7-Day Timeline */}
+      <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+        <div className="pb-3 border-b border-white/10 p-5">
+          <h3 className="text-lg font-display font-medium text-white/90">7-Day Horizon</h3>
+          <p className="text-sm font-light text-white/60 mt-1">Your upcoming week at a glance.</p>
+        </div>
+        <div className="p-5">
+          <div className="relative border-l-2 border-white/10 ml-3 space-y-6 pb-2">
             {timeline?.map((day: any, idx: number) => {
               const isNormal = day.status === "NORMAL";
               const isWarning = day.status === "WARNING";
               const isHigh = day.status === "HIGH";
 
-              const dotColorClass = isHigh ? "bg-[var(--danger)]" : isWarning ? "bg-[var(--accent-warm)]" : "bg-[var(--primary-soft)]";
-              const dotBorderClass = isHigh ? "bg-[var(--danger-soft)]" : isWarning ? "bg-[#FFF6ED]" : "bg-[var(--border-subtle)]";
-              const titleColorClass = isHigh ? "text-[var(--danger)]" : isWarning ? "text-[#7A4A1E]" : "text-[var(--text-primary)]";
-              const subtitleColorClass = isHigh ? "text-[var(--danger)]/70" : isWarning ? "text-[#7A4A1E]/70" : "text-[var(--text-secondary)]";
-              const boxClass = isHigh ? "bg-[var(--danger-soft)] border-[#FECACA]" : isWarning ? "bg-[var(--surface)] border-[#FFD9AE]" : "bg-[var(--background-secondary)] border-[var(--border)]";
-              const labelColorClass = isHigh ? "text-[var(--danger)]" : isWarning ? "text-[var(--accent-warm)]" : "text-[var(--text-muted)]";
+              const dotColorClass = isHigh ? "bg-red-400" : isWarning ? "bg-amber-400" : "bg-[var(--moonlit-cyan)]";
+              const dotBorderClass = isHigh ? "bg-red-500/20 border-red-500/30" : isWarning ? "bg-amber-500/20 border-amber-500/30" : "bg-[var(--moonlit-cyan)]/20 border-[var(--moonlit-cyan)]/30";
+              const titleColorClass = isHigh ? "text-red-400" : isWarning ? "text-amber-400" : "text-white/90";
+              const subtitleColorClass = isHigh ? "text-red-400/70" : isWarning ? "text-amber-400/70" : "text-white/60";
+              const boxClass = isHigh ? "bg-red-500/10 border-red-500/20" : isWarning ? "bg-amber-500/10 border-amber-500/20" : "bg-white/5 border-white/10";
+              const labelColorClass = isHigh ? "text-red-400" : isWarning ? "text-amber-400" : "text-white/50";
 
               return (
                 <div key={idx} className="relative pl-6">
-                  <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white flex items-center justify-center ${dotBorderClass}`}>
-                    <div className={`w-1.5 h-1.5 rounded-full ${dotColorClass}`} />
+                  <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border flex items-center justify-center ${dotBorderClass}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${dotColorClass}`} />
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <p className={`text-xs font-semibold uppercase tracking-wider ${labelColorClass}`}>{day.label}</p>
-                      <p className="text-[10px] text-[var(--text-muted)] font-medium">{day.dateStr}</p>
+                      <p className={`text-xs font-medium uppercase tracking-wider ${labelColorClass}`}>{day.label}</p>
+                      <p className="text-[10px] text-white/40 font-light">{day.dateStr}</p>
                     </div>
-                    <div className={`border rounded-xl p-3 shadow-sm ${boxClass}`}>
+                    <div className={`border rounded-xl p-3 backdrop-blur-sm shadow-sm ${boxClass}`}>
                       <div className="flex items-center gap-2">
-                        {isHigh && <ShieldAlert className="w-4 h-4 text-[var(--danger)]" />}
-                        <p className={`text-sm font-semibold ${titleColorClass}`}>{day.level}</p>
+                        {isHigh && <ShieldAlert className="w-4 h-4 text-red-400" />}
+                        <p className={`text-sm font-medium ${titleColorClass}`}>{day.level}</p>
                       </div>
-                      <p className={`text-xs mt-1 ${subtitleColorClass}`}>
+                      <p className={`text-xs mt-1 font-light ${subtitleColorClass}`}>
                         {day.taskCount === 0 ? "No tasks scheduled." : `${day.taskCount} task(s) scheduled.`}
                       </p>
                     </div>
@@ -168,8 +169,8 @@ export default function ForecastPage() {
               );
             })}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }

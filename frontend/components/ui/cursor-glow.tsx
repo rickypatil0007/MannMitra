@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
+import { motionTokens } from "@/frontend/lib/motion/tokens";
 
 export function CursorGlow() {
   const [isVisible, setIsVisible] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
   // Smooth spring physics for a floating feel
-  const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20, mass: 0.5 });
-  const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20, mass: 0.5 });
+  const smoothX = useSpring(mouseX, motionTokens.spring.gentle);
+  const smoothY = useSpring(mouseY, motionTokens.spring.gentle);
 
   useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(pointer: coarse)").matches || shouldReduceMotion) return;
 
     const updateMousePosition = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -30,15 +32,15 @@ export function CursorGlow() {
       window.removeEventListener("mousemove", updateMousePosition);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [isVisible, mouseX, mouseY]);
+  }, [isVisible, mouseX, mouseY, shouldReduceMotion]);
 
-  const backgroundStyle = useMotionTemplate`radial-gradient(500px circle at ${smoothX}px ${smoothY}px, rgba(224, 122, 95, 0.07), transparent 40%)`;
+  const backgroundStyle = useMotionTemplate`radial-gradient(400px circle at ${smoothX}px ${smoothY}px, rgba(79, 209, 197, 0.08), transparent 50%)`;
 
-  if (!isVisible) return null;
+  if (!isVisible || shouldReduceMotion) return null;
 
   return (
     <motion.div
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[1] overflow-hidden mix-blend-screen"
       style={{
         background: backgroundStyle,
       }}

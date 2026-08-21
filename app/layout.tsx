@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Epilogue, Manrope } from "next/font/google";
+import { Geist, Fraunces } from "next/font/google";
 import "./globals.css";
 
-import { CursorGlow } from "@/frontend/components/ui/cursor-glow";
+import { PremiumCursor } from "@/frontend/components/motion/premium-cursor";
 import { ScrollProgress } from "@/frontend/components/ui/scroll-progress";
+import { AnimatedScenery } from "@/frontend/components/environment/AnimatedScenery";
 
-const epilogue = Epilogue({
-  variable: "--font-epilogue",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
 export const metadata: Metadata = {
@@ -26,12 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${epilogue.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="antialiased min-h-screen bg-[var(--background-primary)] selection:bg-[var(--primary-soft)] selection:text-[var(--primary-hover)] relative">
+    <html lang="en" className={`${geist.variable} ${fraunces.variable} h-full antialiased`}>
+      <body className="antialiased min-h-screen bg-[var(--background-primary)] selection:bg-[var(--primary-soft)] selection:text-[var(--primary-hover)] relative overflow-x-hidden">
+        <AnimatedScenery />
         <ScrollProgress />
-        <CursorGlow />
+        <PremiumCursor />
         {children}
-
       </body>
     </html>
   );

@@ -131,26 +131,26 @@ export default function SupportPage() {
             const status = accepted ? "accepted" : pending ? "pending" : null;
             
             return (
-              <Card key={c.id} className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
-                <CardContent className="p-5">
+              <div key={c.id} className="border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden hover:shadow-[0_0_20px_rgba(121,175,194,0.15)] hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 transition-all duration-200">
+                <div className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[var(--primary-soft)] flex items-center justify-center flex-shrink-0 text-[var(--primary-hover)] font-bold font-display text-sm">
+                    <div className="w-12 h-12 rounded-full bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center flex-shrink-0 text-[var(--moonlit-cyan)] font-bold font-display text-sm">
                       {initials(c.name)}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
-                          <p className="font-semibold text-[var(--text-primary)]">{c.name}</p>
-                          <p className="text-sm text-[var(--text-secondary)]">{c.title}</p>
+                          <p className="font-medium text-white">{c.name}</p>
+                          <p className="text-sm text-[var(--moonlit-cyan)] font-light">{c.title}</p>
                         </div>
                         {status === "pending" && (
-                          <span className="text-xs px-2.5 py-1 rounded-full bg-[#FFF6ED] text-[#7A4A1E] border border-[#FFD9AE] font-semibold flex items-center gap-1">
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--accent-warm)]/20 text-[var(--accent-warm)] border border-[var(--accent-warm)]/30 font-medium flex items-center gap-1">
                             <Clock className="w-3 h-3" /> Pending
                           </span>
                         )}
                         {status === "accepted" && (
-                          <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--primary-soft)] text-[var(--primary-hover)] font-semibold flex items-center gap-1">
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30 font-medium flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3" /> Accepted
                           </span>
                         )}
@@ -158,20 +158,21 @@ export default function SupportPage() {
 
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {c.specialties.map((s) => (
-                          <span key={s} className="px-2 py-0.5 rounded-full bg-[var(--background-secondary)] border border-[var(--border)] text-[10px] font-medium text-[var(--text-secondary)]">
+                          <span key={s} className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-light text-white/70">
                             {s}
                           </span>
                         ))}
                       </div>
 
-                      <p className="text-xs text-[var(--text-muted)] mt-2">{c.availability}</p>
+                      <p className="text-xs text-white/40 mt-2 font-light">{c.availability}</p>
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex gap-2 justify-end">
-                    <Button variant="secondary" size="sm">View Profile</Button>
+                  <div className="mt-4 pt-4 border-t border-white/10 flex gap-2 justify-end">
+                    <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-white/10">View Profile</Button>
                     <Button 
                       size="sm" 
+                      className="bg-[var(--moonlit-cyan)] hover:bg-[var(--moonlit-cyan)]/90 text-white shadow-lg"
                       disabled={status !== null || submittingId === c.id}
                       onClick={() => handleRequestChat(c)}
                     >
@@ -184,8 +185,8 @@ export default function SupportPage() {
                       )}
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -193,83 +194,77 @@ export default function SupportPage() {
 
       {/* Group support & Requests */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-2xl bg-[var(--surface-secondary)] flex items-center justify-center mb-3">
-              <Users className="w-5 h-5 text-[var(--primary)]" />
-            </div>
-            <CardTitle className="text-base">Group Support Sessions</CardTitle>
-            <CardDescription>Join a facilitated small group with other students facing similar pressures.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="secondary" className="w-full">Explore Groups</Button>
-          </CardContent>
-        </Card>
+        <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden hover:bg-white/10 hover:border-[var(--moonlit-cyan)]/30 hover:shadow-[0_0_20px_rgba(121,175,194,0.15)] transition-all duration-200 p-6 flex flex-col h-full">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center mb-4">
+            <Users className="w-6 h-6 text-[var(--moonlit-cyan)]" />
+          </div>
+          <h3 className="text-lg font-medium text-white mb-2">Group Support Sessions</h3>
+          <p className="text-sm text-white/60 font-light mb-6 flex-1">Join a facilitated small group with other students facing similar pressures.</p>
+          <Button variant="ghost" className="w-full bg-white/5 hover:bg-[var(--moonlit-cyan)]/20 text-white hover:text-[var(--moonlit-cyan)] border border-white/10 hover:border-[var(--moonlit-cyan)]/30">Explore Groups</Button>
+        </div>
         
-        <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-2xl bg-[var(--surface-secondary)] flex items-center justify-center mb-3">
-              <CalendarHeart className="w-5 h-5 text-[var(--primary)]" />
-            </div>
-            <CardTitle className="text-base">My Support Requests</CardTitle>
-            <CardDescription>Track the status of your counsellor requests and upcoming sessions.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {loading ? (
-                <div className="flex justify-center py-4">
-                  <Loader2 className="w-5 h-5 animate-spin text-[var(--primary)]" />
-                </div>
-              ) : requests.length === 0 ? (
-                <p className="text-sm text-[var(--text-muted)] text-center py-4">No active requests</p>
-              ) : (
-                requests.map(req => (
-                  <div key={req.id} className="flex items-center justify-between p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--primary-soft)]">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-[var(--primary-soft)]" />
-                      <div>
-                        <p className="text-xs font-semibold text-[var(--primary-hover)]">{req.notes || "General Request"}</p>
-                        <p className="text-[10px] text-[var(--text-secondary)]">
-                          {req.status.charAt(0).toUpperCase() + req.status.slice(1)} · 
-                          {new Date(req.requestedAt).toLocaleDateString()}
-                        </p>
-                      </div>
+        <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden hover:bg-white/10 hover:border-[var(--moonlit-cyan)]/30 hover:shadow-[0_0_20px_rgba(121,175,194,0.15)] transition-all duration-200 p-6 flex flex-col h-full">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center mb-4">
+            <CalendarHeart className="w-6 h-6 text-[var(--moonlit-cyan)]" />
+          </div>
+          <h3 className="text-lg font-medium text-white mb-2">My Support Requests</h3>
+          <p className="text-sm text-white/60 font-light mb-6">Track the status of your counsellor requests and upcoming sessions.</p>
+          <div className="space-y-3 mt-auto">
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <Loader2 className="w-5 h-5 animate-spin text-[var(--moonlit-cyan)]" />
+              </div>
+            ) : requests.length === 0 ? (
+              <p className="text-sm text-white/40 text-center py-4 font-light border border-white/5 rounded-xl bg-white/5">No active requests</p>
+            ) : (
+              requests.map(req => (
+                <div key={req.id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[var(--moonlit-cyan)]/70" />
+                    <div>
+                      <p className="text-xs font-medium text-white/90">{req.notes || "General Request"}</p>
+                      <p className="text-[10px] text-white/50 font-light">
+                        {req.status.charAt(0).toUpperCase() + req.status.slice(1)} · 
+                        {new Date(req.requestedAt).toLocaleDateString()}
+                      </p>
                     </div>
-                    <span className={`text-[10px] px-2 py-1 rounded-full font-semibold ${
-                      req.status === 'pending' 
-                        ? "bg-[#FFF6ED] text-[#7A4A1E]" 
-                        : "bg-[var(--primary-soft)] text-[var(--primary-hover)]"
-                    }`}>
-                      {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
-                    </span>
                   </div>
-                ))
-              )}
+                  <span className={`text-[10px] px-2 py-1 rounded-full font-medium border ${
+                    req.status === 'pending' 
+                      ? "bg-[var(--accent-warm)]/10 text-[var(--accent-warm)] border-[var(--accent-warm)]/20" 
+                      : "bg-[var(--moonlit-cyan)]/10 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/20"
+                  }`}>
+                    {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden hover:bg-white/10 hover:border-[var(--moonlit-cyan)]/30 hover:shadow-[0_0_20px_rgba(121,175,194,0.15)] transition-all duration-200 p-6 lg:col-span-2">
+          <div className="flex items-start gap-4 mb-2">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center shrink-0">
+              <ShieldAlert className="w-6 h-6 text-[var(--moonlit-cyan)]" />
             </div>
-          </CardContent>
-        </Card>
-        <Card className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200 lg:col-span-2">
-          <CardHeader>
-            <div className="w-10 h-10 rounded-2xl bg-[var(--surface-secondary)] flex items-center justify-center mb-3">
-              <ShieldAlert className="w-5 h-5 text-[var(--primary)]" />
+            <div>
+              <h3 className="text-lg font-medium text-white">Privacy & Data Support</h3>
+              <p className="text-sm text-white/60 font-light">Get help with managing your data, withdrawing consent, or understanding our security practices.</p>
             </div>
-            <CardTitle className="text-base">Privacy & Data Support</CardTitle>
-            <CardDescription>Get help with managing your data, withdrawing consent, or understanding our security practices.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 text-sm text-[var(--text-secondary)]">
-              <p>
-                <strong>DPDP Act & SPDI Rules:</strong> MannMitra applies reasonable security practices to protect personal information. Your consent is required before we collect any data.
-              </p>
-              <p>
-                To withdraw consent or request data deletion, please contact our Data Protection Officer at:
-              </p>
-              <a href="mailto:privacy@mannmitra.edu" className="font-medium text-[var(--primary)] hover:underline">
-                privacy@mannmitra.edu
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-white/10 space-y-4 text-sm text-white/70 font-light">
+            <p>
+              <strong className="text-white font-medium">DPDP Act & SPDI Rules:</strong> MannMitra applies reasonable security practices to protect personal information. Your consent is required before we collect any data.
+            </p>
+            <p>
+              To withdraw consent or request data deletion, please contact our Data Protection Officer at:
+            </p>
+            <a href="mailto:privacy@mannmitra.edu" className="font-medium text-[var(--moonlit-cyan)] hover:text-white transition-colors">
+              privacy@mannmitra.edu
+            </a>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

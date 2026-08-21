@@ -37,16 +37,16 @@ export function MitraInput({
   };
 
   return (
-    <div className="p-4 md:p-6 border-t border-[var(--border-subtle)] bg-[var(--surface)]">
+    <div className="p-4 md:p-6 border-t border-white/10 bg-transparent relative z-20 backdrop-blur-md">
       <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto flex items-end gap-2">
-        <div className="relative flex-1 bg-[var(--background-primary)] border border-[var(--border-subtle)] rounded-2xl focus-within:border-[var(--primary)] focus-within:ring-2 focus-within:ring-[var(--primary)]/20 transition-all shadow-sm">
+        <div className="relative flex-1 bg-white/5 border border-white/10 rounded-2xl focus-within:border-white/30 focus-within:bg-white/10 transition-all shadow-2xl backdrop-blur-sm">
           <textarea
             ref={textareaRef}
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKey}
             placeholder="Tell Mitra what's on your mind..."
-            className="w-full max-h-[120px] min-h-[52px] bg-transparent resize-none py-3.5 pl-4 pr-12 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none scrollbar-thin"
+            className="w-full max-h-[120px] min-h-[52px] bg-transparent resize-none py-3.5 pl-4 pr-12 text-white placeholder:text-white/30 focus:outline-none scrollbar-thin font-light"
             rows={1}
             disabled={isSending}
           />
@@ -55,7 +55,7 @@ export function MitraInput({
               type="button"
               onClick={startListening}
               className={`absolute right-3 bottom-3 p-1.5 rounded-full transition-colors ${
-                isListening ? "bg-red-500/10 text-red-500" : "text-[var(--text-muted)] hover:text-[var(--primary)]"
+                isListening ? "bg-red-500/10 text-red-500" : "text-white/40 hover:text-white/80 hover:bg-white/5"
               }`}
               title="Voice Input"
               disabled={isSending}
@@ -67,7 +67,7 @@ export function MitraInput({
         <button
           type="submit"
           disabled={!input.trim() || isSending}
-          className="flex-shrink-0 flex items-center justify-center w-[52px] h-[52px] rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+          className="flex-shrink-0 flex items-center justify-center w-[52px] h-[52px] rounded-2xl bg-white/10 text-white hover:bg-white/20 border border-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg backdrop-blur-sm"
         >
           <Send className="w-5 h-5 ml-1" />
         </button>

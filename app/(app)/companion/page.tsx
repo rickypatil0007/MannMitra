@@ -169,7 +169,7 @@ export default function CompanionPage() {
       
       {/* Header */}
       <header className="flex flex-col mb-8 shrink-0">
-        <h1 className="text-3xl font-display font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-h1 font-display font-medium tracking-tight flex items-center gap-3">
           <div className="w-10 h-10 bg-[var(--primary)]/10 rounded-xl flex items-center justify-center">
             <Compass className="w-5 h-5 text-[var(--primary)]" />
           </div>
@@ -242,7 +242,7 @@ export default function CompanionPage() {
       {/* Search Results */}
       {hasSearched && results && (
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-[var(--text-primary)]">
+          <h2 className="text-lg font-medium text-[var(--text-primary)]">
             {results.length > 0 ? `${results.length} companions found` : "Recommended Companions"}
           </h2>
           
@@ -279,7 +279,7 @@ export default function CompanionPage() {
                             <UserCircle2 className="w-7 h-7 text-[var(--text-muted)]" />
                           </div>
                           <div>
-                            <h3 className="font-bold text-[var(--text-primary)] text-lg leading-tight">
+                            <h3 className="font-medium text-[var(--text-primary)] text-lg leading-tight">
                               {companion.anonymousName}
                             </h3>
                             <p className="text-[var(--text-secondary)] text-xs mt-1 font-medium">
@@ -319,7 +319,7 @@ export default function CompanionPage() {
                 <UserCircle2 className="w-10 h-10 text-[var(--text-muted)]" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-[var(--text-primary)]">{selectedProfile.anonymousName}</h2>
+                <h2 className="text-h2 font-medium text-[var(--text-primary)]">{selectedProfile.anonymousName}</h2>
                 <div className="flex items-center gap-1.5 text-xs text-[var(--success)] font-medium mt-1">
                   <span className="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse" />
                   Active Now
@@ -329,20 +329,20 @@ export default function CompanionPage() {
 
             <div className="space-y-4">
                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">About</h4>
+                  <h4 className="text-caption font-medium uppercase tracking-wider text-[var(--text-muted)] mb-2">About</h4>
                   <p className="text-sm text-[var(--text-primary)] leading-relaxed">"{selectedProfile.bio}"</p>
                </div>
 
                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">Availability</h4>
+                    <h4 className="text-caption font-medium uppercase tracking-wider text-[var(--text-muted)] mb-2">Availability</h4>
                     <div className="flex items-center gap-2 text-sm text-[var(--text-primary)]">
                        <Clock className="w-4 h-4 text-[var(--primary)]" />
                        {selectedProfile.availability}
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">Match Strength</h4>
+                    <h4 className="text-caption font-medium uppercase tracking-wider text-[var(--text-muted)] mb-2">Match Strength</h4>
                     {('matchScore' in selectedProfile && selectedProfile.matchScore > 0) ? (
                       <span className="text-sm font-semibold text-[var(--primary)]">
                         {Math.min(99, 40 + (selectedProfile.matchScore * 20))}% Match
@@ -354,7 +354,7 @@ export default function CompanionPage() {
                </div>
 
                <div>
-                 <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-2">Interests</h4>
+                 <h4 className="text-caption font-medium uppercase tracking-wider text-[var(--text-muted)] mb-2">Interests</h4>
                  <div className="flex flex-wrap gap-1.5">
                    {selectedProfile.interests.map((int: string) => (
                      <span key={int} className="px-2.5 py-1 rounded-md text-xs bg-[var(--surface-secondary)] text-[var(--text-secondary)] border border-[var(--border)]">
@@ -366,7 +366,7 @@ export default function CompanionPage() {
 
                {'sharedInterests' in selectedProfile && (selectedProfile as MatchResult).sharedInterests.length > 0 && (
                  <div>
-                   <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--primary)] mb-2">Shared Interests</h4>
+                   <h4 className="text-caption font-medium uppercase tracking-wider text-[var(--primary)] mb-2">Shared Interests</h4>
                    <div className="flex flex-wrap gap-1.5">
                      {(selectedProfile as MatchResult).sharedInterests.map((int: string) => (
                        <span key={int} className="px-2.5 py-1 rounded-md text-xs bg-[var(--primary-soft)] text-[var(--primary)] border border-[var(--primary)]/20">

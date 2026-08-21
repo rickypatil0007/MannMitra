@@ -34,17 +34,17 @@ export default function MitraPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-5rem)] flex flex-col md:flex-row relative overflow-hidden -mx-4 sm:mx-0 sm:rounded-2xl sm:border border-[var(--border-subtle)] bg-[var(--surface)]">
+    <div className="h-[calc(100vh-7rem)] md:h-[calc(100vh-5rem)] flex flex-col md:flex-row relative overflow-hidden -mx-4 sm:mx-0 sm:rounded-2xl sm:border border-white/10 bg-transparent">
       
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-3 border-b border-[var(--border-subtle)] bg-[var(--surface-secondary)]">
+      <div className="md:hidden flex items-center justify-between p-3 border-b border-white/10 bg-white/5 backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <button onClick={toggleSidebar} className="text-[var(--text-muted)] p-1">
+          <button onClick={toggleSidebar} className="text-white/60 p-1">
             <PanelLeftClose className="w-5 h-5 rotate-180" />
           </button>
-          <h3 className="font-semibold text-sm">Mitra AI</h3>
+          <h3 className="font-medium text-sm text-white/90">Mitra AI</h3>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => router.push('/mitra/call')} className="h-8 gap-2 text-[var(--primary)] hover:text-[var(--primary-hover)] bg-[var(--primary-soft)] hover:bg-[var(--primary)]/20">
+        <Button variant="ghost" size="sm" onClick={() => router.push('/mitra/call')} className="h-8 gap-2 text-[var(--moonlit-cyan)] hover:text-white bg-[var(--moonlit-cyan)]/10 hover:bg-[var(--moonlit-cyan)]/20">
           <Video className="w-4 h-4" />
           <span className="text-xs font-semibold">Visual Call</span>
         </Button>
@@ -65,19 +65,19 @@ export default function MitraPage() {
 
       {/* Sidebar */}
       <motion.div 
-        className={`absolute md:relative z-30 h-full w-64 bg-[var(--surface-secondary)] border-r border-[var(--border-subtle)] flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`absolute md:relative z-30 h-full w-64 bg-white/5 backdrop-blur-lg border-r border-white/10 flex flex-col transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-64 w-0 md:block"
         }`}
         style={{ width: isSidebarOpen ? 256 : undefined }}
       >
-        <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
-          <h3 className="font-semibold text-sm text-[var(--text-primary)]">Chat History</h3>
-          <button onClick={toggleSidebar} className="md:hidden text-[var(--text-muted)] p-1">
+        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+          <h3 className="font-medium text-sm text-white/90">Chat History</h3>
+          <button onClick={toggleSidebar} className="md:hidden text-white/60 p-1">
             <PanelLeftClose className="w-5 h-5" />
           </button>
         </div>
         <div className="p-3">
-          <Button onClick={() => { reset(); if (window.innerWidth < 768) setIsSidebarOpen(false); }} className="w-full gap-2 bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)]">
+          <Button onClick={() => { reset(); if (window.innerWidth < 768) setIsSidebarOpen(false); }} className="w-full gap-2 bg-white/10 text-white hover:bg-white/20 border border-white/10">
             <Plus className="w-4 h-4" /> New Chat
           </Button>
         </div>
@@ -91,8 +91,8 @@ export default function MitraPage() {
                 }}
                 className={`w-full text-left px-3 py-2.5 rounded-lg text-sm flex items-center gap-2 transition-colors ${
                   conversationId === c.id 
-                    ? "bg-[var(--background-primary)] font-medium text-[var(--primary)] shadow-sm" 
-                    : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"
+                    ? "bg-white/10 font-medium text-white shadow-sm" 
+                    : "text-white/60 font-light hover:bg-white/5 hover:text-white/90"
                 }`}
               >
                 <MessageSquare className="w-4 h-4 shrink-0" />
@@ -103,7 +103,7 @@ export default function MitraPage() {
                   e.stopPropagation();
                   removeConversation(user!.uid, c.id);
                 }}
-                className="absolute right-2 p-1.5 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 rounded-md opacity-0 group-hover:opacity-100 transition-all"
+                className="absolute right-2 p-1.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-md opacity-0 group-hover:opacity-100 transition-all"
                 title="Delete Chat"
               >
                 <Trash2 className="w-4 h-4" />
@@ -114,11 +114,11 @@ export default function MitraPage() {
       </motion.div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col transition-all duration-300 relative">
+      <div className="flex-1 flex flex-col transition-all duration-300 relative bg-transparent">
         {/* Desktop Visual Call Button Header */}
-        <div className="hidden md:block absolute top-4 right-16 z-10">
-           <Button variant="outline" size="sm" onClick={() => router.push('/mitra/call')} className="gap-2 shadow-sm border-[var(--primary)/20] text-[var(--primary)] bg-[var(--surface)] hover:bg-[var(--primary-soft)] rounded-full px-4">
-             <Video className="w-4 h-4" />
+        <div className="hidden md:block absolute top-4 right-6 z-20">
+           <Button variant="outline" size="sm" onClick={() => router.push('/mitra/call')} className="gap-2 shadow-lg border-white/20 text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full px-4 font-medium transition-all hover:scale-105">
+             <Video className="w-4 h-4 text-[var(--moonlit-cyan)]" />
              Visual Call Mode
            </Button>
         </div>

@@ -8,12 +8,12 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-[20px] transition-all duration-200 shadow-card border border-[var(--border-subtle)]",
-      variant === "default" && "bg-[var(--surface)]",
-      variant === "green"  && "bg-[var(--surface-secondary)]",
-      variant === "soft"   && "bg-[var(--surface-secondary)]",
-      variant === "warm"   && "bg-[var(--surface-community)]",
-      variant === "ai"     && "bg-[var(--surface-ai)]",
+      "rounded-[20px] transition-all duration-300 shadow-soft",
+      variant === "default" && "glass bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)]",
+      variant === "green"   && "glass bg-[rgba(110,211,199,0.1)] hover:bg-[rgba(110,211,199,0.15)]",
+      variant === "soft"    && "glass bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.09)]",
+      variant === "warm"    && "glass bg-[rgba(217,160,102,0.1)] hover:bg-[rgba(217,160,102,0.15)]",
+      variant === "ai"      && "glass bg-[rgba(23,76,57,0.3)] border-[rgba(110,211,199,0.2)]",
       className
     )}
     {...props}

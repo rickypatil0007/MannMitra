@@ -49,15 +49,15 @@ export function MitraChat({ firebaseUid, conversationId, initialMessages }: Mitr
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-[var(--surface)]">
-      <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)] shrink-0 bg-[var(--surface)]">
+    <div className="flex-1 flex flex-col min-w-0 bg-transparent relative z-10">
+      <div className="flex items-center justify-between p-4 border-b border-white/10 shrink-0 bg-white/5 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[var(--surface-ai)] border border-[var(--border-subtle)] flex items-center justify-center shadow-soft">
-            <Brain className="w-5 h-5 text-[var(--accent-ai)]" />
+          <div className="w-10 h-10 rounded-full bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 flex items-center justify-center shadow-[0_0_15px_var(--moonlit-cyan)] shadow-[var(--moonlit-cyan)]/20">
+            <Brain className="w-5 h-5 text-[var(--moonlit-cyan)] drop-shadow-[0_0_8px_var(--moonlit-cyan)]" />
           </div>
           <div>
-            <p className="text-base font-display font-semibold text-[var(--text-primary)]">Mitra</p>
-            <p className="text-xs text-[var(--text-muted)]">Private AI companion</p>
+            <p className="text-base font-display font-medium text-white tracking-wide">Mitra</p>
+            <p className="text-xs text-white/50 font-light">Private AI companion</p>
           </div>
         </div>
       </div>

@@ -54,59 +54,59 @@ export default function SeniorStoriesPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
           {stories.map((story) => (
-            <Card key={story.id} className="hover:shadow-[0_2px_16px_rgba(30,80,60,0.07)] transition-all duration-200 cursor-pointer group">
-              <CardContent className="p-6">
+            <div key={story.id} className="border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(121,175,194,0.1)] transition-all duration-200 cursor-pointer group">
+              <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
-                  <Badge variant="muted">{story.category}</Badge>
-                  <span className="text-xs text-[var(--text-muted)]">{story.reads} reads</span>
+                  <Badge variant="muted" className="bg-[var(--moonlit-cyan)]/10 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/20">{story.category}</Badge>
+                  <span className="text-xs text-white/40 font-light">{story.reads} reads</span>
                 </div>
-                <h3 className="text-xl font-display font-semibold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">{story.title}</h3>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">{story.preview}</p>
-                <div className="flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
+                <h3 className="text-xl font-display font-medium text-white mb-2 group-hover:text-[var(--moonlit-cyan)] transition-colors">{story.title}</h3>
+                <p className="text-sm text-white/70 font-light leading-relaxed mb-4">{story.preview}</p>
+                <div className="flex items-center justify-between border-t border-white/10 pt-4">
                   <div className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-[var(--primary-soft)]" />
-                    <span className="text-xs font-semibold text-[var(--text-primary)]">{story.author}</span>
+                    <GraduationCap className="w-4 h-4 text-white/40" />
+                    <span className="text-xs font-medium text-white/80">{story.author}</span>
                   </div>
-                  <Button variant="ghost" size="sm" className="text-[var(--primary)] hover:text-[var(--primary-hover)]">
+                  <Button variant="ghost" size="sm" className="text-[var(--moonlit-cyan)] hover:text-white hover:bg-[var(--moonlit-cyan)]/20">
                     Read Story
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
         <div className="space-y-4">
-          <Card className="bg-[var(--text-primary)] text-[var(--primary-foreground)] border-transparent">
-            <CardContent className="p-6 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--surface)]/10 flex items-center justify-center mx-auto">
-                <Quote className="w-6 h-6 text-[var(--primary-foreground)]" />
+          <div className="border border-[var(--moonlit-cyan)]/30 bg-[var(--moonlit-cyan)]/10 backdrop-blur-md rounded-3xl overflow-hidden shadow-[0_0_20px_rgba(121,175,194,0.1)]">
+            <div className="p-6 text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 flex items-center justify-center mx-auto">
+                <Quote className="w-6 h-6 text-[var(--moonlit-cyan)]" />
               </div>
-              <h3 className="text-lg font-semibold font-display">Share your journey</h3>
-              <p className="text-sm text-[var(--primary-foreground)]/70 leading-relaxed">
+              <h3 className="text-lg font-medium font-display text-white">Share your journey</h3>
+              <p className="text-sm text-white/70 font-light leading-relaxed">
                 Your setbacks and successes can help current students navigate their own challenges.
               </p>
-              <Button className="w-full bg-[var(--surface)] text-[var(--text-primary)] hover:bg-[var(--surface)]/90">
+              <Button className="w-full bg-[var(--moonlit-cyan)] hover:bg-[var(--moonlit-cyan)]/90 text-white shadow-lg">
                 Submit a Story
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-[var(--warning)]" /> Top Categories
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
+          <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden">
+            <div className="px-6 pt-6 pb-2">
+              <h3 className="text-base font-medium text-white flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-[var(--accent-warm)]" /> Top Categories
+              </h3>
+            </div>
+            <div className="p-4 space-y-1">
               {['Failure & Recovery', 'Internships', 'Mental Health', 'Career Pivots'].map(c => (
-                <div key={c} className="flex items-center justify-between p-2 rounded-lg hover:bg-[var(--background-secondary)] cursor-pointer transition-colors">
-                  <span className="text-sm text-[var(--text-secondary)] font-medium">{c}</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <div key={c} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 cursor-pointer transition-colors group">
+                  <span className="text-sm text-white/70 group-hover:text-white font-light transition-colors">{c}</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover:text-white/70 transition-colors" />
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

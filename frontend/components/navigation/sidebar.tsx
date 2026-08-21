@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { motionTokens } from "@/frontend/lib/motion/tokens";
 import { cn } from "@/frontend/lib/utils";
 import { auth } from "@/frontend/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -55,6 +56,7 @@ export function Sidebar() {
 
   const isGuest = !user || user.isAnonymous;
   const navigation = loading ? guestNavigation : (isGuest ? guestNavigation : authenticatedNavigation);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <aside className="flex flex-col w-60 border-r-0 glass-nav min-h-screen" aria-label="Main navigation">
@@ -80,9 +82,9 @@ export function Sidebar() {
           return (
             <motion.div
               key={item.name}
-              initial={{ opacity: 0, x: -12 }}
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.03, duration: 0.3 }}
+              transition={{ delay: shouldReduceMotion ? 0 : index * 0.03, duration: motionTokens.duration.normal }}
             >
               <Link
                 href={item.href}
@@ -94,21 +96,26 @@ export function Sidebar() {
                     : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]"
                 )}
               >
-                {isActive && (
+                {isActive && !shouldReduceMotion && (
                   <motion.div
                     layoutId="sidebar-active"
                     className="absolute inset-0 bg-[var(--surface-secondary)] rounded-xl"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    transition={motionTokens.spring.gentle}
+                  />
+                )}
+                {isActive && shouldReduceMotion && (
+                  <div
+                    className="absolute inset-0 bg-[var(--surface-secondary)] rounded-xl"
                   />
                 )}
                 <motion.span
                   className="relative z-10 flex items-center gap-3"
-                  whileHover={{ x: 2 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  whileHover={shouldReduceMotion ? undefined : { x: 2 }}
+                  transition={motionTokens.spring.soft}
                 >
                   <motion.span
-                    animate={isActive ? { scale: [1, 1.15, 1] } : {}}
-                    transition={{ duration: 0.3 }}
+                    animate={isActive && !shouldReduceMotion ? { scale: [1, 1.15, 1] } : {}}
+                    transition={{ duration: motionTokens.duration.normal }}
                   >
                     <item.icon
                       className={cn(
@@ -127,13 +134,13 @@ export function Sidebar() {
       </nav>
 
       <div className="px-2.5 pb-2.5">
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <motion.div whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }} whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}>
           <Link
             href="/safety"
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--danger)] bg-[var(--danger-soft)] hover:bg-[#FECACA]/30 transition-colors border border-[#FECACA]/50"
           >
             <motion.span
-              animate={{ scale: [1, 1.1, 1] }}
+              animate={shouldReduceMotion ? {} : { scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <AlertTriangle className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} />

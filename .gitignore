@@ -40,5 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# env and secrets
 .env*
+/apikeys/
+*service-account*.json
+firebase-admin-*.json
+*.pem
+
+# vercel
+.vercel

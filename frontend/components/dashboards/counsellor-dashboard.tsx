@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
-import { PageHeader, Badge } from "@/frontend/components/ui/shared";
 import { Button } from "@/frontend/components/ui/button";
 import { 
   Users, ShieldAlert, Clock, CheckCircle2, MessageSquare, 
@@ -21,144 +19,136 @@ export function CounsellorDashboard() {
       className="space-y-6 max-w-5xl"
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <PageHeader 
-          title="Counsellor Portal" 
-          description="Manage your caseload, review new requests, and update your status."
-        />
-        <div className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--border)] p-1 rounded-lg">
-          <button onClick={() => setStatus("available")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "available" ? "bg-[var(--success)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Available</button>
-          <button onClick={() => setStatus("busy")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "busy" ? "bg-[var(--warning)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Busy</button>
-          <button onClick={() => setStatus("offline")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "offline" ? "bg-[var(--text-muted)] text-[var(--primary-foreground)]" : "text-[var(--text-secondary)] hover:bg-[var(--background-secondary)]"}`}>Offline</button>
+        <div>
+          <h1 className="text-3xl font-display font-medium text-white tracking-tight">Counsellor Portal</h1>
+          <p className="text-white/60 font-light mt-1">Manage your caseload, review new requests, and update your status.</p>
+        </div>
+        <div className="flex items-center gap-2 bg-white/5 border border-white/10 p-1 rounded-lg backdrop-blur-md">
+          <button onClick={() => setStatus("available")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "available" ? "bg-[var(--sky-deep)] text-white shadow-[0_0_15px_var(--sky-deep)]" : "text-white/60 hover:bg-white/10 hover:text-white"}`}>Available</button>
+          <button onClick={() => setStatus("busy")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "busy" ? "bg-amber-500/80 text-white shadow-[0_0_15px_rgba(245,158,11,0.5)]" : "text-white/60 hover:bg-white/10 hover:text-white"}`}>Busy</button>
+          <button onClick={() => setStatus("offline")} className={`px-3 py-1.5 rounded-md text-xs font-semibold ${status === "offline" ? "bg-white/20 text-white" : "text-white/60 hover:bg-white/10 hover:text-white"}`}>Offline</button>
         </div>
       </div>
 
       {/* Top Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-[var(--border)] shadow-soft">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-[var(--text-secondary)]">Active Caseload</p>
-                <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">14</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
-                <Users className="w-5 h-5 text-[var(--primary)]" />
-              </div>
+        <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden p-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-white/70">Active Caseload</p>
+              <p className="text-3xl font-display font-medium text-white mt-1">14</p>
             </div>
-            <p className="text-xs text-[var(--text-muted)] mt-4">2 slots remaining</p>
-          </CardContent>
-        </Card>
+            <div className="w-10 h-10 rounded-full bg-[var(--moonlit-cyan)]/10 flex items-center justify-center">
+              <Users className="w-5 h-5 text-[var(--moonlit-cyan)]" />
+            </div>
+          </div>
+          <p className="text-xs text-white/50 font-light mt-4">2 slots remaining</p>
+        </div>
 
-        <Card className="border-[var(--border)] shadow-soft bg-[var(--surface)]">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-[var(--text-secondary)]">Pending Requests</p>
-                <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">3</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[var(--danger-soft)] flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[var(--danger)]" />
-              </div>
+        <div className="border border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.1)] bg-red-500/5 backdrop-blur-md rounded-2xl overflow-hidden p-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-red-200/80">Pending Requests</p>
+              <p className="text-3xl font-display font-medium text-red-100 mt-1">3</p>
             </div>
-            <p className="text-xs text-[var(--danger)] font-semibold mt-4">Action required</p>
-          </CardContent>
-        </Card>
+            <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-red-400" />
+            </div>
+          </div>
+          <p className="text-xs text-red-400 font-medium mt-4">Action required</p>
+        </div>
         
-        <Card className="border-[var(--border)] shadow-soft">
-          <CardContent className="p-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-[var(--text-secondary)]">High Priority Alerts</p>
-                <p className="text-3xl font-display font-semibold text-[var(--text-primary)] mt-1">0</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[var(--background-secondary)] flex items-center justify-center">
-                <ShieldAlert className="w-5 h-5 text-[var(--text-muted)]" />
-              </div>
+        <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden p-5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-white/70">High Priority Alerts</p>
+              <p className="text-3xl font-display font-medium text-white mt-1">0</p>
             </div>
-            <p className="text-xs text-[var(--text-muted)] mt-4 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--success)]" /> All clear
-            </p>
-          </CardContent>
-        </Card>
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+              <ShieldAlert className="w-5 h-5 text-white/60" />
+            </div>
+          </div>
+          <p className="text-xs text-[var(--sky-deep)] mt-4 flex items-center gap-1 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--sky-deep)]" /> All clear
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Main Panel: Pending Requests */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="border-[var(--border)] shadow-soft">
-            <CardHeader className="pb-3 border-b border-[var(--border-subtle)]">
-              <CardTitle className="text-lg flex items-center justify-between">
-                <span>Pending Intake Requests</span>
-                <Badge variant="warning">3 New</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="divide-y divide-[var(--border-subtle)]">
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+            <div className="pb-3 border-b border-white/10 p-5">
+              <div className="text-lg flex items-center justify-between">
+                <span className="font-display font-medium text-white/90">Pending Intake Requests</span>
+                <span className="bg-red-500/20 text-red-300 px-2 py-1 rounded-md text-xs font-semibold border border-red-500/30">3 New</span>
+              </div>
+            </div>
+            <div className="p-0">
+              <div className="divide-y divide-white/10">
                 {[
                   { id: "req-1", reason: "Severe academic anxiety", time: "2 hours ago", priority: "Medium" },
                   { id: "req-2", reason: "Feeling isolated and lonely", time: "5 hours ago", priority: "Low" },
                   { id: "req-3", reason: "Panic attacks before exams", time: "1 day ago", priority: "High" }
                 ].map((req) => (
-                  <div key={req.id} className="p-5 hover:bg-[var(--background-secondary)] transition-colors">
-                    <div className="flex items-start justify-between">
+                  <div key={req.id} className="p-5 hover:bg-white/5 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
-                          <Badge variant={req.priority === "High" ? "danger" : req.priority === "Medium" ? "warning" : "muted"}>{req.priority} Priority</Badge>
-                          <span className="text-xs text-[var(--text-muted)]">{req.time}</span>
+                          <span className={`px-2 py-0.5 rounded-sm text-xs font-semibold border ${req.priority === "High" ? "bg-red-500/20 border-red-500/30 text-red-300" : req.priority === "Medium" ? "bg-amber-500/20 border-amber-500/30 text-amber-300" : "bg-white/10 border-white/20 text-white/60"}`}>{req.priority} Priority</span>
+                          <span className="text-xs font-light text-white/50">{req.time}</span>
                         </div>
-                        <h4 className="font-semibold text-[var(--text-primary)] flex items-center gap-2">
-                          <EyeOff className="w-4 h-4 text-[var(--text-muted)]" /> Anonymous Student
+                        <h4 className="font-medium text-white/90 flex items-center gap-2">
+                          <EyeOff className="w-4 h-4 text-white/50" /> Anonymous Student
                         </h4>
-                        <p className="text-sm text-[var(--text-secondary)] mt-1">Stated Reason: "{req.reason}"</p>
+                        <p className="text-sm font-light text-white/60 mt-1">Stated Reason: "{req.reason}"</p>
                       </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="text-[var(--text-secondary)] border-[var(--border)]">Review</Button>
-                        <Button size="sm" className="bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary-hover)]">Accept</Button>
+                      <div className="flex gap-2 sm:shrink-0">
+                        <Button size="sm" variant="outline" className="text-white/80 border-white/20 hover:bg-white/10 bg-transparent">Review</Button>
+                        <Button size="sm" className="bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30 hover:bg-[var(--moonlit-cyan)]/30 backdrop-blur-sm">Accept</Button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Right Panel: Security & Case Notes */}
         <div className="space-y-6">
-          <Card className="bg-[var(--surface-secondary)] border-[var(--primary-soft)]">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-[var(--surface)] flex items-center justify-center">
-                  <Lock className="w-5 h-5 text-[var(--primary)]" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-[var(--primary-hover)]">Private Case Notes</h3>
-                  <p className="text-xs text-[var(--primary)]">HIPAA & FERPA Compliant</p>
-                </div>
+          <div className="bg-[var(--moonlit-cyan)]/5 border border-[var(--moonlit-cyan)]/20 shadow-2xl backdrop-blur-md rounded-2xl overflow-hidden p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[var(--moonlit-cyan)]/10 flex items-center justify-center border border-[var(--moonlit-cyan)]/20">
+                <Lock className="w-5 h-5 text-[var(--moonlit-cyan)]" />
               </div>
-              <p className="text-sm text-[var(--primary-hover)] leading-relaxed mb-4">
-                Select an active student from your caseload to view or add encrypted, private notes. These are never visible to the institution.
-              </p>
-              <Button variant="outline" className="w-full bg-[var(--surface)] text-[var(--primary)] border-[var(--primary-soft)] hover:bg-[var(--background-secondary)]">
-                Open Note Editor
-              </Button>
-            </CardContent>
-          </Card>
+              <div>
+                <h3 className="font-medium text-[var(--moonlit-cyan)]">Private Case Notes</h3>
+                <p className="text-xs font-light text-[var(--moonlit-cyan)]/70">HIPAA & FERPA Compliant</p>
+              </div>
+            </div>
+            <p className="text-sm font-light text-[var(--moonlit-cyan)]/80 leading-relaxed mb-5">
+              Select an active student from your caseload to view or add encrypted, private notes. These are never visible to the institution.
+            </p>
+            <Button variant="outline" className="w-full bg-transparent text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/30 hover:bg-[var(--moonlit-cyan)]/10">
+              Open Note Editor
+            </Button>
+          </div>
           
-          <Card className="border-[var(--border)] shadow-soft">
-            <CardHeader className="pb-3 border-b border-[var(--border-subtle)]">
-              <CardTitle className="text-base flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-[var(--text-primary)]" />
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+            <div className="pb-3 border-b border-white/10 p-5">
+              <div className="text-base font-medium flex items-center gap-2 text-white/90">
+                <MessageSquare className="w-4 h-4 text-white/70" />
                 Recent Messages
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="p-8 text-center text-[var(--text-muted)] text-sm">
+              </div>
+            </div>
+            <div className="p-0">
+              <div className="p-8 text-center text-white/40 font-light text-sm">
                 No unread messages from active students.
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
       </div>

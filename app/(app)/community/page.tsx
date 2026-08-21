@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { staggerItem } from "@/frontend/lib/motion-presets";
 import { Card, CardContent } from "@/frontend/components/ui/card";
 import { Button } from "@/frontend/components/ui/button";
 import { Modal } from "@/frontend/components/ui/modal";
@@ -131,8 +132,8 @@ export default function CommunityPage() {
       <GuestPrompt feature="Community" description="Create an account to join the conversation, share anonymously, and connect with peers." />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">Community</h1>
-          <p className="text-[var(--text-secondary)] mt-1">You are not alone. Share anonymously.</p>
+          <h1 className="text-3xl font-display font-medium text-white tracking-tight">Community</h1>
+          <p className="text-white/60 font-light mt-1">You are not alone. Share anonymously.</p>
         </div>
         <Button onClick={() => setIsPostModalOpen(true)} className="gap-2 shrink-0">
           <PenLine className="w-4 h-4" />
@@ -143,17 +144,19 @@ export default function CommunityPage() {
       {/* Tag filter bar */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
         {TAGS.map((t) => (
-          <button
+          <motion.button
             key={t}
             onClick={() => setActiveTag(t)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeTag === t
-                ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
-                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)]"
+                ? "bg-[var(--moonlit-cyan)]/20 text-white border border-[var(--moonlit-cyan)]/50 shadow-[0_0_15px_rgba(121,175,194,0.2)]"
+                : "bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20"
             }`}
           >
             {t}
-          </button>
+          </motion.button>
         ))}
       </div>
 
@@ -168,33 +171,40 @@ export default function CommunityPage() {
             No posts found for this tag. Be the first to share!
           </div>
         ) : (
-          posts.map((post) => {
+          posts.map((post, index) => {
             const isLiked = post.likes?.length > 0;
             const isExpanded = expandedPostId === post.id;
             const timeStr = new Date(post.createdAt).toLocaleDateString();
 
             return (
-              <Card key={post.id} variant="warm" className="hover:shadow-card transition-all duration-200 overflow-hidden relative">
-                <CardContent className="p-6">
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.06 }}
+                whileHover={{ y: -2 }}
+              >
+              <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(121,175,194,0.1)] transition-all duration-300 relative group">
+                <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full bg-[var(--surface-secondary)] text-xs font-semibold text-[var(--primary)] border border-[var(--primary-soft)]">
+                    <span className="px-3 py-1 rounded-full bg-[var(--moonlit-cyan)]/10 text-xs font-medium text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/20">
                       {post.tag || "General"}
                     </span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-[var(--text-muted)]">{timeStr}</span>
+                      <span className="text-xs text-white/40 font-light">{timeStr}</span>
                       <div className="relative">
                         <button 
                           onClick={() => setModPostId(modPostId === post.id ? null : post.id)}
-                          className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                          className="text-white/40 hover:text-white"
                         >
                           <MoreHorizontal className="w-4 h-4" />
                         </button>
                         {modPostId === post.id && (
-                          <div className="absolute right-0 mt-2 w-40 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-10 py-1">
-                            <button onClick={() => handleReport(post.id)} className="w-full text-left px-4 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] flex items-center gap-2">
+                          <div className="absolute right-0 mt-2 w-40 bg-[#06152F]/90 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl z-10 py-1 overflow-hidden">
+                            <button onClick={() => handleReport(post.id)} className="w-full text-left px-4 py-2 text-sm text-white/70 hover:bg-white/10 flex items-center gap-2">
                               <Flag className="w-4 h-4" /> Report
                             </button>
-                            <button onClick={() => handleBlock(post.authorId)} className="w-full text-left px-4 py-2 text-sm text-[var(--danger)] hover:bg-[var(--background-secondary)] flex items-center gap-2">
+                            <button onClick={() => handleBlock(post.authorId)} className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/10 flex items-center gap-2">
                               <Ban className="w-4 h-4" /> Block User
                             </button>
                           </div>
@@ -203,9 +213,9 @@ export default function CommunityPage() {
                     </div>
                   </div>
                   
-                  <p className="text-[var(--text-primary)] leading-relaxed mb-5 whitespace-pre-wrap">{post.content}</p>
+                  <p className="text-white/90 leading-relaxed mb-5 whitespace-pre-wrap font-light">{post.content}</p>
                   
-                  <div className="flex items-center gap-5 text-[var(--text-muted)] border-t border-[var(--border-subtle)] pt-4">
+                  <div className="flex items-center gap-5 text-white/50 border-t border-white/10 pt-4">
                     <button 
                       onClick={() => handleLike(post.id)} 
                       disabled={interactionLoading === post.id}
@@ -216,7 +226,7 @@ export default function CommunityPage() {
                     </button>
                     <button 
                       onClick={() => setExpandedPostId(isExpanded ? null : post.id)}
-                      className="flex items-center gap-1.5 text-sm hover:text-[var(--primary)] transition-colors"
+                      className="flex items-center gap-1.5 text-sm hover:text-[var(--moonlit-cyan)] transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" /> {post._count.comments}
                     </button>
@@ -229,16 +239,16 @@ export default function CommunityPage() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="mt-4 pt-4 border-t border-[var(--border-subtle)] space-y-4"
+                        className="mt-4 pt-4 border-t border-white/10 space-y-4"
                       >
                         <div className="space-y-3">
                           {post.comments?.map((c: any) => (
-                            <div key={c.id} className="bg-[var(--surface-secondary)] p-3 rounded-xl">
-                              <span className="text-xs font-semibold text-[var(--primary)] mb-1 block">
+                            <div key={c.id} className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                              <span className="text-xs font-medium text-[var(--moonlit-cyan)] mb-1 block">
                                 {c.author?.anonymousName || "Anonymous"}
                               </span>
-                              <p className="text-sm text-[var(--text-primary)]">{c.content}</p>
-                              <span className="text-[10px] text-[var(--text-muted)] mt-1 block">
+                              <p className="text-sm text-white/80 font-light">{c.content}</p>
+                              <span className="text-[10px] text-white/40 mt-1 block font-light">
                                 {new Date(c.createdAt).toLocaleDateString()}
                               </span>
                             </div>
@@ -250,11 +260,11 @@ export default function CommunityPage() {
                             placeholder="Add a supportive comment..."
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
-                            className="flex-1 bg-[var(--surface-secondary)] border-none text-sm px-4 rounded-full outline-none focus:ring-1 focus:ring-[var(--primary-soft)]"
+                            className="flex-1 bg-white/5 border border-white/10 text-white placeholder-white/30 text-sm px-4 rounded-full outline-none focus:ring-1 focus:ring-[var(--moonlit-cyan)]/50"
                           />
                           <Button 
                             size="sm" 
-                            className="rounded-full px-4" 
+                            className="rounded-full px-4 bg-[var(--moonlit-cyan)]/20 hover:bg-[var(--moonlit-cyan)]/40 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30" 
                             onClick={() => handleAddComment(post.id)}
                             disabled={!commentText.trim() || commentingPostId === post.id}
                           >
@@ -264,8 +274,9 @@ export default function CommunityPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
+              </motion.div>
             );
           })
         )}

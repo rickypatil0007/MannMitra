@@ -1,8 +1,10 @@
 "use client";
 
-import * as motion from "framer-motion/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/frontend/components/ui/card";
-import { Button } from "@/frontend/components/ui/button";
+import { motion, useReducedMotion } from "framer-motion";
+import { motionTokens } from "@/frontend/lib/motion/tokens";
+import { StaggerContainer } from "@/frontend/components/motion/StaggerContainer";
+import { SlideUp } from "@/frontend/components/motion/SlideUp";
+import { FadeIn } from "@/frontend/components/motion/FadeIn";
 import { 
   MessageSquareHeart, CheckCircle2, Clock, Calendar, 
   TrendingDown, ArrowRight, Activity, BookOpen, Users, 
@@ -31,90 +33,96 @@ export function StudentDashboard() {
   // Simulate a wellness state fetch
   const [wellnessState, setWellnessState] = useState<"good" | "stressed" | "overwhelmed">("good");
 
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut" as const }}
+      transition={{ duration: motionTokens.duration.normal, ease: motionTokens.ease.out }}
       className="space-y-8"
     >
       {/* ─── Top Section: Greeting & Quick Mitra Access ─── */}
-      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-6">
+      <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
           <h1 className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight">
             {greeting}, Alex.
           </h1>
-          <p className="text-[var(--text-muted)] mt-1 text-sm">
+          <p className="text-white/60 mt-1 text-sm font-light">
             You have 2 pending tasks today. Your stress levels are stable.
           </p>
         </div>
-        <Button className="gap-2 shrink-0 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--primary-foreground)] shadow-soft rounded-xl" asChild>
-          <Link href="/mitra">
-            <MessageSquareHeart className="w-4 h-4" />
-            Talk to Mitra
-          </Link>
-        </Button>
+        <Link 
+          href="/mitra"
+          className="inline-flex items-center gap-2 shrink-0 bg-white/10 hover:bg-white/20 text-white shadow-soft rounded-xl px-4 py-2.5 transition-colors border border-white/10 text-sm font-medium"
+        >
+          <MessageSquareHeart className="w-4 h-4" />
+          Talk to Mitra
+        </Link>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <StaggerContainer delayChildren={0.1} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* ─── Left Column (Main Focus & Tasks) ─── */}
-        <div className="lg:col-span-8 space-y-8">
+        <FadeIn className="lg:col-span-8 space-y-8">
           
           {/* Today's Focus Priority */}
-          <div className="rounded-2xl bg-[var(--surface-secondary)] border border-[var(--border)] p-6 shadow-soft relative overflow-hidden">
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-6 shadow-2xl relative overflow-hidden backdrop-blur-md">
             {/* Soft decorative glow */}
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[var(--primary-soft)] rounded-full blur-3xl opacity-50" />
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-[var(--moonlit-cyan)] rounded-full blur-[80px] opacity-20 pointer-events-none" />
             
-            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-[var(--primary-soft)]" />
-                  <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-wider">Top Priority</p>
+                  <Sparkles className="w-4 h-4 text-[var(--moonlit-cyan)] opacity-80" />
+                  <p className="text-xs font-semibold text-[var(--moonlit-cyan)] uppercase tracking-widest opacity-80">Top Priority</p>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--primary-hover)] leading-snug">
+                <h3 className="text-xl font-display font-medium text-white leading-snug">
                   Midterm Exam in CS301 — in 4 days
                 </h3>
-                <p className="text-sm text-[var(--primary-soft)] mt-1">
+                <p className="text-sm text-white/60 font-light mt-1.5">
                   Mitra suggests blocking out 2 hours today for review.
                 </p>
               </div>
-              <Button variant="secondary" size="sm" className="shrink-0 bg-[var(--surface)] hover:bg-[var(--background-secondary)] text-[var(--primary)] border-[var(--border)]" asChild>
-                <Link href="/planner">Plan Study Time <ArrowRight className="w-3.5 h-3.5 ml-1" /></Link>
-              </Button>
+              <Link 
+                href="/planner"
+                className="inline-flex shrink-0 items-center bg-transparent hover:bg-white/10 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30 rounded-full px-4 py-2 text-sm font-medium transition-colors"
+              >
+                Plan Study Time <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              </Link>
             </div>
           </div>
 
           {/* Planner & Tasks */}
-          <section className="space-y-4">
+          <section className="space-y-4 pt-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-display font-semibold text-[var(--text-primary)]">Today&apos;s Checklist</h2>
-              <Link href="/planner" className="text-sm font-medium text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors flex items-center gap-1">
+              <h2 className="text-lg font-display font-medium text-white/90">Today&apos;s Checklist</h2>
+              <Link href="/planner" className="text-sm font-medium text-[var(--moonlit-cyan)] hover:text-white transition-colors flex items-center gap-1 opacity-80 hover:opacity-100">
                 Open Planner <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-2">
               {tasks.map((t) => (
                 <div 
                   key={t.id} 
-                  className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${
+                  className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 ${
                     t.done 
-                    ? "bg-[var(--background-secondary)] border-transparent opacity-60" 
-                    : "bg-[var(--surface)] border-[var(--border)] hover:border-[var(--primary-soft)] hover:shadow-soft cursor-pointer"
+                    ? "bg-transparent border-transparent opacity-40" 
+                    : "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10 cursor-pointer backdrop-blur-sm"
                   }`}
                 >
-                  <button className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${t.done ? "border-[var(--success)] bg-[var(--success)]" : "border-[var(--border)] hover:border-[var(--primary-soft)]"}`}>
-                    {t.done && <CheckCircle2 className="w-4 h-4 text-[var(--primary-foreground)]" />}
+                  <button className={`w-5 h-5 rounded-full border flex-shrink-0 flex items-center justify-center transition-colors ${t.done ? "border-white bg-white" : "border-white/30 hover:border-white/60"}`}>
+                    {t.done && <CheckCircle2 className="w-3 h-3 text-[var(--sky-deep)]" />}
                   </button>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium ${t.done ? "line-through text-[var(--text-muted)]" : "text-[var(--text-primary)]"}`}>
+                    <p className={`text-sm ${t.done ? "line-through font-light text-white/50" : "font-medium text-white/90"}`}>
                       {t.title}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0 bg-[var(--background-secondary)] px-2.5 py-1 rounded-md">
-                    <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                    <span className="text-xs font-medium text-[var(--text-muted)]">{t.time}</span>
+                  <div className="flex items-center gap-1.5 shrink-0 px-2.5 py-1 rounded-md bg-white/5 border border-white/5">
+                    <Clock className="w-3.5 h-3.5 text-white/50" />
+                    <span className="text-xs font-light text-white/60">{t.time}</span>
                   </div>
                 </div>
               ))}
@@ -122,93 +130,93 @@ export function StudentDashboard() {
           </section>
 
           {/* Mitra Suggestions / Recommendations */}
-          <section className="space-y-4 pt-4 border-t border-[var(--border-subtle)]">
-            <h2 className="text-lg font-display font-semibold text-[var(--text-primary)]">Recommended for You</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <section className="space-y-4 pt-8">
+            <h2 className="text-lg font-display font-medium text-white/90">Recommended for You</h2>
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {recommendations.map((rec) => (
-                <Link key={rec.id} href={`/${rec.type}`} className="block group">
-                  <div className="h-full p-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--primary-soft)] hover:shadow-soft transition-all">
-                    <div className="w-8 h-8 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                      <rec.icon className="w-4 h-4 text-[var(--primary)]" />
+                <SlideUp key={rec.id}>
+                  <Link href={`/${rec.type}`} className="block group h-full">
+                    <div className="h-full p-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 transition-all duration-300 backdrop-blur-sm">
+                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <rec.icon className="w-4 h-4 text-white/80" />
+                      </div>
+                      <p className="text-sm font-medium text-white/90 leading-snug">{rec.title}</p>
                     </div>
-                    <p className="text-sm font-medium text-[var(--text-primary)] leading-snug">{rec.title}</p>
-                  </div>
-                </Link>
+                  </Link>
+                </SlideUp>
               ))}
-            </div>
+            </StaggerContainer>
           </section>
 
-        </div>
+        </FadeIn>
 
         {/* ─── Right Column (Wellness, Check-in, Upcoming) ─── */}
-        <div className="lg:col-span-4 space-y-6">
+        <FadeIn delay={0.2} className="lg:col-span-4 space-y-6">
           
-          {/* Quick Check-in Card */}
-          <Card className="border-[var(--border)] shadow-sm bg-[var(--surface)] overflow-hidden">
-            <CardHeader className="pb-3 bg-[var(--background-secondary)] border-b border-[var(--border-subtle)]">
-              <CardTitle className="text-base flex items-center gap-2 text-[var(--text-primary)]">
-                <Activity className="w-4 h-4 text-[var(--primary)]" />
-                Daily Check-in
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-5 space-y-4">
-              <p className="text-sm text-[var(--text-muted)]">
+          {/* Quick Check-in Panel */}
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+            <div className="p-5 border-b border-white/10 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-[var(--moonlit-cyan)] opacity-80" />
+              <h3 className="text-sm font-medium text-white/90">Daily Check-in</h3>
+            </div>
+            <div className="p-5 space-y-5">
+              <p className="text-sm text-white/60 font-light">
                 You haven't logged your stress levels today. Taking 1 minute to reflect can improve your focus.
               </p>
-              <Button className="w-full bg-[var(--surface-secondary)] hover:bg-[var(--primary-soft)] text-[var(--primary-hover)] font-medium" variant="secondary" asChild>
-                <Link href="/mood">Log Stress Level</Link>
-              </Button>
-            </CardContent>
-          </Card>
+              <Link 
+                href="/mood"
+                className="flex items-center justify-center w-full rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 transition-colors text-sm border border-white/5"
+              >
+                Log Stress Level
+              </Link>
+            </div>
+          </div>
 
           {/* Wellness Pulse */}
-          <Card className="border-[var(--border)] shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2 text-[var(--text-primary)]">
-                <TrendingDown className="w-4 h-4 text-[var(--primary-soft)]" />
-                Stress Trend
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+            <div className="p-5 border-b border-white/10 flex items-center gap-2">
+              <TrendingDown className="w-4 h-4 text-[var(--moonlit-cyan)] opacity-80" />
+              <h3 className="text-sm font-medium text-white/90">Stress Trend</h3>
+            </div>
+            <div className="p-5 space-y-5">
               <div>
-                <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-[var(--text-secondary)]">Current level</span>
-                  <span className="text-[var(--success)] font-semibold">Low</span>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-white/60 font-light">Current level</span>
+                  <span className="text-[var(--moonlit-cyan)] font-medium">Low</span>
                 </div>
-                <div className="w-full bg-[var(--border-subtle)] h-2 rounded-full overflow-hidden">
-                  <div className="bg-[var(--primary-soft)] w-1/4 h-full rounded-full" />
+                <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-[var(--moonlit-cyan)] opacity-80 w-1/4 h-full rounded-full shadow-[0_0_10px_var(--moonlit-cyan)]" />
                 </div>
               </div>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+              <p className="text-xs text-white/50 font-light leading-relaxed">
                 Your stress levels have been steadily dropping since the weekend. Great job maintaining balance.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Upcoming Events */}
-          <Card className="border-[var(--border)] shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2 text-[var(--text-primary)]">
-                <Calendar className="w-4 h-4 text-[var(--text-primary)]" />
-                Upcoming
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="pl-3 border-l-2 border-[var(--primary)] relative">
-                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--primary)] ring-4 ring-[var(--surface)]" />
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Midterm — CS301</p>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">Thursday, 10:00 AM</p>
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+            <div className="p-5 border-b border-white/10 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-white/70" />
+              <h3 className="text-sm font-medium text-white/90">Upcoming</h3>
+            </div>
+            <div className="p-5 space-y-5">
+              <div className="pl-4 border-l-[1.5px] border-[var(--moonlit-cyan)] relative">
+                <div className="absolute -left-[4.5px] top-1.5 w-2 h-2 rounded-full bg-[var(--moonlit-cyan)] ring-4 ring-transparent" />
+                <p className="text-sm font-medium text-white/90">Midterm — CS301</p>
+                <p className="text-xs text-white/50 font-light mt-1">Thursday, 10:00 AM</p>
               </div>
-              <div className="pl-3 border-l-2 border-[var(--border)] relative">
-                <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-[var(--border)] ring-4 ring-[var(--surface)]" />
-                <p className="text-sm font-medium text-[var(--text-secondary)]">Therapy Appointment</p>
-                <p className="text-xs text-[var(--text-muted)] mt-0.5">Friday, 2:00 PM</p>
+              <div className="pl-4 border-l-[1.5px] border-white/20 relative">
+                <div className="absolute -left-[4.5px] top-1.5 w-2 h-2 rounded-full bg-white/30 ring-4 ring-transparent" />
+                <p className="text-sm font-medium text-white/70">Therapy Appointment</p>
+                <p className="text-xs text-white/50 font-light mt-1">Friday, 2:00 PM</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
         </div>
-      </div>
+        </FadeIn>
+      </StaggerContainer>
     </motion.div>
   );
 }

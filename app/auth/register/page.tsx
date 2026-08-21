@@ -9,7 +9,6 @@ import { auth } from "@/frontend/lib/firebase";
 import { syncUser } from "@/backend/actions/user";
 import { Button } from "@/frontend/components/ui/button";
 import { Input } from "@/frontend/components/ui/input";
-import { AuthFormWrapper, AuthSection } from "@/frontend/components/ui/animated";
 import { ArrowLeft, Loader2, Shield, ChevronDown, ExternalLink } from "lucide-react";
 
 export default function RegisterPage() {
@@ -57,154 +56,151 @@ export default function RegisterPage() {
   };
 
   return (
-    <AuthFormWrapper>
-      <AuthSection>
-        <Link
-          href="/auth/student"
-          className="absolute -top-12 left-0 flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Link>
-      </AuthSection>
-
-      <AuthSection>
-        <h2 className="text-2xl font-display font-semibold text-[var(--text-primary)] tracking-tight">
+    <div className="flex flex-col h-full w-full">
+      <div className="mb-8 text-center relative flex flex-col items-center">
+        <div className="w-full flex justify-start mb-4">
+          <Link
+            href="/auth/student"
+            className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)] hover:text-white transition-colors opacity-70 hover:opacity-100"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Link>
+        </div>
+        <h2 className="text-3xl font-display font-medium text-[var(--text-primary)] tracking-tight">
           Create Account
         </h2>
-        <p className="text-[var(--text-secondary)] mt-1.5 text-sm">
+        <p className="text-[var(--text-secondary)] mt-2 text-sm font-light">
           Join MannMitra to start your wellness journey.
         </p>
-      </AuthSection>
+      </div>
 
-      <AuthSection>
-        <form onSubmit={handleRegister} className="space-y-4">
-          {[
-            { label: "Full Name", type: "text", placeholder: "John Doe", value: name, setter: setName },
-            { label: "Email", type: "email", placeholder: "student@university.edu", value: email, setter: setEmail },
-            { label: "Password", type: "password", placeholder: "••••••••", value: password, setter: setPassword },
-          ].map((field, i) => (
+      <form onSubmit={handleRegister} className="space-y-5">
+        {[
+          { label: "Full Name", type: "text", placeholder: "John Doe", value: name, setter: setName },
+          { label: "Email", type: "email", placeholder: "student@university.edu", value: email, setter: setEmail },
+          { label: "Password", type: "password", placeholder: "••••••••", value: password, setter: setPassword },
+        ].map((field, i) => (
+          <motion.div
+            key={field.label}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.08 }}
+            className="space-y-1.5"
+          >
+            <label className="text-sm font-medium text-[var(--text-secondary)]">{field.label}</label>
+            <Input
+              type={field.type}
+              placeholder={field.placeholder}
+              value={field.value}
+              onChange={(e) => field.setter(e.target.value)}
+              required
+              minLength={field.type === "password" ? 6 : undefined}
+              className="h-12 bg-white/5 border-white/10 focus:border-white/30 text-white placeholder:text-white/20 transition-all duration-200"
+            />
+            {field.type === "password" && (
+              <p className="text-xs text-white/30 pt-1 font-light">Must be at least 6 characters.</p>
+            )}
+          </motion.div>
+        ))}
+
+        <AnimatePresence>
+          {error && (
             <motion.div
-              key={field.label}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="space-y-1.5"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="p-3 rounded-xl bg-[var(--state-crisis)]/20 border border-[var(--state-crisis)]/30 text-sm text-[var(--text-primary)]"
             >
-              <label className="text-sm font-medium text-[var(--text-primary)]">{field.label}</label>
-              <Input
-                type={field.type}
-                placeholder={field.placeholder}
-                value={field.value}
-                onChange={(e) => field.setter(e.target.value)}
-                required
-                minLength={field.type === "password" ? 6 : undefined}
-                className="h-12 bg-[var(--surface-secondary)] border-[var(--border)] focus:border-[var(--primary)] transition-all duration-200"
-              />
-              {field.type === "password" && (
-                <p className="text-xs text-[var(--text-muted)] pt-1">Must be at least 6 characters.</p>
-              )}
+              {error}
             </motion.div>
-          ))}
+          )}
+        </AnimatePresence>
 
+        <div className="mt-6 mb-4 border border-white/10 rounded-xl overflow-hidden bg-white/5">
+          <button
+            type="button"
+            onClick={() => setShowPrivacyDetails(!showPrivacyDetails)}
+            className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+          >
+            <div className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)]">
+              <Shield className="w-4 h-4 text-[var(--moonlit-cyan)]" />
+              Privacy, Consent & Data Protection
+            </div>
+            <motion.div animate={{ rotate: showPrivacyDetails ? 180 : 0 }}>
+              <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" />
+            </motion.div>
+          </button>
           <AnimatePresence>
-            {error && (
+            {showPrivacyDetails && (
               <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="p-3 rounded-xl bg-[var(--danger-soft)] border border-[#FECACA] text-sm text-[var(--danger)]"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
               >
-                {error}
+                <div className="p-4 space-y-3 text-sm text-white/60 font-light border-t border-white/10">
+                  <p className="leading-relaxed">
+                    Your consent is requested before collecting information used to provide MannMitra services.
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href="/privacy" className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--moonlit-cyan)] hover:underline">
+                      Privacy Policy <ExternalLink className="w-3 h-3" />
+                    </Link>
+                    <Link href="/consent" className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--moonlit-cyan)] hover:underline">
+                      Data & Consent Info <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
 
-          <div className="mt-6 mb-4 border border-[var(--border-subtle)] rounded-xl overflow-hidden bg-[var(--surface)]">
-            <button
-              type="button"
-              onClick={() => setShowPrivacyDetails(!showPrivacyDetails)}
-              className="w-full flex items-center justify-between p-4 bg-[var(--surface-secondary)] hover:bg-[var(--background-secondary)] transition-colors"
-            >
-              <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
-                <Shield className="w-4 h-4 text-[var(--primary)]" />
-                Privacy, Consent & Data Protection
-              </div>
-              <motion.div animate={{ rotate: showPrivacyDetails ? 180 : 0 }}>
-                <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" />
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {showPrivacyDetails && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-4 space-y-3 text-sm text-[var(--text-secondary)] border-t border-[var(--border-subtle)]">
-                    <p className="leading-relaxed">
-                      Your consent is requested before collecting information used to provide MannMitra services.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <Link href="/privacy" className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--primary)] hover:underline">
-                        Privacy Policy <ExternalLink className="w-3 h-3" />
-                      </Link>
-                      <Link href="/consent" className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--primary)] hover:underline">
-                        Data & Consent Info <ExternalLink className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+        <div className="flex items-start gap-3 mb-6">
+          <input
+            id="consent-checkbox"
+            type="checkbox"
+            checked={hasConsent}
+            onChange={(e) => setHasConsent(e.target.checked)}
+            className="w-4 h-4 mt-0.5 rounded border-white/20 text-[var(--moonlit-cyan)] focus:ring-[var(--moonlit-cyan)] bg-white/5 cursor-pointer"
+            required
+          />
+          <label htmlFor="consent-checkbox" className="text-sm text-white/60 font-light leading-tight cursor-pointer">
+            I consent to the collection and use of my information for providing MannMitra services.
+          </label>
+        </div>
+
+        <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+          <Button type="submit" className="w-full h-12 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white shadow-[0_0_24px_rgba(99,102,241,0.25)] hover:shadow-[0_0_32px_rgba(99,102,241,0.4)] border-none font-semibold transition-all duration-300" disabled={isLoading || !email || !password || !name || !hasConsent}>
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
+          </Button>
+        </motion.div>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-white/10" />
           </div>
-
-          <div className="flex items-start gap-3 mb-6">
-            <input
-              id="consent-checkbox"
-              type="checkbox"
-              checked={hasConsent}
-              onChange={(e) => setHasConsent(e.target.checked)}
-              className="w-4 h-4 mt-0.5 rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--primary)] bg-[var(--surface-secondary)] cursor-pointer"
-              required
-            />
-            <label htmlFor="consent-checkbox" className="text-sm text-[var(--text-secondary)] leading-tight cursor-pointer">
-              I consent to the collection and use of my information for providing MannMitra services.
-            </label>
+          <div className="relative flex justify-center text-xs uppercase tracking-wider">
+            <span className="bg-[var(--bg-surface)] px-3 text-[var(--text-secondary)]">Or continue with</span>
           </div>
+        </div>
 
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button type="submit" className="w-full h-11" disabled={isLoading || !email || !password || !name || !hasConsent}>
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
-            </Button>
-          </motion.div>
+        <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+          <Button type="button" variant="outline" className="w-full h-12 bg-transparent hover:bg-white/5 border-white/10 text-white font-medium" onClick={handleGuestLogin} disabled={isLoading}>
+            Sign in as Guest
+          </Button>
+        </motion.div>
+      </form>
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-[var(--border)]" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-[var(--surface)] px-2 text-[var(--text-secondary)]">Or continue with</span>
-            </div>
-          </div>
-
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button type="button" variant="outline" className="w-full h-11" onClick={handleGuestLogin} disabled={isLoading}>
-              Sign in as Guest
-            </Button>
-          </motion.div>
-        </form>
-      </AuthSection>
-
-      <AuthSection>
-        <p className="text-sm text-center text-[var(--text-secondary)]">
+      <div className="mt-8 text-center">
+        <p className="text-sm text-[var(--text-secondary)] font-light">
           Already have an account?{" "}
-          <Link href="/auth/student/login" className="font-semibold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors">
+          <Link href="/auth/student/login" className="font-medium text-[var(--moonlit-cyan)] hover:text-white transition-colors">
             Sign In
           </Link>
         </p>
-      </AuthSection>
-    </AuthFormWrapper>
+      </div>
+    </div>
   );
 }

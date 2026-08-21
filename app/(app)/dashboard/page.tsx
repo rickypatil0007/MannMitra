@@ -34,12 +34,12 @@ const AI_RESPONSES: Record<number, {en: string, hi: string}> = {
 };
 
 const QUICK_ACTIONS = [
-  { name: "Plan My Day",    href: "/planner",   icon: CheckSquare, color: "bg-blue-50 text-blue-600" },
-  { name: "Write in Diary", href: "/notes",     icon: NotebookPen, color: "bg-purple-50 text-purple-600" },
-  { name: "Join Community", href: "/community", icon: Users,       color: "bg-green-50 text-green-600" },
-  { name: "Relax",          href: "/comfort",   icon: BookOpen,    color: "bg-teal-50 text-teal-600" },
-  { name: "Find a Space",   href: "/spaces",    icon: LayoutDashboard, color: "bg-indigo-50 text-indigo-600" },
-  { name: "Get Support",    href: "/support",   icon: Headset,     color: "bg-rose-50 text-rose-600" },
+  { name: "Plan My Day",    href: "/planner",   icon: CheckSquare, color: "bg-blue-500/20 text-blue-300 border border-blue-500/30" },
+  { name: "Write in Diary", href: "/notes",     icon: NotebookPen, color: "bg-purple-500/20 text-purple-300 border border-purple-500/30" },
+  { name: "Join Community", href: "/community", icon: Users,       color: "bg-green-500/20 text-green-300 border border-green-500/30" },
+  { name: "Relax",          href: "/comfort",   icon: BookOpen,    color: "bg-teal-500/20 text-teal-300 border border-teal-500/30" },
+  { name: "Find a Space",   href: "/spaces",    icon: LayoutDashboard, color: "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" },
+  { name: "Get Support",    href: "/support",   icon: Headset,     color: "bg-rose-500/20 text-rose-300 border border-rose-500/30" },
 ];
 
 export default function DashboardPage() {
@@ -128,11 +128,11 @@ export default function DashboardPage() {
           <motion.h2
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-3xl font-display font-semibold text-[var(--text-primary)] tracking-tight"
+            className="text-h1 font-display font-medium text-white tracking-tight"
           >
             Good afternoon, {user?.displayName?.split(' ')[0] || 'Student'}!
           </motion.h2>
-          <p className="text-[var(--text-secondary)] mt-1">Here is what&apos;s happening with your day.</p>
+          <p className="text-white/60 font-light mt-1">Here is what&apos;s happening with your day.</p>
         </div>
         
         <motion.div
@@ -141,9 +141,9 @@ export default function DashboardPage() {
           transition={{ delay: 0.1 }}
           className="flex items-center gap-3"
         >
-          <Button className="bg-[var(--surface)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--background-secondary)] hidden sm:flex" variant="outline" asChild>
+          <Button className="bg-white/5 text-white/90 border border-white/10 hover:bg-white/10 backdrop-blur-md hidden sm:flex" variant="outline" asChild>
             <Link href="/mitra">
-              <Sparkles className="w-4 h-4 mr-2 text-[var(--primary)]" />
+              <Sparkles className="w-4 h-4 mr-2 text-[var(--moonlit-cyan)]" />
               Chat with Mitra
             </Link>
           </Button>
@@ -168,17 +168,17 @@ export default function DashboardPage() {
           {/* Planner Integration */}
           <StaggerItem>
           <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)] relative overflow-hidden hover-lift">
-            <CardHeader className="pb-3 border-b border-[var(--border-subtle)] flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-display font-semibold flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[var(--primary)]" />
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden hover-lift">
+            <div className="pb-3 border-b border-white/10 p-5 flex flex-row items-center justify-between">
+              <h3 className="text-lg font-display font-medium flex items-center gap-2 text-white/90">
+                <Clock className="w-5 h-5 text-[var(--moonlit-cyan)]" />
                 Up Next
-              </CardTitle>
-              <Link href="/planner" className="text-sm font-medium text-[var(--primary)] hover:underline">
+              </h3>
+              <Link href="/planner" className="text-sm font-light text-[var(--moonlit-cyan)] hover:underline">
                 Open Planner
               </Link>
-            </CardHeader>
-            <CardContent className="p-0">
+            </div>
+            <div className="p-0">
               {activeTasks.length === 0 ? (
                 <div className="text-center py-12 px-4">
                   <CheckSquare className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-3 opacity-50" />
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                               {isToday ? 'Due Today' : 'Due Tomorrow'}
                             </span>
                             <span className="w-1 h-1 rounded-full bg-[var(--border)]" />
-                            <span className={`text-[10px] font-bold ${task.priority === 'HIGH' ? 'text-red-500' : 'text-[var(--primary)]'}`}>
+                            <span className={`text-caption font-medium ${task.priority === 'HIGH' ? 'text-red-500' : 'text-[var(--primary)]'}`}>
                               {task.priority}
                             </span>
                           </div>
@@ -232,8 +232,8 @@ export default function DashboardPage() {
                   </AnimatePresence>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
           </motion.div>
           </StaggerItem>
 
@@ -243,11 +243,11 @@ export default function DashboardPage() {
             whileHover={{ scale: 1.01, y: -3 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-          <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--surface-ai)] to-[var(--surface)] shadow-sm animate-shimmer">
-            <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
-              <div className="w-16 h-16 rounded-2xl bg-[var(--surface)] border border-[var(--primary-soft)] shadow-sm flex items-center justify-center shrink-0 relative">
-                <div className="absolute inset-0 bg-[var(--primary)]/10 rounded-2xl animate-pulse" />
-                <MessageSquareHeart className="w-8 h-8 text-[var(--primary)] relative z-10" />
+          <div className="border border-[var(--moonlit-cyan)]/20 bg-[var(--moonlit-cyan)]/5 shadow-[0_0_30px_var(--moonlit-cyan)] shadow-[var(--moonlit-cyan)]/10 backdrop-blur-md rounded-2xl animate-shimmer overflow-hidden">
+            <div className="p-6 flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-[var(--moonlit-cyan)]/30 shadow-2xl flex items-center justify-center shrink-0 relative backdrop-blur-md">
+                <div className="absolute inset-0 bg-[var(--moonlit-cyan)]/10 rounded-2xl animate-pulse" />
+                <MessageSquareHeart className="w-8 h-8 text-[var(--moonlit-cyan)] relative z-10" />
               </div>
               <div className="flex-1 text-center sm:text-left">
                 <h3 className="font-display font-semibold text-lg text-[var(--text-primary)]">Talk to Mitra</h3>
@@ -258,15 +258,15 @@ export default function DashboardPage() {
                   <Link href="/mitra">Open Mitra</Link>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
           </motion.div>
           </StaggerItem>
 
           {/* Quick Actions Grid */}
           <StaggerItem>
           <div>
-            <h3 className="font-display font-semibold text-lg mb-4 text-[var(--text-primary)]">Quick Actions</h3>
+            <h3 className="font-display font-medium text-lg mb-4 text-white/90">Quick Actions</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {QUICK_ACTIONS.map((action, i) => (
                 <motion.div
@@ -279,12 +279,12 @@ export default function DashboardPage() {
                 >
                 <Link
                   href={action.href}
-                  className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border-subtle)] hover:border-[var(--primary-soft)] hover:shadow-sm transition-all text-center group"
+                  className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all text-center group"
                 >
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${action.color} group-hover:scale-110 transition-transform`}>
                     <action.icon className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-semibold text-[var(--text-primary)]">{action.name}</span>
+                  <span className="text-xs font-light text-white/80 group-hover:text-white transition-colors">{action.name}</span>
                 </Link>
                 </motion.div>
               ))}
@@ -296,8 +296,8 @@ export default function DashboardPage() {
           <StaggerItem>
           <div className="mt-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display font-semibold text-lg text-[var(--text-primary)]">Quiet Spaces Available Now</h3>
-              <Link href="/spaces" className="text-sm font-medium text-[var(--primary)] hover:underline flex items-center gap-1">
+              <h3 className="font-display font-medium text-lg text-white/90">Quiet Spaces Available Now</h3>
+              <Link href="/spaces" className="text-sm font-light text-[var(--moonlit-cyan)] hover:underline flex items-center gap-1">
                 View All <Navigation className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -307,10 +307,10 @@ export default function DashboardPage() {
                 <button
                   key={filter}
                   onClick={() => setSpaceFilter(filter)}
-                  className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                  className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-light transition-colors border ${
                     spaceFilter === filter
-                      ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-transparent"
-                      : "bg-[var(--background-secondary)] text-[var(--text-secondary)] border-[var(--border)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)]"
+                      ? "bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/30 backdrop-blur-sm"
+                      : "bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white backdrop-blur-sm"
                   }`}
                 >
                   {filter}
@@ -330,23 +330,23 @@ export default function DashboardPage() {
                     transition={{ delay: i * 0.08 }}
                     whileHover={{ y: -3 }}
                   >
-                  <Card className="hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200 hover-lift">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-1 text-xs text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md w-fit mb-2">
+                  <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl hover:border-white/20 transition-all duration-200 hover-lift overflow-hidden">
+                    <div className="p-4">
+                      <div className="flex items-center gap-1 text-xs text-[var(--moonlit-cyan)] font-light bg-[var(--moonlit-cyan)]/10 px-2 py-0.5 rounded-md w-fit mb-2 border border-[var(--moonlit-cyan)]/20">
                         <MapPin className="w-3 h-3" /> {space.location.split(',')[0]}
                       </div>
-                      <h4 className="font-semibold text-[var(--text-primary)] text-sm mb-2">{space.name}</h4>
+                      <h4 className="font-medium text-white/90 text-sm mb-2">{space.name}</h4>
                       
-                      <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+                      <div className="flex items-center justify-between text-xs text-white/50 font-light">
                         <span>Capacity: {space.capacity}</span>
                         {space.crowdPercentage !== undefined && (
                           <div className="flex items-center gap-1.5">
-                            <span className="font-medium text-[var(--text-primary)]">{space.crowdPercentage}% Full</span>
+                            <span className="font-medium text-white/80">{space.crowdPercentage}% Full</span>
                           </div>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                   </motion.div>
               ))}
             </div>
@@ -412,7 +412,7 @@ export default function DashboardPage() {
                         key={i} 
                         onClick={() => handleMoodClick(m.score, m.stress)}
                         {...emojiTap}
-                        className="text-2xl sm:text-3xl hover:bg-white/20 p-2 rounded-full cursor-pointer"
+                        className="text-h2 hover:bg-white/20 p-2 rounded-full cursor-pointer"
                         title={m.stress}
                       >
                         {m.emoji}
@@ -430,11 +430,11 @@ export default function DashboardPage() {
           {/* Weekly Wellness Mini Chart */}
           <StaggerItem>
           <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-          <Card className="border-[var(--border-subtle)] shadow-sm bg-[var(--surface)] hover-lift">
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-display font-semibold">Your Week</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl hover-lift overflow-hidden">
+            <div className="pb-2 border-b border-white/10 p-5 flex flex-row items-center justify-between">
+              <h3 className="text-lg font-display font-medium text-white/90">Your Week</h3>
+            </div>
+            <div className="p-5 pt-0">
               {(() => {
                 // If demo mode is active and we have no real data, use the story dataset
                 const dataToUse = (useDemo && weeklyData.length === 0) ? [
@@ -538,8 +538,8 @@ export default function DashboardPage() {
                   </>
                 );
               })()}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
           </motion.div>
           </StaggerItem>
 

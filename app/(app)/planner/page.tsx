@@ -178,78 +178,78 @@ export default function PlannerPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               {/* Activity Heatmap */}
-              <Card className="lg:col-span-2 border-[var(--border-subtle)] bg-[var(--surface)]">
-                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+              <div className="lg:col-span-2 border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+                <div className="pb-2 flex flex-row items-center justify-between border-b border-white/10 p-5">
                   <div>
-                    <CardTitle className="text-base">Study Completion Heatmap</CardTitle>
-                    <p className="text-xs text-[var(--text-muted)] mt-1">Last 60 days</p>
+                    <h3 className="text-base font-display font-medium text-white/90">Study Completion Heatmap</h3>
+                    <p className="text-xs text-white/50 mt-1">Last 60 days</p>
                   </div>
-                  <div className="flex items-center gap-4 text-sm font-medium">
-                    <span className="flex items-center gap-1.5"><Target className="w-4 h-4 text-blue-500" /> {analysis.totalCompleted} Total</span>
-                    <span className="flex items-center gap-1.5"><Flame className="w-4 h-4 text-orange-500" /> {analysis.currentStreak} Day Streak</span>
+                  <div className="flex items-center gap-4 text-sm font-light">
+                    <span className="flex items-center gap-1.5 text-white/80"><Target className="w-4 h-4 text-[var(--moonlit-cyan)]" /> {analysis.totalCompleted} Total</span>
+                    <span className="flex items-center gap-1.5 text-white/80"><Flame className="w-4 h-4 text-amber-400" /> {analysis.currentStreak} Day Streak</span>
                   </div>
-                </CardHeader>
-                <CardContent>
+                </div>
+                <div className="p-5">
                   <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-thin">
                     <div className="flex flex-col flex-wrap h-[120px] gap-1 content-start">
                       {analysis.heatmap.map((day, idx) => (
                         <div 
                           key={idx} 
                           title={`${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}\n${day.count} tasks completed`}
-                          className={`w-3.5 h-3.5 rounded-sm border ${getHeatmapColor(day.count)} hover:ring-2 ring-blue-400 transition-all cursor-help`}
+                          className={`w-3.5 h-3.5 rounded-sm border ${getHeatmapColor(day.count)} hover:ring-2 ring-[var(--moonlit-cyan)] transition-all cursor-help`}
                         />
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-end gap-2 text-xs text-[var(--text-muted)] mt-2">
+                  <div className="flex items-center justify-end gap-2 text-xs text-white/50 mt-2 font-light">
                     <span>Less</span>
-                    <div className="w-3 h-3 rounded-sm bg-[var(--surface-secondary)] border border-[var(--border-subtle)]"></div>
-                    <div className="w-3 h-3 rounded-sm bg-green-200 dark:bg-green-900/40 border border-green-300 dark:border-green-800"></div>
-                    <div className="w-3 h-3 rounded-sm bg-green-400 dark:bg-green-600 border border-green-500"></div>
-                    <div className="w-3 h-3 rounded-sm bg-green-600 dark:bg-green-500 border border-green-700 dark:border-green-400"></div>
+                    <div className="w-3 h-3 rounded-sm bg-white/5 border border-white/10"></div>
+                    <div className="w-3 h-3 rounded-sm bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30"></div>
+                    <div className="w-3 h-3 rounded-sm bg-[var(--moonlit-cyan)]/40 border border-[var(--moonlit-cyan)]/50"></div>
+                    <div className="w-3 h-3 rounded-sm bg-[var(--moonlit-cyan)]/60 border border-[var(--moonlit-cyan)]/70"></div>
                     <span>More</span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Exam Workload Analysis */}
-              <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--background-secondary)] to-[var(--surface)]">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-[var(--primary)]" />
+              <div className="border border-[var(--moonlit-cyan)]/20 shadow-2xl bg-[var(--moonlit-cyan)]/5 backdrop-blur-md rounded-2xl overflow-hidden">
+                <div className="pb-2 border-b border-[var(--moonlit-cyan)]/10 p-5">
+                  <h3 className="text-base font-display font-medium flex items-center gap-2 text-white/90">
+                    <GraduationCap className="w-5 h-5 text-[var(--moonlit-cyan)]" />
                     Exam Workload Analysis
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                  </h3>
+                </div>
+                <div className="p-5">
                   {analysis.examAnalysis ? (
                     <div className="space-y-4">
-                      <div className="bg-[var(--surface)] border border-[var(--border-subtle)] rounded-lg p-3">
-                        <p className="text-xs text-[var(--text-secondary)] font-medium mb-1">Upcoming Milestone</p>
-                        <p className="font-semibold text-[var(--text-primary)]">{analysis.examAnalysis.examTitle}</p>
+                      <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+                        <p className="text-xs text-white/50 font-light mb-1">Upcoming Milestone</p>
+                        <p className="font-medium text-white/90">{analysis.examAnalysis.examTitle}</p>
                         <div className="flex items-center gap-4 mt-2">
                           <div className="flex flex-col">
-                            <span className="text-2xl font-display font-bold text-amber-500">{analysis.examAnalysis.daysRemaining}</span>
-                            <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wide">Days Left</span>
+                            <span className="text-2xl font-display font-bold text-amber-400">{analysis.examAnalysis.daysRemaining}</span>
+                            <span className="text-[10px] text-white/40 uppercase tracking-wide">Days Left</span>
                           </div>
-                          <div className="h-8 w-px bg-[var(--border-subtle)]"></div>
+                          <div className="h-8 w-px bg-white/10"></div>
                           <div className="flex flex-col">
-                            <span className="text-2xl font-display font-bold text-blue-500">{analysis.examAnalysis.remainingTasks}</span>
-                            <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wide">Tasks Due</span>
+                            <span className="text-2xl font-display font-bold text-[var(--moonlit-cyan)]">{analysis.examAnalysis.remainingTasks}</span>
+                            <span className="text-[10px] text-white/40 uppercase tracking-wide">Tasks Due</span>
                           </div>
                         </div>
                       </div>
-                      <div className="bg-[var(--primary-soft)] text-[var(--primary-hover)] text-sm p-3 rounded-lg leading-relaxed">
-                        <strong>Mitra Suggests:</strong> {analysis.examAnalysis.aiRecommendation}
+                      <div className="bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] font-light text-sm p-3 rounded-lg leading-relaxed">
+                        <strong className="font-medium text-white/90">Mitra Suggests:</strong> {analysis.examAnalysis.aiRecommendation}
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-6 text-center text-[var(--text-muted)]">
+                    <div className="flex flex-col items-center justify-center py-6 text-center text-white/50">
                       <CheckCircle2 className="w-8 h-8 mb-2 opacity-50" />
-                      <p className="text-sm">No upcoming exams detected.<br/>You're currently on track.</p>
+                      <p className="text-sm font-light">No upcoming exams detected.<br/>You're currently on track.</p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           )}
 
@@ -261,11 +261,11 @@ export default function PlannerPage() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
               >
-                <Card className="border-[var(--primary-soft)] border-2 mb-6">
-                  <CardContent className="p-5 space-y-4">
+                <div className="border border-[var(--moonlit-cyan)]/30 shadow-[0_0_20px_var(--moonlit-cyan)] shadow-[var(--moonlit-cyan)]/10 bg-white/5 backdrop-blur-md rounded-2xl mb-6 overflow-hidden">
+                  <div className="p-5 space-y-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-[var(--text-primary)]">New Task</p>
-                      <button onClick={() => setShowForm(false)} className="text-[var(--text-muted)] hover:text-[var(--text-secondary)]">
+                      <p className="text-sm font-medium text-white/90">New Task</p>
+                      <button onClick={() => setShowForm(false)} className="text-white/50 hover:text-white/80 transition-colors">
                         <X className="w-4 h-4" />
                       </button>
                     </div>
@@ -275,28 +275,29 @@ export default function PlannerPage() {
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && addTask()}
                       autoFocus
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-[var(--moonlit-cyan)]/50"
                     />
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-[var(--text-secondary)]">Deadline</label>
+                        <label className="text-xs font-light text-white/60">Deadline</label>
                         <Input
                           type="datetime-local"
                           value={newDeadline}
                           onChange={(e) => setNewDeadline(e.target.value)}
-                          className="text-sm"
+                          className="text-sm bg-white/5 border-white/10 text-white focus-visible:ring-[var(--moonlit-cyan)]/50"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-[var(--text-secondary)]">Priority</label>
+                        <label className="text-xs font-light text-white/60">Priority</label>
                         <div className="flex gap-2">
                           {(["HIGH", "MEDIUM", "LOW"] as TaskPriority[]).map((p) => (
                             <button
                               key={p}
                               onClick={() => setNewPriority(p)}
-                              className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-semibold border transition-colors ${
+                              className={`flex-1 py-2 rounded-lg text-[10px] sm:text-xs font-medium border transition-colors ${
                                 newPriority === p
-                                  ? "bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)]"
-                                  : "bg-[var(--surface)] text-[var(--text-secondary)] border-[var(--border)] hover:border-[var(--primary-soft)]"
+                                  ? "bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border-[var(--moonlit-cyan)]/40"
+                                  : "bg-white/5 text-white/50 border-white/10 hover:border-white/20"
                               }`}
                             >
                               {p}
@@ -306,19 +307,19 @@ export default function PlannerPage() {
                       </div>
                     </div>
                     <div className="flex gap-2 justify-end pt-1">
-                      <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
-                      <Button size="sm" onClick={addTask} disabled={!newTitle.trim() || actionLoading}>
+                      <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} className="text-white/70 hover:bg-white/10 hover:text-white">Cancel</Button>
+                      <Button size="sm" onClick={addTask} disabled={!newTitle.trim() || actionLoading} className="bg-[var(--moonlit-cyan)]/80 text-white hover:bg-[var(--moonlit-cyan)]">
                         {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Task"}
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Task List Section */}
-          <div className="flex gap-1 p-1 bg-[var(--background-secondary)] rounded-xl border border-[var(--border)] w-fit mb-4">
+          <div className="flex gap-1 p-1 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 w-fit mb-4">
             {tabs.map((tab) => {
               const tabActiveCount = tasks.filter(t => !t.isCompleted && getDueCategory(new Date(t.deadline)) === "today").length;
               return (
@@ -327,13 +328,13 @@ export default function PlannerPage() {
                   onClick={() => setActiveTab(tab)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
                     activeTab === tab
-                      ? "bg-[var(--surface)] text-[var(--text-primary)] shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
-                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      ? "bg-white/10 text-white shadow-sm border border-white/10"
+                      : "text-white/50 font-light hover:text-white/80"
                   }`}
                 >
                   {tab}
                   {tab === "Today" && tabActiveCount > 0 && (
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] font-bold">
+                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30 font-medium">
                       {tabActiveCount}
                     </span>
                   )}
@@ -343,24 +344,24 @@ export default function PlannerPage() {
           </div>
 
           {activeTab === "Calendar" ? (
-            <Card>
-              <CardContent className="p-0">
-                <div className="grid grid-cols-7 border-b border-[var(--border-subtle)] text-center">
+            <div className="border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden">
+              <div className="p-0">
+                <div className="grid grid-cols-7 border-b border-white/10 text-center">
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-                    <div key={d} className="py-3 text-xs font-semibold text-[var(--text-secondary)] border-r border-[var(--border-subtle)] last:border-r-0">{d}</div>
+                    <div key={d} className="py-3 text-xs font-medium text-white/50 border-r border-white/10 last:border-r-0">{d}</div>
                   ))}
                 </div>
                 <div className="grid grid-cols-7 grid-rows-5 h-[400px]">
                   {Array.from({ length: 35 }).map((_, i) => (
-                    <div key={i} className="border-b border-r border-[var(--border-subtle)] p-2 hover:bg-[var(--background-secondary)] transition-colors flex flex-col items-center">
-                      <span className={`text-sm font-medium ${i === 12 ? 'text-[var(--primary-foreground)] bg-[var(--primary)] w-6 h-6 rounded-full flex items-center justify-center' : 'text-[var(--text-primary)]'}`}>
+                    <div key={i} className="border-b border-r border-white/10 p-2 hover:bg-white/10 transition-colors flex flex-col items-center">
+                      <span className={`text-sm font-medium ${i === 12 ? 'text-[var(--moonlit-cyan)] bg-[var(--moonlit-cyan)]/20 border border-[var(--moonlit-cyan)]/30 w-6 h-6 rounded-full flex items-center justify-center' : 'text-white/70 font-light'}`}>
                         {(i % 31) + 1}
                       </span>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ) : (
             <>
               {/* Active tasks */}
@@ -381,17 +382,17 @@ export default function PlannerPage() {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95, height: 0, marginBottom: 0 }}
-                        className="group flex items-start gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--background-primary)] transition-colors"
+                        className="group flex items-start gap-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-colors"
                       >
                         <button
                           onClick={() => toggle(t.id, t.isCompleted)}
-                          className="mt-1 flex-shrink-0 text-[var(--border-subtle)] hover:text-[var(--primary)] transition-colors"
+                          className="mt-1 flex-shrink-0 text-white/30 hover:text-[var(--moonlit-cyan)] transition-colors"
                         >
                           <Circle className="w-6 h-6" />
                         </button>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-[var(--text-primary)] leading-tight">{t.title}</p>
-                          <div className="flex items-center gap-3 mt-2 text-[11px] font-medium text-[var(--text-muted)]">
+                          <p className="text-sm font-medium text-white/90 leading-tight">{t.title}</p>
+                          <div className="flex items-center gap-3 mt-2 text-[11px] font-light text-white/60">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3.5 h-3.5" />
                               {new Date(t.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
@@ -401,7 +402,7 @@ export default function PlannerPage() {
                               {new Date(t.deadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                             {priorityConfig[t.priority] && (
-                              <Badge variant={priorityConfig[t.priority].badge as any} className="gap-1.5 h-5 text-[10px]">
+                              <Badge variant={priorityConfig[t.priority].badge as any} className="gap-1.5 h-5 text-[10px] bg-white/5 border-white/10 text-white/70">
                                 <span className={`w-1.5 h-1.5 rounded-full ${priorityConfig[t.priority].dot}`} />
                                 {t.priority}
                               </Badge>
@@ -410,7 +411,7 @@ export default function PlannerPage() {
                         </div>
                         <button
                           onClick={() => remove(t.id)}
-                          className="opacity-0 group-hover:opacity-100 p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-all"
+                          className="opacity-0 group-hover:opacity-100 p-2 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -423,7 +424,7 @@ export default function PlannerPage() {
               {/* Completed tasks */}
               {completed.length > 0 && (
                 <div className="mt-8">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-3">Completed</h3>
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-white/50 mb-3">Completed</h3>
                   <div className="space-y-2">
                     {completed.map((t) => (
                       <motion.div
@@ -431,18 +432,18 @@ export default function PlannerPage() {
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="group flex items-center gap-4 p-3 rounded-lg border border-transparent hover:border-[var(--border)] hover:bg-[var(--surface)] transition-colors"
+                        className="group flex items-center gap-4 p-3 rounded-lg border border-transparent hover:border-white/10 hover:bg-white/5 transition-colors"
                       >
                         <button
                           onClick={() => toggle(t.id, t.isCompleted)}
-                          className="text-green-500 hover:text-green-600 transition-colors"
+                          className="text-emerald-400/50 hover:text-emerald-400 transition-colors"
                         >
                           <CheckCircle2 className="w-5 h-5" />
                         </button>
-                        <p className="flex-1 text-sm text-[var(--text-muted)] line-through">{t.title}</p>
+                        <p className="flex-1 text-sm text-white/40 font-light line-through">{t.title}</p>
                         <button
                           onClick={() => remove(t.id)}
-                          className="opacity-0 group-hover:opacity-100 p-2 text-[var(--text-muted)] hover:text-red-500 rounded-lg transition-all"
+                          className="opacity-0 group-hover:opacity-100 p-2 text-white/30 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "notion": {
+      "serverUrl": "https://mcp.notion.com/mcp"
+    },
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp"],
+      "env": {
+        "STRIPE_API_KEY": ""
+      }
+    }
+  }
+}

@@ -87,10 +87,10 @@ export default function SpacesPage() {
           <button
             key={t}
             onClick={() => setFilter(t)}
-            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               filter === t
-                ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
-                : "bg-[var(--background-secondary)] text-[var(--text-secondary)] border border-[var(--border)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary-soft)]"
+                ? "bg-[var(--moonlit-cyan)]/20 text-[var(--moonlit-cyan)] border border-[var(--moonlit-cyan)]/30 shadow-[0_0_15px_rgba(121,175,194,0.15)]"
+                : "bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-white/80"
             }`}
           >
             {t}
@@ -115,58 +115,58 @@ export default function SpacesPage() {
             const isFull = (space.crowdPercentage || 0) >= 100 || !space.isAvailable;
             
             return (
-              <Card key={space.id} className={`hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200 ${isFull ? 'opacity-80 bg-[var(--background-secondary)]/50' : ''}`}>
-                <CardContent className="p-5">
+              <div key={space.id} className={`border border-white/10 shadow-2xl bg-white/5 backdrop-blur-md rounded-2xl overflow-hidden transition-all duration-200 hover:border-[var(--moonlit-cyan)]/30 hover:shadow-[0_0_20px_rgba(121,175,194,0.1)] ${isFull ? 'opacity-70 bg-white/5' : ''}`}>
+                <div className="p-5">
                   <div className="flex items-start justify-between mb-3">
-                    <Badge variant={type === "Wellness" ? "green" : type === "Library" ? "default" : "muted"}>{type}</Badge>
-                    <div className="flex items-center gap-1 text-sm text-[var(--primary)] font-medium bg-[var(--surface-secondary)] px-2 py-0.5 rounded-md">
+                    <Badge variant={type === "Wellness" ? "green" : type === "Library" ? "default" : "muted"} className="bg-white/10 text-white border-white/20">{type}</Badge>
+                    <div className="flex items-center gap-1 text-sm text-[var(--moonlit-cyan)] font-medium bg-[var(--moonlit-cyan)]/10 border border-[var(--moonlit-cyan)]/20 px-2 py-0.5 rounded-md">
                       <MapPin className="w-3.5 h-3.5" /> {space.location}
                     </div>
                   </div>
                   
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-semibold text-[var(--text-primary)] leading-tight">{space.name}</h3>
+                    <h3 className="text-lg font-medium text-white/90 leading-tight">{space.name}</h3>
                   </div>
                   
                   {space.description && (
-                    <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2 min-h-[40px]">{space.description}</p>
+                    <p className="text-sm text-white/60 mb-4 line-clamp-2 min-h-[40px] font-light">{space.description}</p>
                   )}
                   
-                  <div className="grid grid-cols-2 gap-y-4 gap-x-2 border-t border-[var(--border-subtle)] pt-4 mb-5">
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-2 border-t border-white/10 pt-4 mb-5">
                     {/* Status / Availability */}
-                    <div className="col-span-2 flex items-center justify-between bg-[var(--surface-secondary)] p-2.5 rounded-lg border border-[var(--border-subtle)]">
+                    <div className="col-span-2 flex items-center justify-between bg-white/5 p-2.5 rounded-lg border border-white/10">
                       <div className="flex items-center gap-2">
                         {isFull ? (
-                          <XCircle className="w-4 h-4 text-[var(--danger)]" />
+                          <XCircle className="w-4 h-4 text-red-400" />
                         ) : (
-                          <CheckCircle2 className="w-4 h-4 text-[var(--success)]" />
+                          <CheckCircle2 className="w-4 h-4 text-[var(--moonlit-cyan)]" />
                         )}
-                        <span className={`text-sm font-semibold ${isFull ? 'text-[var(--danger)]' : 'text-[var(--success)]'}`}>
+                        <span className={`text-sm font-medium ${isFull ? 'text-red-400' : 'text-[var(--moonlit-cyan)]'}`}>
                           {isFull ? 'Unavailable / Full' : 'Available'}
                         </span>
                       </div>
                       
                       {space.crowdPercentage !== undefined && (
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-medium text-[var(--text-secondary)]">Crowd:</span>
-                          <div className="w-16 h-2 bg-[var(--border-subtle)] rounded-full overflow-hidden">
+                          <span className="text-xs font-light text-white/50">Crowd:</span>
+                          <div className="w-16 h-2 bg-white/10 rounded-full overflow-hidden">
                             <div 
-                              className={`h-full rounded-full ${space.crowdPercentage > 85 ? 'bg-[var(--danger)]' : space.crowdPercentage > 60 ? 'bg-[var(--warning)]' : 'bg-[var(--success)]'}`}
+                              className={`h-full rounded-full ${space.crowdPercentage > 85 ? 'bg-red-400' : space.crowdPercentage > 60 ? 'bg-amber-400' : 'bg-[var(--moonlit-cyan)]'}`}
                               style={{ width: `${Math.min(100, space.crowdPercentage)}%` }}
                             />
                           </div>
-                          <span className="text-xs font-bold text-[var(--text-primary)] min-w-[3ch] text-right">{space.crowdPercentage}%</span>
+                          <span className="text-xs font-medium text-white/80 min-w-[3ch] text-right">{space.crowdPercentage}%</span>
                         </div>
                       )}
                     </div>
                     
                     <div>
-                      <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><VolumeX className="w-3.5 h-3.5" /> Noise Level</p>
-                      <p className="text-sm font-medium text-[var(--text-primary)] capitalize">{space.noiseLevel}</p>
+                      <p className="text-xs text-white/50 mb-1 flex items-center gap-1.5 font-light"><VolumeX className="w-3.5 h-3.5" /> Noise Level</p>
+                      <p className="text-sm font-medium text-white/90 capitalize">{space.noiseLevel}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-[var(--text-muted)] mb-1 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> Occupancy</p>
-                      <p className="text-sm font-medium text-[var(--text-primary)]">
+                      <p className="text-xs text-white/50 mb-1 flex items-center gap-1.5 font-light"><Users className="w-3.5 h-3.5" /> Occupancy</p>
+                      <p className="text-sm font-medium text-white/90">
                         {space.occupancy !== undefined && space.capacity !== null
                           ? `${space.occupancy} / ${space.capacity}` 
                           : space.capacity 
@@ -179,17 +179,17 @@ export default function SpacesPage() {
 
                   <Button 
                     disabled={isFull}
-                    className={`w-full gap-2 shadow-none ${
+                    className={`w-full gap-2 shadow-none transition-all ${
                       isFull 
-                        ? "bg-[var(--border-subtle)] text-[var(--text-muted)] cursor-not-allowed" 
-                        : "bg-[var(--background-secondary)] text-[var(--primary)] hover:bg-[var(--surface-secondary)] hover:text-[var(--primary-hover)] border border-[var(--primary-soft)]"
+                        ? "bg-white/5 text-white/30 border-white/5 cursor-not-allowed" 
+                        : "bg-[var(--moonlit-cyan)]/10 text-[var(--moonlit-cyan)] hover:bg-[var(--moonlit-cyan)]/20 hover:text-white border border-[var(--moonlit-cyan)]/30"
                     }`}
                   >
                     <Navigation className="w-4 h-4" /> 
                     {isFull ? "Currently Unavailable" : "Get Directions"}
                   </Button>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>

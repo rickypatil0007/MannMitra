@@ -205,32 +205,32 @@ export default function NotesPage() {
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
 
             {/* Reflection Prompts */}
-            <Card className="border-[var(--primary-soft)] bg-gradient-to-br from-[var(--surface)] to-[var(--surface-secondary)]">
-              <CardContent className="p-5">
+            <div className="border border-[var(--moonlit-cyan)]/20 bg-[var(--moonlit-cyan)]/5 backdrop-blur-md shadow-lg rounded-3xl overflow-hidden">
+              <div className="p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-[var(--primary)]" />
-                  <span className="text-sm font-semibold text-[var(--primary)]">Today&apos;s Reflection Prompts</span>
+                  <Sparkles className="w-4 h-4 text-[var(--moonlit-cyan)]" />
+                  <span className="text-sm font-medium text-[var(--moonlit-cyan)]">Today&apos;s Reflection Prompts</span>
                 </div>
                 <div className="space-y-2">
                   {dailyPrompts.map((prompt, i) => (
                     <button
                       key={i}
                       onClick={() => openNew(prompt)}
-                      className="w-full text-left px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border-subtle)] hover:border-[var(--primary-soft)] hover:bg-[var(--surface-secondary)] transition-all text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      className="w-full text-left px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-[var(--moonlit-cyan)]/40 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(121,175,194,0.1)] transition-all text-sm text-white/70 hover:text-white font-light"
                     >
                       &ldquo;{prompt}&rdquo;
                     </button>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Search */}
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
               <Input
                 placeholder="Search notes..."
-                className="pl-9"
+                className="pl-9 bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:border-[var(--moonlit-cyan)]/50 focus:ring-1 focus:ring-[var(--moonlit-cyan)]/50 rounded-2xl h-11"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -250,14 +250,14 @@ export default function NotesPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {notes.map((note) => (
-                  <Card
+                  <div
                     key={note.id}
-                    className="cursor-pointer hover:shadow-soft hover:border-[var(--primary-soft)] transition-all duration-200 relative group"
+                    className="cursor-pointer border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl hover:shadow-[0_0_20px_rgba(121,175,194,0.15)] hover:border-[var(--moonlit-cyan)]/30 hover:bg-white/10 transition-all duration-200 relative group overflow-hidden"
                     onClick={() => openNote(note)}
                   >
-                    <CardContent className="p-5">
+                    <div className="p-5">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-[var(--text-primary)] truncate flex-1">{note.title || "Untitled"}</h3>
+                        <h3 className="font-medium text-white/90 truncate flex-1">{note.title || "Untitled"}</h3>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -265,25 +265,25 @@ export default function NotesPage() {
                           }}
                           className={`shrink-0 p-1 rounded-full transition-colors ${
                             note.isPinned
-                              ? "text-[var(--primary)]"
-                              : "text-[var(--text-muted)] opacity-0 group-hover:opacity-100"
+                              ? "text-[var(--moonlit-cyan)]"
+                              : "text-white/30 opacity-0 group-hover:opacity-100 hover:text-white"
                           }`}
                         >
                           {note.isPinned ? <Pin className="w-3.5 h-3.5" /> : <PinOff className="w-3.5 h-3.5" />}
                         </button>
                       </div>
-                      <p className="text-sm text-[var(--text-secondary)] mt-1.5 line-clamp-2 leading-relaxed">{note.content}</p>
-                      <div className="flex items-center gap-1.5 mt-4 text-[var(--text-muted)]">
+                      <p className="text-sm text-white/60 font-light mt-1.5 line-clamp-2 leading-relaxed">{note.content}</p>
+                      <div className="flex items-center gap-1.5 mt-4 text-white/40">
                         <Calendar className="w-3.5 h-3.5" />
-                        <span className="text-[10px] uppercase font-semibold tracking-wider">
+                        <span className="text-[10px] uppercase font-medium tracking-wider">
                           {new Date(note.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                         </span>
                         {note.isPinned && (
-                          <span className="ml-auto text-[10px] uppercase font-semibold tracking-wider text-[var(--primary)]">Pinned</span>
+                          <span className="ml-auto text-[10px] uppercase font-medium tracking-wider text-[var(--moonlit-cyan)]">Pinned</span>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -370,14 +370,14 @@ export default function NotesPage() {
               placeholder="Title"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
-              className="w-full text-2xl font-display font-semibold text-[var(--text-primary)] placeholder:text-[var(--text-muted)] border-none focus:outline-none focus:ring-0 bg-transparent px-0"
+              className="w-full text-2xl font-display font-medium text-white placeholder:text-white/30 border-none focus:outline-none focus:ring-0 bg-transparent px-0"
             />
 
             <textarea
               placeholder="Start writing or recording..."
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              className="w-full min-h-[400px] text-base text-[var(--text-secondary)] placeholder:text-[var(--text-muted)] border-none focus:outline-none focus:ring-0 bg-transparent px-0 resize-none leading-relaxed"
+              className="w-full min-h-[400px] text-base text-white/80 font-light placeholder:text-white/30 border-none focus:outline-none focus:ring-0 bg-transparent px-0 resize-none leading-relaxed"
               autoFocus
             />
           </motion.div>

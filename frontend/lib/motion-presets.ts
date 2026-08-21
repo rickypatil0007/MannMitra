@@ -93,7 +93,11 @@ export const popIn: Variants = {
 };
 
 export const emojiTap = {
-  whileHover: { scale: 1.25, rotate: [0, -8, 8, 0] },
-  whileTap: { scale: 0.9 },
-  transition: { type: "spring" as const, stiffness: 400, damping: 15 },
+  whileHover: { scale: 1.25, rotate: 8 },
+  whileTap: { scale: 0.9, rotate: -8 },
+  transition: { 
+    type: "spring" as const, 
+    stiffness: 400, 
+    damping: 15
+  },
 };
