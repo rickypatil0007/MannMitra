@@ -36,7 +36,7 @@ export function SkyEnvironment({ interactive = true }: { interactive?: boolean }
       <directionalLight position={[-10, -5, -10]} intensity={0.8} color="#F3EEFF" />
 
       {/* Atmospheric Fog - perfectly matches the background color to blend the horizon */}
-      <fogExp2 attach="fog" color="#FCFBFF" density={0.012} />
+      <fogExp2 attach="fog" args={["#FCFBFF", 0.012]} />
     </group>
   );
 }

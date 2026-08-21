@@ -76,6 +76,6 @@ export const scalePressVariants = {
   tap: { 
     scale: motionTokens.scale.tap,
     y: 0,
-    transition: { duration: motionTokens.duration.micro, ease: "easeOut" }
+    transition: { duration: motionTokens.duration.micro, ease: motionTokens.ease.out }
   }
 };

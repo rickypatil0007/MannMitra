@@ -113,22 +113,22 @@ export function PremiumAmbientBackground({ interactive = true }: PremiumAmbientB
 
       {/* Animated Flowing Waves */}
       <motion.div className="absolute inset-0" style={{ x: wavesX, y: wavesY, opacity: opacityMultiplier }}>
-        <AnimatedWaves reducedMotion={shouldReduceMotion} />
+        <AnimatedWaves reducedMotion={!!shouldReduceMotion} />
       </motion.div>
 
       {/* Floating Orbs */}
       <motion.div className="absolute inset-0" style={{ x: orbsX, y: orbsY, opacity: opacityMultiplier }}>
-        <FloatingOrbs count={orbCount} reducedMotion={shouldReduceMotion} />
+        <FloatingOrbs count={orbCount} reducedMotion={!!shouldReduceMotion} />
       </motion.div>
 
       {/* Floating Leaves */}
       <motion.div className="absolute inset-0" style={{ x: particlesX, y: particlesY, opacity: opacityMultiplier }}>
-        <FloatingLeaves count={leafCount} reducedMotion={shouldReduceMotion} />
+        <FloatingLeaves count={leafCount} reducedMotion={!!shouldReduceMotion} />
       </motion.div>
 
       {/* Tiny Ambient Particles */}
       <motion.div className="absolute inset-0" style={{ x: particlesX, y: particlesY, opacity: opacityMultiplier }}>
-        <AmbientParticles count={particleCount} reducedMotion={shouldReduceMotion} />
+        <AmbientParticles count={particleCount} reducedMotion={!!shouldReduceMotion} />
       </motion.div>
 
       {/* Edge Vignette (Soft Lavender) */}

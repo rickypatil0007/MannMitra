@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { cn } from "@/frontend/lib/utils";
 
 interface SplitTextProps {
@@ -12,7 +12,7 @@ interface SplitTextProps {
 export function SplitText({ text, className, delay = 0 }: SplitTextProps) {
   const words = text.split(" ");
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
@@ -20,7 +20,7 @@ export function SplitText({ text, className, delay = 0 }: SplitTextProps) {
     }),
   };
 
-  const child = {
+  const child: Variants = {
     visible: {
       opacity: 1,
       y: 0,

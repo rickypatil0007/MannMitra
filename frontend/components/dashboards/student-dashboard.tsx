@@ -214,7 +214,6 @@ export function StudentDashboard() {
             </div>
           </div>
 
-        </div>
         </FadeIn>
       </StaggerContainer>
     </motion.div>
